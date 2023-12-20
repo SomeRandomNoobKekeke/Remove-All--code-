@@ -39,10 +39,10 @@ namespace RemoveAll
 
     public static Dictionary<string, bool> whitelist { get; set; } = new Dictionary<string, bool>();
 
-    public static bool CullEntities(Camera cam,
-      ref Rectangle ___prevCullArea, ref double ___prevCullTime,
-      HashSet<Submarine> ___visibleSubs, ref List<MapEntity> ___visibleEntities)
+    public static bool CullEntities(Camera cam, Submarine __instance)
     {
+      Submarine _ = __instance;
+
       Rectangle camView = cam.WorldView;
       camView = new Rectangle(
         camView.X - cullEntitiesSettings.CullMarginX,
@@ -58,16 +58,16 @@ namespace RemoveAll
         camView.Y += camView.Height;
       }
 
-      if (Math.Abs(camView.X - ___prevCullArea.X) < cullEntitiesSettings.CullMoveThreshold &&
-          Math.Abs(camView.Y - ___prevCullArea.Y) < cullEntitiesSettings.CullMoveThreshold &&
-          Math.Abs(camView.Right - ___prevCullArea.Right) < cullEntitiesSettings.CullMoveThreshold &&
-          Math.Abs(camView.Bottom - ___prevCullArea.Bottom) < cullEntitiesSettings.CullMoveThreshold &&
-          ___prevCullTime > Timing.TotalTime - cullEntitiesSettings.CullInterval)
+      if (Math.Abs(camView.X - Submarine.prevCullArea.X) < cullEntitiesSettings.CullMoveThreshold &&
+          Math.Abs(camView.Y - Submarine.prevCullArea.Y) < cullEntitiesSettings.CullMoveThreshold &&
+          Math.Abs(camView.Right - Submarine.prevCullArea.Right) < cullEntitiesSettings.CullMoveThreshold &&
+          Math.Abs(camView.Bottom - Submarine.prevCullArea.Bottom) < cullEntitiesSettings.CullMoveThreshold &&
+          Submarine.prevCullTime > Timing.TotalTime - cullEntitiesSettings.CullInterval)
       {
         return false;
       }
 
-      ___visibleSubs.Clear();
+      Submarine.visibleSubs.Clear();
       foreach (Submarine sub in Submarine.Loaded)
       {
         if (Level.Loaded != null && sub.WorldPosition.Y < Level.MaxEntityDepth) { continue; }
@@ -80,17 +80,17 @@ namespace RemoveAll
 
         if (Submarine.RectsOverlap(worldBorders, camView))
         {
-          ___visibleSubs.Add(sub);
+          Submarine.visibleSubs.Add(sub);
         }
       }
 
-      if (___visibleEntities == null)
+      if (Submarine.visibleEntities == null)
       {
-        ___visibleEntities = new List<MapEntity>(MapEntity.MapEntityList.Count);
+        Submarine.visibleEntities = new List<MapEntity>(MapEntity.MapEntityList.Count);
       }
       else
       {
-        ___visibleEntities.Clear();
+        Submarine.visibleEntities.Clear();
       }
 
       foreach (MapEntity entity in MapEntity.MapEntityList)
@@ -110,13 +110,13 @@ namespace RemoveAll
 
         if (entity.Submarine != null)
         {
-          if (!___visibleSubs.Contains(entity.Submarine)) { continue; }
+          if (!Submarine.visibleSubs.Contains(entity.Submarine)) { continue; }
         }
-        if (entity.IsVisible(camView)) { ___visibleEntities.Add(entity); }
+        if (entity.IsVisible(camView)) { Submarine.visibleEntities.Add(entity); }
       }
 
-      ___prevCullArea = camView;
-      ___prevCullTime = Timing.TotalTime;
+      Submarine.prevCullArea = camView;
+      Submarine.prevCullTime = Timing.TotalTime;
 
       return false;
     }

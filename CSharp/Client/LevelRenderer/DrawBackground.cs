@@ -28,13 +28,10 @@ namespace RemoveAll
     }
     public static DrawBackgroundSettings drawBackgroundSettings = new DrawBackgroundSettings();
 
-    public static bool DrawBackground(SpriteBatch spriteBatch, Camera cam,
-            LevelObjectManager backgroundSpriteManager,
-            BackgroundCreatureManager backgroundCreatureManager,
-            LevelRenderer __instance,
-            Level ___level,
-             Vector2 ___waterParticleOffset)
+    public static bool DrawBackground(SpriteBatch spriteBatch, Camera cam, LevelObjectManager backgroundSpriteManager, BackgroundCreatureManager backgroundCreatureManager, LevelRenderer __instance)
     {
+      LevelRenderer _ = __instance;
+
       if (drawBackgroundSettings.DrawBackgroundTopSprite)
       {
         spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.LinearWrap);
@@ -44,26 +41,26 @@ namespace RemoveAll
         backgroundPos.Y = -backgroundPos.Y;
         backgroundPos *= 0.05f;
 
-        if (___level.GenerationParams.BackgroundTopSprite != null)
+        if (_.level.GenerationParams.BackgroundTopSprite != null)
         {
-          int backgroundSize = (int)___level.GenerationParams.BackgroundTopSprite.size.Y;
+          int backgroundSize = (int)_.level.GenerationParams.BackgroundTopSprite.size.Y;
           if (backgroundPos.Y < backgroundSize)
           {
             if (backgroundPos.Y < 0)
             {
-              var backgroundTop = ___level.GenerationParams.BackgroundTopSprite;
+              var backgroundTop = _.level.GenerationParams.BackgroundTopSprite;
               backgroundTop.SourceRect = new Rectangle((int)backgroundPos.X, (int)backgroundPos.Y, backgroundSize, (int)Math.Min(-backgroundPos.Y, backgroundSize));
               backgroundTop.DrawTiled(spriteBatch, Vector2.Zero, new Vector2(GameMain.GraphicsWidth, Math.Min(-backgroundPos.Y, GameMain.GraphicsHeight)),
-                  color: ___level.BackgroundTextureColor);
+                  color: _.level.BackgroundTextureColor);
             }
-            if (-backgroundPos.Y < GameMain.GraphicsHeight && ___level.GenerationParams.BackgroundSprite != null)
+            if (-backgroundPos.Y < GameMain.GraphicsHeight && _.level.GenerationParams.BackgroundSprite != null)
             {
-              var background = ___level.GenerationParams.BackgroundSprite;
+              var background = _.level.GenerationParams.BackgroundSprite;
               background.SourceRect = new Rectangle((int)backgroundPos.X, (int)Math.Max(backgroundPos.Y, 0), backgroundSize, backgroundSize);
               background.DrawTiled(spriteBatch,
                   (backgroundPos.Y < 0) ? new Vector2(0.0f, (int)-backgroundPos.Y) : Vector2.Zero,
                   new Vector2(GameMain.GraphicsWidth, (int)Math.Min(Math.Ceiling(backgroundSize - backgroundPos.Y), backgroundSize)),
-                  color: ___level.BackgroundTextureColor);
+                  color: _.level.BackgroundTextureColor);
             }
           }
         }
@@ -90,13 +87,13 @@ namespace RemoveAll
 
       if (drawBackgroundSettings.DrawWaterParticles)
       {
-        if (___level.GenerationParams.WaterParticles != null && cam.Zoom > 0.05f)
+        if (_.level.GenerationParams.WaterParticles != null && cam.Zoom > 0.05f)
         {
-          float textureScale = ___level.GenerationParams.WaterParticleScale;
+          float textureScale = _.level.GenerationParams.WaterParticleScale;
 
           Rectangle srcRect = new Rectangle(0, 0, 2048, 2048);
           Vector2 origin = new Vector2(cam.WorldView.X, -cam.WorldView.Y);
-          Vector2 offset = -origin + ___waterParticleOffset;
+          Vector2 offset = -origin + _.waterParticleOffset;
           while (offset.X <= -srcRect.Width * textureScale) offset.X += srcRect.Width * textureScale;
           while (offset.X > 0.0f) offset.X -= srcRect.Width * textureScale;
           while (offset.Y <= -srcRect.Height * textureScale) offset.Y += srcRect.Height * textureScale;
@@ -120,10 +117,10 @@ namespace RemoveAll
             while (offsetS.Y <= -srcRect.Height * texScale) offsetS.Y += srcRect.Height * texScale;
             while (offsetS.Y > 0.0f) offsetS.Y -= srcRect.Height * texScale;
 
-            ___level.GenerationParams.WaterParticles.DrawTiled(
+            _.level.GenerationParams.WaterParticles.DrawTiled(
                 spriteBatch, origin + offsetS,
                 new Vector2(cam.WorldView.Width - offsetS.X, cam.WorldView.Height - offsetS.Y),
-                color: ___level.GenerationParams.WaterParticleColor * alpha, textureScale: new Vector2(texScale));
+                color: _.level.GenerationParams.WaterParticleColor * alpha, textureScale: new Vector2(texScale));
           }
         }
       }
@@ -132,7 +129,7 @@ namespace RemoveAll
 
       if (drawBackgroundSettings.RenderWalls)
       {
-        __instance.RenderWalls(GameMain.Instance.GraphicsDevice, cam);
+        _.RenderWalls(GameMain.Instance.GraphicsDevice, cam);
       }
 
       if (drawBackgroundSettings.DrawObjectsMid)

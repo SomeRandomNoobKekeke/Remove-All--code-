@@ -159,6 +159,11 @@ namespace RemoveAll
         prefix: new HarmonyMethod(typeof(SubmarinePatch).GetMethod("CullEntities"))
       );
 
+      harmony.Patch(
+        original: typeof(GUI).GetMethod("Draw", BindingFlags.Public | BindingFlags.Static),
+        prefix: new HarmonyMethod(typeof(GUIPatch).GetMethod("Draw"))
+      );
+
       // harmony.Patch(
       //   original: typeof(GameScreen).GetMethod("DrawMap"),
       //   prefix: new HarmonyMethod(typeof(GameScreenPatch).GetMethod("DrawMap"))
