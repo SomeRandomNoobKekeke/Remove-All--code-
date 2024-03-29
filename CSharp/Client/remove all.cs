@@ -5,7 +5,7 @@ using Barotrauma;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
 
-//using System.Text.Json; :(
+using System.Text.Json;
 using System.IO;
 using System.Runtime.CompilerServices;
 
@@ -21,14 +21,33 @@ namespace RemoveAll
     public string ModDir = "";
     public Harmony harmony;
 
+
     public void Initialize()
     {
       harmony = new Harmony("remove.all");
 
       figureOutModVersionAndDirPath();
       PatchAll();
+
+      loadSettings();
     }
 
+
+    public void loadSettings()
+    {
+      string s;
+      //string s = File.ReadAllText(ModDir + "/befaultSettings.json");
+
+      //settings = JsonSerializer.Deserialize<Settings>(s);
+
+      settings = new Settings();
+
+      s = JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true });
+
+      log(s);
+
+      File.WriteAllText(ModDir + "/befaultSettings.json", s);
+    }
 
 
     public void figureOutModVersionAndDirPath()
@@ -38,7 +57,7 @@ namespace RemoveAll
         if (p.Name == "Remove all")
         {
           ModVersion = p.ModVersion;
-          ModDir = p.Dir;
+          ModDir = Path.GetFullPath(p.Dir);
         }
       }
     }
@@ -48,6 +67,7 @@ namespace RemoveAll
       patchLevelRenderer();
       patchSubmarine();
       patchLevelObjectManager();
+      patchWaterRenderer();
     }
 
     public static void log(object msg, Color? cl = null, [CallerLineNumber] int lineNumber = 0)
@@ -60,6 +80,8 @@ namespace RemoveAll
     {
       harmony.UnpatchAll(harmony.Id);
       harmony = null;
+
+      settings = null;
 
     }
 

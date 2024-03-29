@@ -1,6 +1,10 @@
 using System;
 using System.Reflection;
 
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+
 using HarmonyLib;
 using Barotrauma;
 using Microsoft.Xna.Framework;
@@ -12,10 +16,28 @@ using System.Collections.Generic;
 using System.Linq;
 using Voronoi2;
 
+
+
 namespace RemoveAll
 {
   partial class RemoveAllMod
   {
+    public class LevelRendererSettings
+    {
+      [JsonPropertyName("Draw water particles")]
+      public bool drawWaterParticles { get; set; } = false;
+
+
+      public int waterParticleLayers = 4;
+      [JsonPropertyName("Water particle layers count (1-4)")]
+      public int WaterParticleLayers
+      {
+        get { return waterParticleLayers; }
+        set { waterParticleLayers = Math.Clamp(value, 1, 4); }
+      }
+    }
+
+
     public static bool LevelRenderer_Update_Prefix(float deltaTime, Camera cam, LevelRenderer __instance)
     {
       LevelRenderer _ = __instance;
@@ -55,35 +77,42 @@ namespace RemoveAll
 
       //calculate the sum of the forces of nearby level triggers
       //and use it to move the water texture and water distortion effect
-      Vector2 currentWaterParticleVel = _.level.GenerationParams.WaterParticleVelocity;
-      foreach (LevelObject levelObject in _.level.LevelObjectManager.GetVisibleObjects())
+
+      if (settings.LR.drawWaterParticles)
       {
-        if (levelObject.Triggers == null) { continue; }
-        //use the largest water flow velocity of all the triggers
-        Vector2 objectMaxFlow = Vector2.Zero;
-        foreach (LevelTrigger trigger in levelObject.Triggers)
+        Vector2 currentWaterParticleVel = _.level.GenerationParams.WaterParticleVelocity;
+        foreach (LevelObject levelObject in _.level.LevelObjectManager.GetVisibleObjects())
         {
-          Vector2 vel = trigger.GetWaterFlowVelocity(cam.WorldViewCenter);
-          if (vel.LengthSquared() > objectMaxFlow.LengthSquared())
+          if (levelObject.Triggers == null) { continue; }
+          //use the largest water flow velocity of all the triggers
+          Vector2 objectMaxFlow = Vector2.Zero;
+          foreach (LevelTrigger trigger in levelObject.Triggers)
           {
-            objectMaxFlow = vel;
+            Vector2 vel = trigger.GetWaterFlowVelocity(cam.WorldViewCenter);
+            if (vel.LengthSquared() > objectMaxFlow.LengthSquared())
+            {
+              objectMaxFlow = vel;
+            }
           }
+          currentWaterParticleVel += objectMaxFlow;
         }
-        currentWaterParticleVel += objectMaxFlow;
-      }
 
-      _.waterParticleVelocity = Vector2.Lerp(_.waterParticleVelocity, currentWaterParticleVel, deltaTime);
 
-      WaterRenderer.Instance?.ScrollWater(_.waterParticleVelocity, deltaTime);
 
-      if (_.level.GenerationParams.WaterParticles != null)
-      {
-        Vector2 waterTextureSize = _.level.GenerationParams.WaterParticles.size * _.level.GenerationParams.WaterParticleScale;
-        _.waterParticleOffset += new Vector2(_.waterParticleVelocity.X, -_.waterParticleVelocity.Y) * _.level.GenerationParams.WaterParticleScale * deltaTime;
-        while (_.waterParticleOffset.X <= -waterTextureSize.X) { _.waterParticleOffset.X += waterTextureSize.X; }
-        while (_.waterParticleOffset.X >= waterTextureSize.X) { _.waterParticleOffset.X -= waterTextureSize.X; }
-        while (_.waterParticleOffset.Y <= -waterTextureSize.Y) { _.waterParticleOffset.Y += waterTextureSize.Y; }
-        while (_.waterParticleOffset.Y >= waterTextureSize.Y) { _.waterParticleOffset.Y -= waterTextureSize.Y; }
+        _.waterParticleVelocity = Vector2.Lerp(_.waterParticleVelocity, currentWaterParticleVel, deltaTime);
+
+        WaterRenderer.Instance?.ScrollWater(_.waterParticleVelocity, deltaTime);
+
+        if (_.level.GenerationParams.WaterParticles != null)
+        {
+          Vector2 waterTextureSize = _.level.GenerationParams.WaterParticles.size * _.level.GenerationParams.WaterParticleScale;
+          _.waterParticleOffset += new Vector2(_.waterParticleVelocity.X, -_.waterParticleVelocity.Y) * _.level.GenerationParams.WaterParticleScale * deltaTime;
+          while (_.waterParticleOffset.X <= -waterTextureSize.X) { _.waterParticleOffset.X += waterTextureSize.X; }
+          while (_.waterParticleOffset.X >= waterTextureSize.X) { _.waterParticleOffset.X -= waterTextureSize.X; }
+          while (_.waterParticleOffset.Y <= -waterTextureSize.Y) { _.waterParticleOffset.Y += waterTextureSize.Y; }
+          while (_.waterParticleOffset.Y >= waterTextureSize.Y) { _.waterParticleOffset.Y -= waterTextureSize.Y; }
+        }
+
       }
 
       return false;
@@ -137,7 +166,8 @@ namespace RemoveAll
         backgroundCreatureManager?.Draw(spriteBatch, cam);
       }
 
-      if (_.level.GenerationParams.WaterParticles != null && cam.Zoom > 0.05f)
+
+      if (settings.LR.drawWaterParticles && _.level.GenerationParams.WaterParticles != null && cam.Zoom > 0.05f)
       {
         float textureScale = _.level.GenerationParams.WaterParticleScale;
 
@@ -148,7 +178,7 @@ namespace RemoveAll
         while (offset.X > 0.0f) offset.X -= srcRect.Width * textureScale;
         while (offset.Y <= -srcRect.Height * textureScale) offset.Y += srcRect.Height * textureScale;
         while (offset.Y > 0.0f) offset.Y -= srcRect.Height * textureScale;
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < settings.LR.WaterParticleLayers; i++)
         {
           float scale = (1.0f - i * 0.2f);
 

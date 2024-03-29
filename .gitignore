@@ -1,5 +1,2 @@
-Brotrauma item list.html
-Decorations.json
-filelist.xml
-CSharp/RunConfig.xml
-ignore
+*.*
+!CSharp/**/*.cs
