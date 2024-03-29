@@ -47,6 +47,7 @@ namespace RemoveAll
     {
       patchLevelRenderer();
       patchSubmarine();
+      patchLevelObjectManager();
     }
 
     public static void log(object msg, Color? cl = null, [CallerLineNumber] int lineNumber = 0)
