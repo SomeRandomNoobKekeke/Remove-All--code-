@@ -73,6 +73,7 @@ namespace RemoveAll
       patchLightManager();
       patchSubmarine();
       patchWaterRenderer();
+      patchGUI();
     }
 
     public static void log(object msg, Color? cl = null, [CallerLineNumber] int lineNumber = 0)
