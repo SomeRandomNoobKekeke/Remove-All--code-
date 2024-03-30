@@ -37,7 +37,7 @@ namespace RemoveAll
 
     public static bool GUI_Draw_Prefix(Camera cam, SpriteBatch spriteBatch)
     {
-      lock (typeof(GUI).GetField("mutex", AccessTools.all).GetValue(null))
+      lock (GUI.mutex)
       {
         GUI.usedIndicatorAngles.Clear();
 
