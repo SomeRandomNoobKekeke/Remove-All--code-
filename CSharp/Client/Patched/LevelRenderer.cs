@@ -25,10 +25,10 @@ namespace RemoveAll
     public class LevelRendererSettings
     {
       [JsonPropertyName("Draw water particles")]
-      public bool drawWaterParticles { get; set; } = false;
+      public bool drawWaterParticles { get; set; } = true;
 
 
-      public int waterParticleLayers = 4;
+      public int waterParticleLayers = 1;
       [JsonPropertyName("Water particle layers count (1-4)")]
       public int WaterParticleLayers
       {

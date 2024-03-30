@@ -30,6 +30,8 @@ namespace RemoveAll
       PatchAll();
 
       loadSettings();
+
+      GameMain.GameScreen.Cam.MinZoom = 0;
     }
 
 
@@ -64,9 +66,12 @@ namespace RemoveAll
 
     public void PatchAll()
     {
-      patchLevelRenderer();
-      patchSubmarine();
+      patchGameScreen();
+      patchLevel();
       patchLevelObjectManager();
+      patchLevelRenderer();
+      patchLightManager();
+      patchSubmarine();
       patchWaterRenderer();
     }
 
