@@ -74,6 +74,7 @@ namespace RemoveAll
       patchSubmarine();
       patchWaterRenderer();
       patchGUI();
+      patchBackgroundCreatureManager();
     }
 
     public static void log(object msg, Color? cl = null, [CallerLineNumber] int lineNumber = 0)

@@ -78,7 +78,7 @@ namespace RemoveAll
       //calculate the sum of the forces of nearby level triggers
       //and use it to move the water texture and water distortion effect
 
-      if (settings.LR.drawWaterParticles)
+      if (settings.LevelRenderer.drawWaterParticles)
       {
         Vector2 currentWaterParticleVel = _.level.GenerationParams.WaterParticleVelocity;
         foreach (LevelObject levelObject in _.level.LevelObjectManager.GetVisibleObjects())
@@ -167,7 +167,7 @@ namespace RemoveAll
       }
 
 
-      if (settings.LR.drawWaterParticles && _.level.GenerationParams.WaterParticles != null && cam.Zoom > 0.05f)
+      if (settings.LevelRenderer.drawWaterParticles && _.level.GenerationParams.WaterParticles != null && cam.Zoom > 0.05f)
       {
         float textureScale = _.level.GenerationParams.WaterParticleScale;
 
@@ -178,7 +178,7 @@ namespace RemoveAll
         while (offset.X > 0.0f) offset.X -= srcRect.Width * textureScale;
         while (offset.Y <= -srcRect.Height * textureScale) offset.Y += srcRect.Height * textureScale;
         while (offset.Y > 0.0f) offset.Y -= srcRect.Height * textureScale;
-        for (int i = 0; i < settings.LR.WaterParticleLayers; i++)
+        for (int i = 0; i < settings.LevelRenderer.WaterParticleLayers; i++)
         {
           float scale = (1.0f - i * 0.2f);
 

@@ -21,7 +21,12 @@ namespace RemoveAll
 {
   public class LightManagerSettings
   {
-
+    public bool drawHalo { get; set; } = false;
+    public bool ghostCharacters { get; set; } = false;
+    public bool highlightItems { get; set; } = false;
+    public bool drawGapGlow { get; set; } = false;
+    public bool disableHullAmbientLight { get; set; } = true;
+    public bool disableGlobalAmbientLight { get; set; } = true;
   }
 
   partial class RemoveAllMod
@@ -262,7 +267,16 @@ namespace RemoveAll
       //draw background lights
       //---------------------------------------------------------------------------------------------------
       graphics.SetRenderTarget(_.LightMap);
-      graphics.Clear(_.AmbientLight);
+
+      if (settings.LightManager.disableGlobalAmbientLight)
+      {
+        //graphics.Clear(Color.Black);
+      }
+      else
+      {
+        graphics.Clear(_.AmbientLight);
+      }
+
       graphics.BlendState = BlendState.Additive;
       spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, transformMatrix: spriteBatchTransform);
       Level.Loaded?.BackgroundCreatureManager?.DrawLights(spriteBatch, cam);
@@ -282,44 +296,49 @@ namespace RemoveAll
       Dictionary<Hull, Rectangle> visibleHulls = _.GetVisibleHulls(cam);
       foreach (KeyValuePair<Hull, Rectangle> hull in visibleHulls)
       {
+        Color ambientColor = settings.LightManager.disableHullAmbientLight || hull.Key.AmbientLight == Color.TransparentBlack ? Color.Black : hull.Key.AmbientLight.Multiply(hull.Key.AmbientLight.A / 255.0f);
+
         GUI.DrawRectangle(spriteBatch,
             new Vector2(hull.Value.X, -hull.Value.Y),
             new Vector2(hull.Value.Width, hull.Value.Height),
-            hull.Key.AmbientLight == Color.TransparentBlack ? Color.Black : hull.Key.AmbientLight.Multiply(hull.Key.AmbientLight.A / 255.0f), true);
+            ambientColor, true);
       }
       spriteBatch.End();
 
-      spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, transformMatrix: spriteBatchTransform);
-      Vector3 glowColorHSV = ToolBox.RGBToHSV(_.AmbientLight);
-      glowColorHSV.Z = Math.Max(glowColorHSV.Z, 0.4f);
-      Color glowColor = ToolBoxCore.HSVToRGB(glowColorHSV.X, glowColorHSV.Y, glowColorHSV.Z);
-      Vector2 glowSpriteSize = new Vector2(_.gapGlowTexture.Width, _.gapGlowTexture.Height);
-      foreach (var gap in Gap.GapList)
+      if (settings.LightManager.drawGapGlow)
       {
-        if (gap.IsRoomToRoom || gap.Open <= 0.0f || gap.ConnectedWall == null) { continue; }
+        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, transformMatrix: spriteBatchTransform);
+        Vector3 glowColorHSV = ToolBox.RGBToHSV(_.AmbientLight);
+        glowColorHSV.Z = Math.Max(glowColorHSV.Z, 0.4f);
+        Color glowColor = ToolBoxCore.HSVToRGB(glowColorHSV.X, glowColorHSV.Y, glowColorHSV.Z);
+        Vector2 glowSpriteSize = new Vector2(_.gapGlowTexture.Width, _.gapGlowTexture.Height);
+        foreach (var gap in Gap.GapList)
+        {
+          if (gap.IsRoomToRoom || gap.Open <= 0.0f || gap.ConnectedWall == null) { continue; }
 
-        float a = MathHelper.Lerp(0.5f, 1.0f,
-            PerlinNoise.GetPerlin((float)Timing.TotalTime * 0.05f, gap.GlowEffectT));
+          float a = MathHelper.Lerp(0.5f, 1.0f,
+              PerlinNoise.GetPerlin((float)Timing.TotalTime * 0.05f, gap.GlowEffectT));
 
-        float scale = MathHelper.Lerp(0.5f, 2.0f,
-            PerlinNoise.GetPerlin((float)Timing.TotalTime * 0.01f, gap.GlowEffectT));
+          float scale = MathHelper.Lerp(0.5f, 2.0f,
+              PerlinNoise.GetPerlin((float)Timing.TotalTime * 0.01f, gap.GlowEffectT));
 
-        float rot = PerlinNoise.GetPerlin((float)Timing.TotalTime * 0.001f, gap.GlowEffectT) * MathHelper.TwoPi;
+          float rot = PerlinNoise.GetPerlin((float)Timing.TotalTime * 0.001f, gap.GlowEffectT) * MathHelper.TwoPi;
 
-        Vector2 spriteScale = new Vector2(gap.Rect.Width, gap.Rect.Height) / glowSpriteSize;
-        Vector2 drawPos = new Vector2(gap.DrawPosition.X, -gap.DrawPosition.Y);
+          Vector2 spriteScale = new Vector2(gap.Rect.Width, gap.Rect.Height) / glowSpriteSize;
+          Vector2 drawPos = new Vector2(gap.DrawPosition.X, -gap.DrawPosition.Y);
 
-        spriteBatch.Draw(_.gapGlowTexture,
-            drawPos,
-            null,
-            glowColor * a,
-            rot,
-            glowSpriteSize / 2,
-            scale: Math.Max(spriteScale.X, spriteScale.Y) * scale,
-            SpriteEffects.None,
-            layerDepth: 0);
+          spriteBatch.Draw(_.gapGlowTexture,
+              drawPos,
+              null,
+              glowColor * a,
+              rot,
+              glowSpriteSize / 2,
+              scale: Math.Max(spriteScale.X, spriteScale.Y) * scale,
+              SpriteEffects.None,
+              layerDepth: 0);
+        }
+        spriteBatch.End();
       }
-      spriteBatch.End();
 
       GameMain.GameScreen.DamageEffect.CurrentTechnique = GameMain.GameScreen.DamageEffect.Techniques["StencilShaderSolidColor"];
       GameMain.GameScreen.DamageEffect.Parameters["solidColor"].SetValue(Color.Black.ToVector4());
@@ -341,7 +360,7 @@ namespace RemoveAll
       }
       spriteBatch.End();
 
-      if (highlightsVisible)
+      if (settings.LightManager.highlightItems && highlightsVisible)
       {
         spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
         spriteBatch.Draw(_.HighlightMap, Vector2.Zero, Color.White);
@@ -350,7 +369,8 @@ namespace RemoveAll
 
       //draw characters to obstruct the highlighted items/characters and light sprites
       //---------------------------------------------------------------------------------------------------
-      if (cam.Zoom > LightManager.ObstructLightsBehindCharactersZoomThreshold)
+
+      if (!settings.LightManager.ghostCharacters && cam.Zoom > LightManager.ObstructLightsBehindCharactersZoomThreshold)
       {
         _.SolidColorEffect.CurrentTechnique = _.SolidColorEffect.Techniques["SolidVertexColor"];
         spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, effect: _.SolidColorEffect, transformMatrix: spriteBatchTransform);
@@ -370,7 +390,7 @@ namespace RemoveAll
         {
           if (character.CurrentHull == null || !character.Enabled || !character.IsVisible || character.InvisibleTimer > 0.0f) { continue; }
           if (Character.Controlled?.FocusedCharacter == character) { continue; }
-          Color lightColor = character.CurrentHull.AmbientLight == Color.TransparentBlack ?
+          Color lightColor = settings.LightManager.disableHullAmbientLight || character.CurrentHull.AmbientLight == Color.TransparentBlack ?
               Color.Black :
               character.CurrentHull.AmbientLight.Multiply(character.CurrentHull.AmbientLight.A / 255.0f).Opaque();
           foreach (Limb limb in character.AnimController.Limbs)
@@ -420,16 +440,19 @@ namespace RemoveAll
 
       GameMain.ParticleManager.Draw(spriteBatch, false, null, Barotrauma.Particles.ParticleBlendState.Additive);
 
-      if (Character.Controlled != null)
+      if (settings.LightManager.drawHalo)
       {
-        DrawHalo(Character.Controlled);
-      }
-      else
-      {
-        foreach (Character character in Character.CharacterList)
+        if (Character.Controlled != null)
         {
-          if (character.Submarine == null || character.IsDead || !character.IsHuman) { continue; }
-          DrawHalo(character);
+          DrawHalo(Character.Controlled);
+        }
+        else
+        {
+          foreach (Character character in Character.CharacterList)
+          {
+            if (character.Submarine == null || character.IsDead || !character.IsHuman) { continue; }
+            DrawHalo(character);
+          }
         }
       }
 
@@ -440,7 +463,9 @@ namespace RemoveAll
         haloDrawPos.Y = -haloDrawPos.Y;
 
         //ambient light decreases the brightness of the halo (no need for a bright halo if the ambient light is bright enough)
-        float ambientBrightness = (_.AmbientLight.R + _.AmbientLight.B + _.AmbientLight.G) / 255.0f / 3.0f;
+        Color ambientColor = settings.LightManager.disableGlobalAmbientLight ? Color.Black : _.AmbientLight;
+
+        float ambientBrightness = (ambientColor.R + ambientColor.B + ambientColor.G) / 255.0f / 3.0f;
         Color haloColor = Color.White.Multiply(0.3f - ambientBrightness);
         if (haloColor.A > 0)
         {

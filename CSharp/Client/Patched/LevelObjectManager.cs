@@ -17,12 +17,15 @@ namespace RemoveAll
   {
     public class LevelObjectManagerSettings
     {
-
+      public int maxVisibleLevelObjects { get; set; } = 500;
+      public float cutOffdepth { get; set; } = 1000;
     }
 
     public static bool LevelObjectManager_RefreshVisibleObjects_Prefix(Rectangle currentIndices, float zoom, LevelObjectManager __instance)
     {
       LevelObjectManager _ = __instance;
+
+      int maxVisible = 100;
 
       _.visibleObjectsBack.Clear();
       _.visibleObjectsMid.Clear();
@@ -52,6 +55,8 @@ namespace RemoveAll
           if (!obj.CanBeVisible) { continue; }
           if (obj.Prefab.HideWhenBroken && obj.Health <= 0.0f) { continue; }
 
+          if (obj.Position.Z >= settings.LevelObjectManager.cutOffdepth) continue;
+
           if (zoom < 0.05f)
           {
             //hide if the sprite is very small when zoomed this far out
@@ -72,7 +77,7 @@ namespace RemoveAll
               obj.Position.Z >= 0 ?
                   _.visibleObjectsBack :
                   (obj.Position.Z < -1 ? _.visibleObjectsFront : _.visibleObjectsMid);
-          if (objectList.Count >= LevelObjectManager.MaxVisibleObjects) { continue; }
+          if (objectList.Count >= settings.LevelObjectManager.maxVisibleLevelObjects) { continue; }
 
           int drawOrderIndex = 0;
           for (int i = 0; i < objectList.Count; i++)
@@ -90,11 +95,11 @@ namespace RemoveAll
             else
             {
               drawOrderIndex = i + 1;
-              if (drawOrderIndex >= LevelObjectManager.MaxVisibleObjects) { break; }
+              if (drawOrderIndex >= settings.LevelObjectManager.maxVisibleLevelObjects) { break; }
             }
           }
 
-          if (drawOrderIndex >= 0 && drawOrderIndex < LevelObjectManager.MaxVisibleObjects)
+          if (drawOrderIndex >= 0 && drawOrderIndex < settings.LevelObjectManager.maxVisibleLevelObjects)
           {
             objectList.Insert(drawOrderIndex, obj);
           }
@@ -183,7 +188,7 @@ namespace RemoveAll
 
         if (GameMain.DebugDraw)
         {
-          GUI.DrawRectangle(spriteBatch, new Vector2(obj.Position.X, -obj.Position.Y), new Vector2(10.0f, 10.0f), GUIStyle.Red, true);
+          GUI.DrawRectangle(spriteBatch, new Vector2(obj.Position.X, -obj.Position.Y - 100), new Vector2(10.0f, 200.0f), GUIStyle.Red, true);
 
           if (obj.Triggers == null) { continue; }
           foreach (LevelTrigger trigger in obj.Triggers)
