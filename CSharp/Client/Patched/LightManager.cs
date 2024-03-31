@@ -21,12 +21,16 @@ namespace RemoveAll
 {
   public class LightManagerSettings
   {
-    public bool drawHalo { get; set; } = false;
+    public bool drawHalo { get; set; } = true;
     public bool ghostCharacters { get; set; } = false;
     public bool highlightItems { get; set; } = false;
     public bool drawGapGlow { get; set; } = false;
-    public bool disableHullAmbientLight { get; set; } = true;
-    public bool disableGlobalAmbientLight { get; set; } = true;
+
+    public float haloScale { get; set; } = 1.0f;
+    public float haloBrightness { get; set; } = 0.25f;
+
+    public float hullAmbientBrightness { get; set; } = 0f;
+
   }
 
   partial class RemoveAllMod
@@ -268,14 +272,9 @@ namespace RemoveAll
       //---------------------------------------------------------------------------------------------------
       graphics.SetRenderTarget(_.LightMap);
 
-      if (settings.LightManager.disableGlobalAmbientLight)
-      {
-        //graphics.Clear(Color.Black);
-      }
-      else
-      {
-        graphics.Clear(_.AmbientLight);
-      }
+
+      graphics.Clear(_.AmbientLight);
+
 
       graphics.BlendState = BlendState.Additive;
       spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, transformMatrix: spriteBatchTransform);
@@ -296,7 +295,9 @@ namespace RemoveAll
       Dictionary<Hull, Rectangle> visibleHulls = _.GetVisibleHulls(cam);
       foreach (KeyValuePair<Hull, Rectangle> hull in visibleHulls)
       {
-        Color ambientColor = settings.LightManager.disableHullAmbientLight || hull.Key.AmbientLight == Color.TransparentBlack ? Color.Black : hull.Key.AmbientLight.Multiply(hull.Key.AmbientLight.A / 255.0f);
+        Color ambientColor = hull.Key.AmbientLight == Color.TransparentBlack ? Color.Black : hull.Key.AmbientLight.Multiply(hull.Key.AmbientLight.A / 255.0f);
+
+        ambientColor = Color.Lerp(Color.Black, ambientColor, settings.LightManager.hullAmbientBrightness);
 
         GUI.DrawRectangle(spriteBatch,
             new Vector2(hull.Value.X, -hull.Value.Y),
@@ -390,9 +391,11 @@ namespace RemoveAll
         {
           if (character.CurrentHull == null || !character.Enabled || !character.IsVisible || character.InvisibleTimer > 0.0f) { continue; }
           if (Character.Controlled?.FocusedCharacter == character) { continue; }
-          Color lightColor = settings.LightManager.disableHullAmbientLight || character.CurrentHull.AmbientLight == Color.TransparentBlack ?
+          Color lightColor = character.CurrentHull.AmbientLight == Color.TransparentBlack ?
               Color.Black :
               character.CurrentHull.AmbientLight.Multiply(character.CurrentHull.AmbientLight.A / 255.0f).Opaque();
+
+          lightColor = Color.Lerp(Color.Black, lightColor, settings.LightManager.hullAmbientBrightness);
           foreach (Limb limb in character.AnimController.Limbs)
           {
             if (drawDeformSprites == (limb.DeformSprite == null)) { continue; }
@@ -463,13 +466,13 @@ namespace RemoveAll
         haloDrawPos.Y = -haloDrawPos.Y;
 
         //ambient light decreases the brightness of the halo (no need for a bright halo if the ambient light is bright enough)
-        Color ambientColor = settings.LightManager.disableGlobalAmbientLight ? Color.Black : _.AmbientLight;
 
-        float ambientBrightness = (ambientColor.R + ambientColor.B + ambientColor.G) / 255.0f / 3.0f;
-        Color haloColor = Color.White.Multiply(0.3f - ambientBrightness);
+        float ambientBrightness = (_.AmbientLight.R + _.AmbientLight.B + _.AmbientLight.G) / 255.0f / 3.0f;
+        Color haloColor = Color.White.Multiply(Math.Clamp(settings.LightManager.haloBrightness - ambientBrightness, 0, 1));
         if (haloColor.A > 0)
         {
-          float scale = 512.0f / LightSource.LightTexture.Width;
+          //float scale = 512.0f / LightSource.LightTexture.Width;
+          float scale = settings.LightManager.haloScale;
           spriteBatch.Draw(
               LightSource.LightTexture, haloDrawPos, null, haloColor, 0.0f,
               new Vector2(LightSource.LightTexture.Width, LightSource.LightTexture.Height) / 2, scale, SpriteEffects.None, 0.0f);
