@@ -31,7 +31,7 @@ namespace RemoveAll
 
       loadSettings();
 
-      GameMain.GameScreen.Cam.MinZoom = 0;
+      GameMain.GameScreen.Cam.MinZoom = 0.004f;
     }
 
 

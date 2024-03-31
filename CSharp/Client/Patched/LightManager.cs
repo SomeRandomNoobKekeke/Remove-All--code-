@@ -22,15 +22,15 @@ namespace RemoveAll
   public class LightManagerSettings
   {
     public bool drawHalo { get; set; } = true;
-    public bool ghostCharacters { get; set; } = false;
+    public bool ghostCharacters { get; set; } = true;
     public bool highlightItems { get; set; } = false;
     public bool drawGapGlow { get; set; } = false;
 
     public float haloScale { get; set; } = 1.0f;
     public float haloBrightness { get; set; } = 0.25f;
-
-    public float hullAmbientBrightness { get; set; } = 0f;
-
+    public float hullAmbientBrightness { get; set; } = 1.0f;
+    public float globalLightBrightness { get; set; } = 1.0f;
+    public float levelAmbientBrightness { get; set; } = 1.0f;
   }
 
   partial class RemoveAllMod
@@ -273,7 +273,7 @@ namespace RemoveAll
       graphics.SetRenderTarget(_.LightMap);
 
 
-      graphics.Clear(_.AmbientLight);
+      graphics.Clear(_.AmbientLight.Multiply(settings.LightManager.levelAmbientBrightness));
 
 
       graphics.BlendState = BlendState.Additive;
@@ -295,9 +295,7 @@ namespace RemoveAll
       Dictionary<Hull, Rectangle> visibleHulls = _.GetVisibleHulls(cam);
       foreach (KeyValuePair<Hull, Rectangle> hull in visibleHulls)
       {
-        Color ambientColor = hull.Key.AmbientLight == Color.TransparentBlack ? Color.Black : hull.Key.AmbientLight.Multiply(hull.Key.AmbientLight.A / 255.0f);
-
-        ambientColor = Color.Lerp(Color.Black, ambientColor, settings.LightManager.hullAmbientBrightness);
+        Color ambientColor = hull.Key.AmbientLight == Color.TransparentBlack ? Color.Black : hull.Key.AmbientLight.Multiply(hull.Key.AmbientLight.A / 255.0f * settings.LightManager.levelAmbientBrightness);
 
         GUI.DrawRectangle(spriteBatch,
             new Vector2(hull.Value.X, -hull.Value.Y),
@@ -393,9 +391,8 @@ namespace RemoveAll
           if (Character.Controlled?.FocusedCharacter == character) { continue; }
           Color lightColor = character.CurrentHull.AmbientLight == Color.TransparentBlack ?
               Color.Black :
-              character.CurrentHull.AmbientLight.Multiply(character.CurrentHull.AmbientLight.A / 255.0f).Opaque();
+              character.CurrentHull.AmbientLight.Multiply(character.CurrentHull.AmbientLight.A / 255.0f * settings.LightManager.levelAmbientBrightness).Opaque();
 
-          lightColor = Color.Lerp(Color.Black, lightColor, settings.LightManager.hullAmbientBrightness);
           foreach (Limb limb in character.AnimController.Limbs)
           {
             if (drawDeformSprites == (limb.DeformSprite == null)) { continue; }
