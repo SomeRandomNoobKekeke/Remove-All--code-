@@ -14,6 +14,19 @@ namespace RemoveAll
 {
   partial class RemoveAllMod
   {
+    public class patchingSettings
+    {
+      public bool BackgroundCreatureManager { get; set; } = true;
+      public bool GameScreen { get; set; } = true;
+      public bool GUI { get; set; } = true;
+      public bool Level { get; set; } = true;
+      public bool LevelObjectManager { get; set; } = true;
+      public bool LevelRenderer { get; set; } = true;
+      public bool LightManager { get; set; } = true;
+      public bool LightSource { get; set; } = true;
+      public bool Submarine { get; set; } = true;
+      public bool WaterRenderer { get; set; } = true;
+    }
 
     public class Settings
     {
@@ -29,6 +42,8 @@ namespace RemoveAll
 
       [JsonPropertyName("Max Background Creatures Count")]
       public int maxBackgroundCreaturesCount { get; set; } = 0;
+
+      public patchingSettings patch { get; set; } = new patchingSettings();
     }
 
     public static Settings settings;

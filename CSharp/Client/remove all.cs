@@ -27,9 +27,9 @@ namespace RemoveAll
       harmony = new Harmony("remove.all");
 
       figureOutModVersionAndDirPath();
-      PatchAll();
 
       loadSettings();
+      PatchAll();
 
       GameMain.GameScreen.Cam.MinZoom = 0.004f;
     }
@@ -66,16 +66,16 @@ namespace RemoveAll
 
     public void PatchAll()
     {
-      patchGameScreen();
-      patchLevel();
-      patchLevelObjectManager();
-      patchLevelRenderer();
-      patchLightManager();
-      patchSubmarine();
-      patchWaterRenderer();
-      patchGUI();
-      patchBackgroundCreatureManager();
-      patchLightSource();
+      if (settings.patch.BackgroundCreatureManager) patchBackgroundCreatureManager();
+      if (settings.patch.GameScreen) patchGameScreen();
+      if (settings.patch.GUI) patchGUI();
+      if (settings.patch.Level) patchLevel();
+      if (settings.patch.LevelObjectManager) patchLevelObjectManager();
+      if (settings.patch.LevelRenderer) patchLevelRenderer();
+      if (settings.patch.LightManager) patchLightManager();
+      if (settings.patch.Submarine) patchSubmarine();
+      if (settings.patch.LightSource) patchLightSource();
+      if (settings.patch.WaterRenderer) patchWaterRenderer();
     }
 
     public static void log(object msg, Color? cl = null, [CallerLineNumber] int lineNumber = 0)

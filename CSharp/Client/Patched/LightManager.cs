@@ -22,15 +22,16 @@ namespace RemoveAll
   public class LightManagerSettings
   {
     public bool drawHalo { get; set; } = true;
-    public bool ghostCharacters { get; set; } = true;
+    public bool ghostCharacters { get; set; } = false;
     public bool highlightItems { get; set; } = false;
     public bool drawGapGlow { get; set; } = false;
 
     public float haloScale { get; set; } = 1.0f;
-    public float haloBrightness { get; set; } = 0.25f;
-    public float hullAmbientBrightness { get; set; } = 1.0f;
-    public float globalLightBrightness { get; set; } = 1.0f;
-    public float levelAmbientBrightness { get; set; } = 1.0f;
+    public float haloBrightness { get; set; } = 0.2f;
+    public float hullAmbientBrightness { get; set; } = 0.2f;
+    public Color hullAmbientColor { get; set; } = new Color(255, 255, 255, 16);
+    public float globalLightBrightness { get; set; } = 0.75f;
+    public float levelAmbientBrightness { get; set; } = 0.0f;
   }
 
   partial class RemoveAllMod
@@ -295,7 +296,15 @@ namespace RemoveAll
       Dictionary<Hull, Rectangle> visibleHulls = _.GetVisibleHulls(cam);
       foreach (KeyValuePair<Hull, Rectangle> hull in visibleHulls)
       {
-        Color ambientColor = hull.Key.AmbientLight == Color.TransparentBlack ? Color.Black : hull.Key.AmbientLight.Multiply(hull.Key.AmbientLight.A / 255.0f * settings.LightManager.levelAmbientBrightness);
+        Color ambientColor;
+        if (settings.LightManager.hullAmbientColor != Color.TransparentBlack)
+        {
+          ambientColor = settings.LightManager.hullAmbientColor.Multiply(settings.LightManager.hullAmbientColor.A / 255.0f * settings.LightManager.hullAmbientBrightness);
+        }
+        else
+        {
+          ambientColor = hull.Key.AmbientLight == Color.TransparentBlack ? Color.Black : hull.Key.AmbientLight.Multiply(hull.Key.AmbientLight.A / 255.0f * settings.LightManager.hullAmbientBrightness);
+        }
 
         GUI.DrawRectangle(spriteBatch,
             new Vector2(hull.Value.X, -hull.Value.Y),
@@ -389,9 +398,18 @@ namespace RemoveAll
         {
           if (character.CurrentHull == null || !character.Enabled || !character.IsVisible || character.InvisibleTimer > 0.0f) { continue; }
           if (Character.Controlled?.FocusedCharacter == character) { continue; }
-          Color lightColor = character.CurrentHull.AmbientLight == Color.TransparentBlack ?
-              Color.Black :
-              character.CurrentHull.AmbientLight.Multiply(character.CurrentHull.AmbientLight.A / 255.0f * settings.LightManager.levelAmbientBrightness).Opaque();
+
+          Color lightColor;
+          if (settings.LightManager.hullAmbientColor != Color.TransparentBlack)
+          {
+            lightColor = settings.LightManager.hullAmbientColor.Multiply(settings.LightManager.hullAmbientColor.A / 255.0f * settings.LightManager.hullAmbientBrightness);
+          }
+          else
+          {
+            lightColor = character.CurrentHull.AmbientLight == Color.TransparentBlack ? Color.Black : character.CurrentHull.AmbientLight.Multiply(character.CurrentHull.AmbientLight.A / 255.0f * settings.LightManager.hullAmbientBrightness).Opaque();
+          }
+
+
 
           foreach (Limb limb in character.AnimController.Limbs)
           {
