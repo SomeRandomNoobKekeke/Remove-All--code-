@@ -45,8 +45,5 @@ namespace RemoveAll
 
       public patchingSettings patch { get; set; } = new patchingSettings();
     }
-
-    public static Settings settings;
-
   }
 }

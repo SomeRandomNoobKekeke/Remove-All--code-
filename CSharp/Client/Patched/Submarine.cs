@@ -71,6 +71,15 @@ namespace RemoveAll
       foreach (MapEntity entity in MapEntity.MapEntityList)
       {
         if (entity == null || entity.Removed) { continue; }
+
+        string id = entity.Prefab.Identifier.Value;
+
+
+        bool value;
+        if (mapEntityBlacklist.TryGetValue(id, out value)) { if (!value) continue; }
+
+
+
         if (entity.Submarine != null)
         {
           if (!Submarine.visibleSubs.Contains(entity.Submarine)) { continue; }

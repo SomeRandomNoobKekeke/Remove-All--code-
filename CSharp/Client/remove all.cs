@@ -21,6 +21,10 @@ namespace RemoveAll
     public string ModDir = "";
     public Harmony harmony;
 
+    public static Settings settings;
+
+    public static Dictionary<string, Dictionary<string, bool>> blacklist;
+    public static Dictionary<string, bool> mapEntityBlacklist;
 
     public void Initialize()
     {
@@ -39,16 +43,20 @@ namespace RemoveAll
     {
       string s;
       //string s = File.ReadAllText(ModDir + "/befaultSettings.json");
-
       //settings = JsonSerializer.Deserialize<Settings>(s);
 
       settings = new Settings();
-
       s = JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true });
-
       log(s);
-
       File.WriteAllText(ModDir + "/befaultSettings.json", s);
+
+      s = File.ReadAllText(ModDir + "/should draw.json");
+      blacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(s);
+
+      mapEntityBlacklist = new Dictionary<string, bool>();
+      foreach (var id in blacklist["items"]) { mapEntityBlacklist.TryAdd(id.Key, id.Value); }
+      foreach (var id in blacklist["structures"]) { mapEntityBlacklist.TryAdd(id.Key, id.Value); }
+      foreach (var id in blacklist["levelObjects"]) { mapEntityBlacklist.TryAdd(id.Key, id.Value); }
     }
 
 
