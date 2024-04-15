@@ -178,7 +178,19 @@ namespace RemoveAll
       Matrix transform = cam.ShaderTransform
           * Matrix.CreateOrthographic(GameMain.GraphicsWidth, GameMain.GraphicsHeight, -1, 1) * 0.5f;
 
-      bool highlightsVisible = _.UpdateHighlights(graphics, spriteBatch, spriteBatchTransform, cam);
+
+
+      bool highlightsVisible;
+      if (settings.LightManager.highlightItems)
+      {
+        highlightsVisible = _.UpdateHighlights(graphics, spriteBatch, spriteBatchTransform, cam);
+      }
+      else
+      {
+        highlightsVisible = false;
+      }
+
+
 
       Rectangle viewRect = cam.WorldView;
       viewRect.Y -= cam.WorldView.Height;
@@ -368,7 +380,7 @@ namespace RemoveAll
       }
       spriteBatch.End();
 
-      if (settings.LightManager.highlightItems && highlightsVisible)
+      if (highlightsVisible)
       {
         spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
         spriteBatch.Draw(_.HighlightMap, Vector2.Zero, Color.White);
