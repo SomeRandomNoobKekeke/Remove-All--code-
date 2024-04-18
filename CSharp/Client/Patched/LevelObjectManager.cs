@@ -19,13 +19,13 @@ namespace RemoveAll
     {
       public int maxVisibleLevelObjects { get; set; } = 500;
       public float cutOffdepth { get; set; } = 1000;
+
+      public bool cullLevelObjects { get; set; } = true;
     }
 
     public static bool LevelObjectManager_RefreshVisibleObjects_Prefix(Rectangle currentIndices, float zoom, LevelObjectManager __instance)
     {
       LevelObjectManager _ = __instance;
-
-      int maxVisible = 100;
 
       _.visibleObjectsBack.Clear();
       _.visibleObjectsMid.Clear();
@@ -54,6 +54,16 @@ namespace RemoveAll
         {
           if (!obj.CanBeVisible) { continue; }
           if (obj.Prefab.HideWhenBroken && obj.Health <= 0.0f) { continue; }
+
+
+          if (settings.LevelObjectManager.cullLevelObjects)
+          {
+            string id = obj.Prefab.Identifier.Value;
+
+            bool value;
+            if (blacklist["levelObjects"].TryGetValue(id, out value)) { if (!value) continue; }
+          }
+
 
           if (obj.Position.Z >= settings.LevelObjectManager.cutOffdepth) continue;
 

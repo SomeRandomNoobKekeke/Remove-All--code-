@@ -172,7 +172,7 @@ namespace RemoveAll
           SamplerState.LinearWrap, DepthStencilState.DepthRead, null, null,
           cam.Transform);
 
-      //backgroundSpriteManager?.DrawObjectsBack(spriteBatch, cam);
+      backgroundSpriteManager?.DrawObjectsBack(spriteBatch, cam);
 
       if (cam.Zoom > 0.05f)
       {
@@ -244,7 +244,7 @@ namespace RemoveAll
           BlendState.NonPremultiplied,
           SamplerState.LinearClamp, DepthStencilState.DepthRead, null, null,
           cam.Transform);
-      //backgroundSpriteManager?.DrawObjectsMid(spriteBatch, cam);
+      backgroundSpriteManager?.DrawObjectsMid(spriteBatch, cam);
       spriteBatch.End();
 
 
