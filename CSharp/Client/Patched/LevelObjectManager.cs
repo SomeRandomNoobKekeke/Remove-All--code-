@@ -188,7 +188,7 @@ namespace RemoveAll
 
         if (GameMain.DebugDraw)
         {
-          GUI.DrawRectangle(spriteBatch, new Vector2(obj.Position.X, -obj.Position.Y - 100), new Vector2(10.0f, 200.0f), GUIStyle.Red, true);
+          GUI.DrawRectangle(spriteBatch, new Vector2(obj.Position.X, -obj.Position.Y), new Vector2(10.0f, 10.0f), GUIStyle.Red, true);
 
           if (obj.Triggers == null) { continue; }
           foreach (LevelTrigger trigger in obj.Triggers)

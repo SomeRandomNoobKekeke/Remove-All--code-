@@ -28,6 +28,8 @@ namespace RemoveAll
 
     public void Initialize()
     {
+      log("Compiled!");
+
       harmony = new Harmony("remove.all");
 
       figureOutModVersionAndDirPath();
@@ -36,6 +38,7 @@ namespace RemoveAll
       PatchAll();
 
       GameMain.GameScreen.Cam.MinZoom = 0.004f;
+      GameMain.PerformanceCounter.DrawTimeGraph = new Graph(1000);
     }
 
 
@@ -47,7 +50,7 @@ namespace RemoveAll
 
       settings = new Settings();
       s = JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true });
-      log(s);
+      //log(s);
       File.WriteAllText(ModDir + "/befaultSettings.json", s);
 
       s = File.ReadAllText(ModDir + "/should draw.json");

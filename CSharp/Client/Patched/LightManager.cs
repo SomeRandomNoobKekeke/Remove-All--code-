@@ -26,11 +26,11 @@ namespace RemoveAll
     public bool highlightItems { get; set; } = false;
     public bool drawGapGlow { get; set; } = false;
 
-    public float haloScale { get; set; } = 1.0f;
-    public float haloBrightness { get; set; } = 0.2f;
-    public float hullAmbientBrightness { get; set; } = 0.2f;
-    public Color hullAmbientColor { get; set; } = new Color(255, 255, 255, 16);
-    public float globalLightBrightness { get; set; } = 0.75f;
+    public float haloScale { get; set; } = 0.75f;
+    public float haloBrightness { get; set; } = 0.1f;
+    public float hullAmbientBrightness { get; set; } = 1.0f;
+    public Color hullAmbientColor { get; set; } = new Color(4, 4, 4, 255);
+    public float globalLightBrightness { get; set; } = 0.7f;
     public float levelAmbientBrightness { get; set; } = 0.0f;
   }
 
@@ -311,11 +311,11 @@ namespace RemoveAll
         Color ambientColor;
         if (settings.LightManager.hullAmbientColor != Color.TransparentBlack)
         {
-          ambientColor = settings.LightManager.hullAmbientColor.Multiply(settings.LightManager.hullAmbientColor.A / 255.0f * settings.LightManager.hullAmbientBrightness);
+          ambientColor = settings.LightManager.hullAmbientColor.Multiply(settings.LightManager.hullAmbientColor.A / 255.0f * settings.LightManager.hullAmbientBrightness).Opaque();
         }
         else
         {
-          ambientColor = hull.Key.AmbientLight == Color.TransparentBlack ? Color.Black : hull.Key.AmbientLight.Multiply(hull.Key.AmbientLight.A / 255.0f * settings.LightManager.hullAmbientBrightness);
+          ambientColor = hull.Key.AmbientLight == Color.TransparentBlack ? Color.Black : hull.Key.AmbientLight.Multiply(hull.Key.AmbientLight.A / 255.0f * settings.LightManager.hullAmbientBrightness).Opaque();
         }
 
         GUI.DrawRectangle(spriteBatch,
@@ -414,7 +414,7 @@ namespace RemoveAll
           Color lightColor;
           if (settings.LightManager.hullAmbientColor != Color.TransparentBlack)
           {
-            lightColor = settings.LightManager.hullAmbientColor.Multiply(settings.LightManager.hullAmbientColor.A / 255.0f * settings.LightManager.hullAmbientBrightness);
+            lightColor = settings.LightManager.hullAmbientColor.Multiply(settings.LightManager.hullAmbientColor.A / 255.0f * settings.LightManager.hullAmbientBrightness).Opaque();
           }
           else
           {
@@ -494,7 +494,7 @@ namespace RemoveAll
 
         //ambient light decreases the brightness of the halo (no need for a bright halo if the ambient light is bright enough)
 
-        float ambientBrightness = (_.AmbientLight.R + _.AmbientLight.B + _.AmbientLight.G) / 255.0f / 3.0f;
+        float ambientBrightness = (_.AmbientLight.R + _.AmbientLight.B + _.AmbientLight.G) / 255.0f / 3.0f * settings.LightManager.levelAmbientBrightness;
         Color haloColor = Color.White.Multiply(Math.Clamp(settings.LightManager.haloBrightness - ambientBrightness, 0, 1));
         if (haloColor.A > 0)
         {

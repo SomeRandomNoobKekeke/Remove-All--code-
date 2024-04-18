@@ -30,18 +30,15 @@ namespace RemoveAll
 
     public class Settings
     {
-      [JsonPropertyName("Level Renderer Settings")]
+      // [JsonPropertyName("Level Renderer Settings")]
       public LevelRendererSettings LevelRenderer { get; set; } = new LevelRendererSettings();
-
-      [JsonPropertyName("Level Object Manager Settings")]
       public LevelObjectManagerSettings LevelObjectManager { get; set; } = new LevelObjectManagerSettings();
-
-      [JsonPropertyName("Light Manager Settings")]
       public LightManagerSettings LightManager { get; set; } = new LightManagerSettings();
 
-
-      [JsonPropertyName("Max Background Creatures Count")]
+      public SubmarineSettings Submarine { get; set; } = new SubmarineSettings();
       public int maxBackgroundCreaturesCount { get; set; } = 0;
+
+
 
       public patchingSettings patch { get; set; } = new patchingSettings();
     }

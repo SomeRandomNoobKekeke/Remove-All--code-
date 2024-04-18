@@ -28,13 +28,24 @@ namespace RemoveAll
       public bool drawWaterParticles { get; set; } = true;
 
 
-      public int waterParticleLayers = 1;
-      [JsonPropertyName("Water particle layers count (1-4)")]
-      public int WaterParticleLayers
-      {
-        get { return waterParticleLayers; }
-        set { waterParticleLayers = Math.Clamp(value, 1, 4); }
-      }
+      // public int waterParticleLayers = 1;
+      // [JsonPropertyName("Water particle layers count (1-4)")]
+      // public int WaterParticleLayers
+      // {
+      //   get { return waterParticleLayers; }
+      //   set { waterParticleLayers = Math.Clamp(value, 1, 4); }
+      // }
+
+
+      public Dictionary<string, int> waterParticlelayers { get; set; } = new Dictionary<string, int>{
+        {"coldcaverns",2},
+        {"europanridge",1},
+        {"theaphoticplateau",1},
+        {"thegreatsea",2},
+        {"hydrothermalwastes",4},
+        {"endzone",4},
+        {"outpost",1},
+      };
     }
 
 
@@ -129,6 +140,7 @@ namespace RemoveAll
       backgroundPos.Y = -backgroundPos.Y;
       backgroundPos *= 0.05f;
 
+      // legacy code
       if (_.level.GenerationParams.BackgroundTopSprite != null)
       {
         int backgroundSize = (int)_.level.GenerationParams.BackgroundTopSprite.size.Y;
@@ -160,12 +172,12 @@ namespace RemoveAll
           SamplerState.LinearWrap, DepthStencilState.DepthRead, null, null,
           cam.Transform);
 
-      backgroundSpriteManager?.DrawObjectsBack(spriteBatch, cam);
+      //backgroundSpriteManager?.DrawObjectsBack(spriteBatch, cam);
+
       if (cam.Zoom > 0.05f)
       {
         backgroundCreatureManager?.Draw(spriteBatch, cam);
       }
-
 
       if (settings.LevelRenderer.drawWaterParticles && _.level.GenerationParams.WaterParticles != null && cam.Zoom > 0.05f)
       {
@@ -178,7 +190,28 @@ namespace RemoveAll
         while (offset.X > 0.0f) offset.X -= srcRect.Width * textureScale;
         while (offset.Y <= -srcRect.Height * textureScale) offset.Y += srcRect.Height * textureScale;
         while (offset.Y > 0.0f) offset.Y -= srcRect.Height * textureScale;
-        for (int i = 0; i < settings.LevelRenderer.WaterParticleLayers; i++)
+
+
+        // srsly, every level in the game designated to one biome
+        // biome is a string, but why store string value in string property
+        // when we can store it in ImmutableHashSet<Identifier> with one member, omg
+        string biome;
+        if (_.level.GenerationParams.AnyBiomeAllowed)
+        {
+          biome = "outpost";
+        }
+        else
+        {
+          IEnumerator<Identifier> enumerator = _.level.GenerationParams.AllowedBiomeIdentifiers.GetEnumerator();
+          enumerator.MoveNext();
+          biome = enumerator.Current.Value;
+        }
+
+        int waterParticlelayerCount = 4;
+        settings.LevelRenderer.waterParticlelayers.TryGetValue(biome, out waterParticlelayerCount);
+        waterParticlelayerCount = Math.Clamp(waterParticlelayerCount, 0, 4);
+
+        for (int i = 0; i < waterParticlelayerCount; i++)
         {
           float scale = (1.0f - i * 0.2f);
 
@@ -211,7 +244,7 @@ namespace RemoveAll
           BlendState.NonPremultiplied,
           SamplerState.LinearClamp, DepthStencilState.DepthRead, null, null,
           cam.Transform);
-      backgroundSpriteManager?.DrawObjectsMid(spriteBatch, cam);
+      //backgroundSpriteManager?.DrawObjectsMid(spriteBatch, cam);
       spriteBatch.End();
 
 

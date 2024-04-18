@@ -16,6 +16,25 @@ using System.Linq;
 
 namespace RemoveAll
 {
+  public class SubmarineSettings
+  {
+    /// <summary>
+    /// Interval at which we force culled entites to be updated, regardless if the camera has moved
+    /// </summary>
+    public float CullInterval { get; set; } = 0.25f;
+    /// <summary>
+    /// Margin applied around the view area when culling entities (i.e. entities that are this far outside the view are still considered visible)
+    /// </summary>
+    public int CullMarginX { get; set; } = 0;
+    public int CullMarginY { get; set; } = 0;
+    /// <summary>
+    /// Update entity culling when any corner of the view has moved more than this
+    /// </summary>
+    public int CullMoveThreshold { get; set; } = 50;
+
+    public bool CullEntities { get; set; } = false;
+  }
+
   partial class RemoveAllMod
   {
 
@@ -24,7 +43,13 @@ namespace RemoveAll
       Submarine _ = __instance;
 
       Rectangle camView = cam.WorldView;
-      camView = new Rectangle(camView.X - Submarine.CullMargin, camView.Y + Submarine.CullMargin, camView.Width + Submarine.CullMargin * 2, camView.Height + Submarine.CullMargin * 2);
+
+      camView = new Rectangle(
+        camView.X - settings.Submarine.CullMarginX,
+        camView.Y + settings.Submarine.CullMarginY,
+        camView.Width + settings.Submarine.CullMarginX * 2,
+        camView.Height + settings.Submarine.CullMarginY * 2
+      );
 
       if (Level.Loaded?.Renderer?.CollapseEffectStrength is > 0.0f)
       {
@@ -33,11 +58,11 @@ namespace RemoveAll
         camView.Y += camView.Height;
       }
 
-      if (Math.Abs(camView.X - Submarine.prevCullArea.X) < Submarine.CullMoveThreshold &&
-          Math.Abs(camView.Y - Submarine.prevCullArea.Y) < Submarine.CullMoveThreshold &&
-          Math.Abs(camView.Right - Submarine.prevCullArea.Right) < Submarine.CullMoveThreshold &&
-          Math.Abs(camView.Bottom - Submarine.prevCullArea.Bottom) < Submarine.CullMoveThreshold &&
-          Submarine.prevCullTime > Timing.TotalTime - Submarine.CullInterval)
+      if (Math.Abs(camView.X - Submarine.prevCullArea.X) < settings.Submarine.CullMoveThreshold &&
+          Math.Abs(camView.Y - Submarine.prevCullArea.Y) < settings.Submarine.CullMoveThreshold &&
+          Math.Abs(camView.Right - Submarine.prevCullArea.Right) < settings.Submarine.CullMoveThreshold &&
+          Math.Abs(camView.Bottom - Submarine.prevCullArea.Bottom) < settings.Submarine.CullMoveThreshold &&
+          Submarine.prevCullTime > Timing.TotalTime - settings.Submarine.CullInterval)
       {
         return false;
       }
@@ -74,16 +99,17 @@ namespace RemoveAll
 
         string id = entity.Prefab.Identifier.Value;
 
-
-        bool value;
-        if (mapEntityBlacklist.TryGetValue(id, out value)) { if (!value) continue; }
-
-
+        if (settings.Submarine.CullEntities)
+        {
+          bool value;
+          if (mapEntityBlacklist.TryGetValue(id, out value)) { if (!value) continue; }
+        }
 
         if (entity.Submarine != null)
         {
           if (!Submarine.visibleSubs.Contains(entity.Submarine)) { continue; }
         }
+
         if (entity.IsVisible(camView)) { Submarine.visibleEntities.Add(entity); }
       }
 
