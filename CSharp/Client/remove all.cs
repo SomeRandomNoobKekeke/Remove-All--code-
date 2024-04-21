@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using System.Diagnostics;
 using System.Collections.Generic;
 using Barotrauma;
 using HarmonyLib;
@@ -87,12 +88,49 @@ namespace RemoveAll
       if (settings.patch.Submarine) patchSubmarine();
       if (settings.patch.LightSource) patchLightSource();
       if (settings.patch.WaterRenderer) patchWaterRenderer();
+      patchMisc();
     }
 
-    public static void log(object msg, Color? cl = null, [CallerLineNumber] int lineNumber = 0)
+
+
+    public static string consoleDelim = new string('-', 119);
+
+    public static void log(object msg, Color? cl = null, int printStack = 0, [CallerLineNumber] int lineNumber = 0)
     {
       if (cl == null) cl = Color.Cyan;
+
       DebugConsole.NewMessage($"{lineNumber}| {msg ?? "null"}", cl);
+
+      if (printStack > 0)
+      {
+        StackTrace st = new StackTrace(true);
+
+        for (int i = 3; i < st.FrameCount && i < printStack + 3; i++)
+        {
+          StackFrame sf = st.GetFrame(i);
+          string filePath = shortFileName(sf.GetFileName());
+          DebugConsole.NewMessage($"--{filePath} {sf.GetMethod()}:{sf.GetFileLineNumber()}", cl * 0.75f);
+        }
+
+        DebugConsole.NewMessage(consoleDelim, cl);
+      }
+
+      string shortFileName(string full)
+      {
+        try
+        {
+          if (full == null) return "";
+
+          int i = full.LastIndexOf("Source") - 6;
+          if (i < 0 || i > full.Length) return full;
+          return full.Substring(i);
+        }
+        catch (Exception e)
+        {
+          log(e, Color.Green);
+        }
+        return "";
+      }
     }
 
     public void Dispose()

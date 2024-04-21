@@ -32,7 +32,7 @@ namespace RemoveAll
     /// </summary>
     public int CullMoveThreshold { get; set; } = 50;
 
-    public bool CullEntities { get; set; } = false;
+    public bool CullEntities { get; set; } = true;
   }
 
   partial class RemoveAllMod
@@ -98,13 +98,13 @@ namespace RemoveAll
         if (entity == null || entity.Removed) { continue; }
 
 
-        if (settings.Submarine.CullEntities)
-        {
-          string id = entity.Prefab.Identifier.Value;
+        // if (settings.Submarine.CullEntities)
+        // {
+        //   string id = entity.Prefab.Identifier.Value;
 
-          bool value;
-          if (mapEntityBlacklist.TryGetValue(id, out value)) { if (!value) continue; }
-        }
+        //   bool value;
+        //   if (mapEntityBlacklist.TryGetValue(id, out value)) { if (!value) continue; }
+        // }
 
         if (entity.Submarine != null)
         {
