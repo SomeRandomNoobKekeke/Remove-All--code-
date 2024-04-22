@@ -158,9 +158,6 @@ namespace RemoveAll
     }
 
 
-
-
-
     public static bool LightManager_RenderLightMap_Prefix(GraphicsDevice graphics, SpriteBatch spriteBatch, Camera cam, RenderTarget2D backgroundObstructor, LightManager __instance)
     {
       LightManager _ = __instance;
@@ -201,6 +198,22 @@ namespace RemoveAll
       {
         if (!light.Enabled) { continue; }
         if ((light.Color.A < 1 || light.Range < 1.0f) && !light.LightSourceParams.OverrideLightSpriteAlpha.HasValue) { continue; }
+
+        if (settings.Submarine.CullEntities)
+        {
+          string id = "";
+          LightComponent lc;
+          if (lightSource_lightComponent.TryGetValue(light, out lc))
+          {
+            log(lc);
+            id = lc.Item.Prefab.Identifier.Value;
+          }
+
+
+
+          bool value;
+          if (mapEntityBlacklist.TryGetValue(id, out value)) { if (!value) continue; }
+        }
 
         if (light.ParentBody != null)
         {

@@ -40,6 +40,8 @@ namespace RemoveAll
 
       GameMain.GameScreen.Cam.MinZoom = 0.004f;
       GameMain.PerformanceCounter.DrawTimeGraph = new Graph(1000);
+
+      findLightSources();
     }
 
 
@@ -139,6 +141,9 @@ namespace RemoveAll
       harmony = null;
 
       settings = null;
+
+      lightSource_lightComponent.Clear();
+      lightSource_lightComponent = null;
 
     }
 
