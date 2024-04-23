@@ -42,6 +42,13 @@ namespace RemoveAll
       GameMain.PerformanceCounter.DrawTimeGraph = new Graph(1000);
 
       findLightSources();
+      addCommands();
+
+    }
+
+    public void init()
+    {
+
     }
 
 
@@ -56,7 +63,7 @@ namespace RemoveAll
       //log(s);
       File.WriteAllText(ModDir + "/befaultSettings.json", s);
 
-      s = File.ReadAllText(ModDir + "/should draw.json");
+      s = File.ReadAllText(ModDir + "/Entity Blacklist.json");
       blacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(s);
 
       mapEntityBlacklist = new Dictionary<string, bool>();
@@ -91,6 +98,8 @@ namespace RemoveAll
       if (settings.patch.LightSource) patchLightSource();
       if (settings.patch.WaterRenderer) patchWaterRenderer();
       patchMisc();
+
+
     }
 
 
@@ -144,6 +153,8 @@ namespace RemoveAll
 
       lightSource_lightComponent.Clear();
       lightSource_lightComponent = null;
+
+      removeCommands();
 
     }
 

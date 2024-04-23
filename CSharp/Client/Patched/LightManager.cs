@@ -205,7 +205,6 @@ namespace RemoveAll
           LightComponent lc;
           if (lightSource_lightComponent.TryGetValue(light, out lc))
           {
-            log(lc);
             id = lc.Item.Prefab.Identifier.Value;
           }
 
