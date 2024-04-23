@@ -1,4 +1,5 @@
-*
+*.*
+ContentParser
 !CSharp/**/*.cs
 !.gitignore
 
