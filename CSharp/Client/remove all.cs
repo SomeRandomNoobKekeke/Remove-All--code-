@@ -16,6 +16,8 @@ namespace RemoveAll
   {
     public static string ModVersion = "1.0.0";
     public static string ModDir = "";
+
+    public static bool testing = true;
     public Harmony harmony;
 
     public static Settings settings;
@@ -78,7 +80,7 @@ namespace RemoveAll
       if (settings.patch.Submarine) patchSubmarine();
       if (settings.patch.LightSource) patchLightSource();
       if (settings.patch.WaterRenderer) patchWaterRenderer();
-      patchMisc();
+      patchLightComponent();
 
 
     }

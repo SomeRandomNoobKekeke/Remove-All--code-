@@ -94,10 +94,31 @@ namespace RemoveAll
       {
         // TODO: implement
 
+        save();
+      }
+
+      public static void save(string path = "")
+      {
+        if (path == "") path = Path.Combine(settingsFolder, settingsFileName);
+
         File.WriteAllText(
-          Path.Combine(settingsFolder, settingsFileName),
+          path,
           JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true })
         );
+      }
+
+      public static void justLoad(string filePath)
+      {
+        try
+        {
+          settings = JsonSerializer.Deserialize<Settings>(
+            File.ReadAllText(filePath)
+          );
+        }
+        catch (Exception e)
+        {
+          log(e.Message, Color.Orange);
+        }
       }
 
       public static void load()

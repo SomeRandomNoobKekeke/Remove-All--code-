@@ -22,6 +22,7 @@ namespace RemoveAll
   {
     public static Dictionary<LightSource, LightComponent> lightSource_lightComponent = new Dictionary<LightSource, LightComponent>();
 
+    // TODO: test
     public static void LightComponent_Constructor_Postfix(LightComponent __instance)
     {
       lightSource_lightComponent[__instance.Light] = __instance;
@@ -41,7 +42,7 @@ namespace RemoveAll
     }
 
 
-    public void patchMisc()
+    public void patchLightComponent()
     {
       harmony.Patch(
         original: typeof(LightComponent).GetConstructors()[0],

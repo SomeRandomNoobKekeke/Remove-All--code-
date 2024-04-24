@@ -15,13 +15,13 @@ namespace RemoveAll
   partial class RemoveAllMod : IAssemblyPlugin
   {
 
-    public static bool verbose = true;
+
     public static string consoleDelim = new string('-', 119);
     public static void log(object msg, Color? cl = null, int printStack = 0, [CallerLineNumber] int lineNumber = 0)
     {
       if (cl == null) cl = Color.Cyan;
 
-      if (verbose)
+      if (testing)
       {
         DebugConsole.NewMessage($"{lineNumber}| {msg ?? "null"}", cl);
       }
@@ -102,6 +102,7 @@ namespace RemoveAll
         return;
       }
     }
+
 
   }
 }
