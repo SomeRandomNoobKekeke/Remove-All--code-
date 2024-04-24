@@ -50,6 +50,8 @@ namespace RemoveAll
 
       public string version { get; set; }
 
+      public string customBlacklistPath { get; set; } = "C:\\Users\\user\\Desktop\\Entity Blacklist.json";
+
 
       public static void createStuffIfItDoesntExist()
       {
@@ -82,6 +84,21 @@ namespace RemoveAll
         );
 
         File.Delete(Path.Combine(settingsFolder, blacklistPath));
+        File.Copy(
+          Path.Combine(ModDir, blacklistPath),
+          Path.Combine(settingsFolder, blacklistPath)
+        );
+
+
+        string blacklistOld = Path.Combine(
+          Path.GetDirectoryName(Path.Combine(settingsFolder, blacklistPath)),
+          Path.GetFileNameWithoutExtension(Path.Combine(settingsFolder, blacklistPath)) + "-old" +
+          Path.GetExtension(Path.Combine(settingsFolder, blacklistPath))
+        );
+
+        if (File.Exists(blacklistOld)) File.Delete(blacklistOld);
+
+        File.Move(Path.Combine(settingsFolder, blacklistPath), blacklistOld);
         File.Copy(
           Path.Combine(ModDir, blacklistPath),
           Path.Combine(settingsFolder, blacklistPath)
@@ -145,10 +162,27 @@ namespace RemoveAll
           log(e.Message, Color.Orange);
         }
 
+        try
+        {
+          if (settings.customBlacklistPath == "" && File.Exists(settings.customBlacklistPath))
+          {
+            blacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(
+              File.ReadAllText(Path.Combine(settingsFolder, blacklistPath))
+            );
+          }
+          else
+          {
+            blacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(
+              File.ReadAllText(settings.customBlacklistPath)
+            );
+          }
+        }
+        catch (Exception e)
+        {
+          log(e.Message, Color.Orange);
+        }
 
-        blacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(
-          File.ReadAllText(Path.Combine(settingsFolder, blacklistPath))
-        );
+
 
         mapEntityBlacklist = new Dictionary<string, bool>();
         foreach (var id in blacklist["items"]) { mapEntityBlacklist.TryAdd(id.Key, id.Value); }

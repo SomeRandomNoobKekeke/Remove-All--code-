@@ -22,7 +22,7 @@ namespace RemoveAll
 
     public static Settings settings;
 
-    public static Dictionary<string, Dictionary<string, bool>> blacklist;
+    public static Dictionary<string, Dictionary<string, bool>> blacklist = new Dictionary<string, Dictionary<string, bool>>();
     public static Dictionary<string, bool> mapEntityBlacklist;
 
     public void Initialize()

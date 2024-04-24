@@ -38,7 +38,7 @@ namespace RemoveAll
   partial class RemoveAllMod
   {
 
-    public static bool CullEntities(Camera cam, Submarine __instance)
+    public static bool Submarine_CullEntities_Prefix(Camera cam, Submarine __instance)
     {
       Submarine _ = __instance;
 
@@ -124,7 +124,7 @@ namespace RemoveAll
     {
       harmony.Patch(
         original: typeof(Submarine).GetMethod("CullEntities"),
-        prefix: new HarmonyMethod(typeof(RemoveAllMod).GetMethod("CullEntities"))
+        prefix: new HarmonyMethod(typeof(RemoveAllMod).GetMethod("Submarine_CullEntities_Prefix"))
       );
     }
   }

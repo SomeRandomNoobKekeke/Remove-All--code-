@@ -27,16 +27,6 @@ namespace RemoveAll
       [JsonPropertyName("Draw water particles")]
       public bool drawWaterParticles { get; set; } = true;
 
-
-      // public int waterParticleLayers = 1;
-      // [JsonPropertyName("Water particle layers count (1-4)")]
-      // public int WaterParticleLayers
-      // {
-      //   get { return waterParticleLayers; }
-      //   set { waterParticleLayers = Math.Clamp(value, 1, 4); }
-      // }
-
-
       public Dictionary<string, int> waterParticlelayers { get; set; } = new Dictionary<string, int>{
         {"coldcaverns",2},
         {"europanridge",1},
