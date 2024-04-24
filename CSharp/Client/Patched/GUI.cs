@@ -426,19 +426,9 @@ namespace RemoveAll
                 sprite?.Draw(spriteBatch, PlayerInput.MousePosition, scale: Math.Min(64 / sprite.size.X, 64 / sprite.size.Y) * GUI.Scale);
                 break;
               }
-            case ItemAssemblyPrefab iPrefab:
+            case ItemAssemblyPrefab itemAssemblyPrefab:
               {
-                var (x, y) = PlayerInput.MousePosition;
-                foreach (var pair in iPrefab.DisplayEntities)
-                {
-                  Rectangle dRect = pair.Item2;
-                  dRect = new Rectangle(x: (int)(dRect.X * iPrefab.Scale + x),
-                                        y: (int)(dRect.Y * iPrefab.Scale - y),
-                                        width: (int)(dRect.Width * iPrefab.Scale),
-                                        height: (int)(dRect.Height * iPrefab.Scale));
-                  MapEntityPrefab prefab = MapEntityPrefab.Find("", pair.Item1);
-                  prefab.DrawPlacing(spriteBatch, dRect, prefab.Scale * iPrefab.Scale);
-                }
+                itemAssemblyPrefab.Draw(spriteBatch, PlayerInput.MousePosition.FlipY());
                 break;
               }
           }

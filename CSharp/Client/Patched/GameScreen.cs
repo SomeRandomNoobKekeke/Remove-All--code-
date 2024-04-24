@@ -461,6 +461,8 @@ namespace RemoveAll
       }
       GraphicsQuad.Render();
 
+      Character.DrawSpeechBubbles(spriteBatch, _.cam);
+
       if (_.fadeToBlackState > 0.0f)
       {
         spriteBatch.Begin(SpriteSortMode.Deferred);
