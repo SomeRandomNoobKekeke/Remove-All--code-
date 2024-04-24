@@ -46,6 +46,8 @@ namespace RemoveAll
       DebugConsole.Commands.Add(new DebugConsole.Command("ra_loadsettings", "", (string[] args) =>
       {
         Settings.load();
+
+        reloadBackroundCreatures();
       }));
     }
 
