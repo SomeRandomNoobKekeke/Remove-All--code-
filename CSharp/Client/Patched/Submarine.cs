@@ -98,13 +98,16 @@ namespace RemoveAll
         if (entity == null || entity.Removed) { continue; }
 
 
-        if (settings.Submarine.CullEntities)
+        // note: linked subs are entities without prefab
+        if (settings.Submarine.CullEntities && entity.Prefab != null)
         {
           string id = entity.Prefab.Identifier.Value;
 
           bool value;
           if (mapEntityBlacklist.TryGetValue(id, out value)) { if (!value) continue; }
         }
+
+
 
         if (entity.Submarine != null)
         {
