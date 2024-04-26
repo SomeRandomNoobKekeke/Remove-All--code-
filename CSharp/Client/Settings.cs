@@ -103,9 +103,18 @@ namespace RemoveAll
         // merge old blacklist into new one
         try
         {
-          blacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(
-            File.ReadAllText(Path.Combine(ModDir, stuffFolder, blacklistFileName))
-          );
+          if (settings.customBlacklistPath != "" && File.Exists(settings.customBlacklistPath))
+          {
+            blacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(
+              File.ReadAllText(settings.customBlacklistPath)
+            );
+          }
+          else
+          {
+            blacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(
+              File.ReadAllText(Path.Combine(settingsFolder, blacklistFileName))
+            );
+          }
         }
         catch (Exception e) { log(e.Message, Color.Orange); }
 

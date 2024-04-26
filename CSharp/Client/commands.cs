@@ -65,6 +65,10 @@ namespace RemoveAll
           blacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(
             File.ReadAllText(Path.Combine(ModDir, stuffFolder, blacklistFileName))
           );
+
+          mapEntityBlacklist = new Dictionary<string, bool>();
+          foreach (var id in blacklist["items"]) { mapEntityBlacklist.TryAdd(id.Key, id.Value); }
+          foreach (var id in blacklist["structures"]) { mapEntityBlacklist.TryAdd(id.Key, id.Value); }
         }
         catch (Exception e) { log(e.Message, Color.Orange); }
         Settings.saveBlacklist();
@@ -75,11 +79,16 @@ namespace RemoveAll
         settings.version = ModVersion;
         Settings.saveSettings();
 
+
         try
         {
           blacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(
             File.ReadAllText(Path.Combine(ModDir, stuffFolder, "Entity Blacklist Vanilla.json"))
           );
+
+          mapEntityBlacklist = new Dictionary<string, bool>();
+          foreach (var id in blacklist["items"]) { mapEntityBlacklist.TryAdd(id.Key, id.Value); }
+          foreach (var id in blacklist["structures"]) { mapEntityBlacklist.TryAdd(id.Key, id.Value); }
         }
         catch (Exception e) { log(e.Message, Color.Orange); }
         Settings.saveBlacklist();
