@@ -14,11 +14,6 @@ using Barotrauma.Particles;
 
 namespace RemoveAll
 {
-  public class ParticleManagerSettings
-  {
-    public bool hideParticles { get; set; } = true;
-  }
-
   partial class RemoveAllMod
   {
 

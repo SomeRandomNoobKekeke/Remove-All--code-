@@ -39,6 +39,7 @@ namespace RemoveAll
       public bool WaterRenderer { get; set; } = true;
       public bool LightComponent { get; set; } = true;
       public bool ParticleManager { get; set; } = true;
+      public bool Decal { get; set; } = true;
     }
 
     public class HidingSettings
@@ -47,6 +48,7 @@ namespace RemoveAll
       public bool itemLights { get; set; } = true;
       public bool levelObjects { get; set; } = true;
       public bool particles { get; set; } = true;
+      public bool decals { get; set; } = true;
     }
 
 

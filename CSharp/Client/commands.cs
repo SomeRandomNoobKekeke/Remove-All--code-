@@ -46,25 +46,38 @@ namespace RemoveAll
       })},
 
       {"hide_level_objects",new ToggleableAction((state)=>{
+        if(state) Settings.load();
+        else Settings.saveSettings();
+
         settings.hide.levelObjects = !settings.hide.levelObjects;
       })},
 
       {"hide_entities",new ToggleableAction((state)=>{
         if(state) Settings.load();
+        else Settings.saveSettings();
 
         settings.hide.entities = !settings.hide.entities;
       })},
 
       {"hide_particles",new ToggleableAction((state)=>{
         if(state) Settings.load();
+        else Settings.saveSettings();
 
         settings.hide.particles = !settings.hide.particles;
       })},
 
       {"hide_lights",new ToggleableAction((state)=>{
         if(state) Settings.load();
+        else Settings.saveSettings();
 
         settings.hide.itemLights = !settings.hide.itemLights;
+      })},
+
+      {"hide_decals",new ToggleableAction((state)=>{
+        if(state) Settings.load();
+        else Settings.saveSettings();
+
+        settings.hide.decals = !settings.hide.decals;
       })},
 
       {"reset",new ToggleableAction((state)=>{
@@ -96,6 +109,21 @@ namespace RemoveAll
         {
           blacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(
             File.ReadAllText(Path.Combine(ModDir, stuffFolder, "Entity Blacklist Vanilla.json"))
+          );
+
+          mapEntityBlacklist = new Dictionary<string, bool>();
+          foreach (var id in blacklist["items"]) { mapEntityBlacklist.TryAdd(id.Key, id.Value); }
+          foreach (var id in blacklist["structures"]) { mapEntityBlacklist.TryAdd(id.Key, id.Value); }
+        }
+        catch (Exception e) { log(e.Message, Color.Orange); }
+        Settings.saveBlacklist();
+      })},
+
+      {"all", new ToggleableAction((state)=>{
+        try
+        {
+          blacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(
+            File.ReadAllText(Path.Combine(ModDir, stuffFolder, "All.json"))
           );
 
           mapEntityBlacklist = new Dictionary<string, bool>();
@@ -147,6 +175,33 @@ namespace RemoveAll
 
     public static void addCommands()
     {
+      DebugConsole.Commands.Add(
+        new DebugConsole.Command("ra",
+        "Megacommand to set and toggle settings. options are:\n" +
+        "water_particles \n" +
+        "darkmode  \n" +
+        "background_fishes  \n" +
+        "ghost_characters \n\n" +
+        "reset - resets all settings to default \n" +
+        "all - hides everything \n" +
+        "vanilla - everything as in vanilla \n\n" +
+        "hide_decals \n" +
+        "hide_lights \n" +
+        "hide_particles \n" +
+        "hide_entities \n" +
+        "hide_level_objects", (string[] args) =>
+        {
+          if (args.Length > 0)
+          {
+            if (presets.TryGetValue(args[0], out ToggleableAction ta))
+            {
+              ta.act();
+            }
+          }
+        },
+        () => new string[][] { presets.Keys.ToArray() })
+      );
+
       DebugConsole.Commands.Add(new DebugConsole.Command("ra_exposure", "sets width of showperf graphs in ticks", (string[] args) =>
       {
         if (args.Length > 0 && int.TryParse(args[0], out int ticks))
@@ -203,19 +258,7 @@ namespace RemoveAll
         catch (Exception e) { log(e.Message, Color.Orange); }
       }));
 
-      DebugConsole.Commands.Add(
-        new DebugConsole.Command("ra", "toggles some cool stuff", (string[] args) =>
-        {
-          if (args.Length > 0)
-          {
-            if (presets.TryGetValue(args[0], out ToggleableAction ta))
-            {
-              ta.act();
-            }
-          }
-        },
-        () => new string[][] { presets.Keys.ToArray() })
-      );
+
     }
 
     public static void removeCommands()

@@ -79,6 +79,7 @@ namespace RemoveAll
       if (settings.patch.WaterRenderer) patchWaterRenderer();
       if (settings.patch.LightComponent) patchLightComponent();
       if (settings.patch.ParticleManager) patchParticleManager();
+      if (settings.patch.Decal) patchDecal();
     }
 
 
