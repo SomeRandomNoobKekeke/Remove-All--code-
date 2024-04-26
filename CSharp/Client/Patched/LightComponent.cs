@@ -22,7 +22,6 @@ namespace RemoveAll
   {
     public static Dictionary<LightSource, LightComponent> lightSource_lightComponent = new Dictionary<LightSource, LightComponent>();
 
-    // TODO: test
     public static void LightComponent_Constructor_Postfix(LightComponent __instance)
     {
       lightSource_lightComponent[__instance.Light] = __instance;
@@ -41,12 +40,27 @@ namespace RemoveAll
       }
     }
 
+    // i'm not sure if i need this
+    public static void GameSession_StartRound_clearLightDict(LevelData? levelData, bool mirrorLevel, SubmarineInfo? startOutpost, SubmarineInfo? endOutpost)
+    {
+      lightSource_lightComponent.Clear();
+    }
 
     public void patchLightComponent()
     {
       harmony.Patch(
         original: typeof(LightComponent).GetConstructors()[0],
         postfix: new HarmonyMethod(typeof(RemoveAllMod).GetMethod("LightComponent_Constructor_Postfix"))
+      );
+
+      harmony.Patch(
+        original: typeof(GameSession).GetMethod("StartRound", new Type[]{
+          typeof(LevelData),
+          typeof(bool),
+          typeof(SubmarineInfo),
+          typeof(SubmarineInfo)
+        }),
+        postfix: new HarmonyMethod(typeof(RemoveAllMod).GetMethod("GameSession_StartRound_clearLightDict"))
       );
     }
   }

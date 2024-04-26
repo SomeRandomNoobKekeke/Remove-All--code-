@@ -82,7 +82,6 @@ namespace RemoveAll
 
       {"reset",new ToggleableAction((state)=>{
         settings = new Settings();
-        settings.version = ModVersion;
         Settings.saveSettings();
 
         try

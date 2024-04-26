@@ -24,6 +24,8 @@ namespace RemoveAll
 
 
 
+
+
     public class patchingSettings
     {
       public bool doPatching { get; set; } = true;
@@ -76,8 +78,15 @@ namespace RemoveAll
       // could for example point to your download folder so you could update blacklist in one less step  
       public string customBlacklistPath { get; set; } = "C:\\Users\\user\\Desktop\\Entity Blacklist.json";
 
+      public string realBlacklistPath = "uhh";
 
 
+      public Settings()
+      {
+        version = ModVersion;
+        if (customBlacklistPath != "") realBlacklistPath = customBlacklistPath;
+        else realBlacklistPath = Path.Combine(settingsFolder, blacklistFileName);
+      }
 
 
       public static void createStuffIfItDoesntExist()
@@ -91,6 +100,7 @@ namespace RemoveAll
           Path.Combine(ModDir, stuffFolder, blacklistGenFileName),
           Path.Combine(settingsFolder, blacklistGenFileName)
         );
+
 
         copyIfNotExists(
           Path.Combine(ModDir, stuffFolder, blacklistFileName),
@@ -122,10 +132,10 @@ namespace RemoveAll
         // merge old blacklist into new one
         try
         {
-          if (settings.customBlacklistPath != "" && File.Exists(settings.customBlacklistPath))
+          if (File.Exists(settings.realBlacklistPath))
           {
             blacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(
-              File.ReadAllText(settings.customBlacklistPath)
+              File.ReadAllText(settings.realBlacklistPath)
             );
           }
           else
@@ -140,10 +150,10 @@ namespace RemoveAll
         Dictionary<string, Dictionary<string, bool>> oldBlacklist = new Dictionary<string, Dictionary<string, bool>>();
         try
         {
-          if (settings.customBlacklistPath != "" && File.Exists(settings.customBlacklistPath))
+          if (File.Exists(settings.realBlacklistPath))
           {
             oldBlacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(
-              File.ReadAllText(settings.customBlacklistPath)
+              File.ReadAllText(settings.realBlacklistPath)
             );
           }
           else
@@ -163,24 +173,6 @@ namespace RemoveAll
           }
         }
 
-
-
-        // string blacklistOld = Path.Combine(
-        //   Path.GetDirectoryName(Path.Combine(settingsFolder, blacklistFileName)),
-        //   Path.GetFileNameWithoutExtension(Path.Combine(settingsFolder, blacklistFileName)) + "-old" +
-        //   Path.GetExtension(Path.Combine(settingsFolder, blacklistFileName))
-        // );
-
-        // if (File.Exists(blacklistOld)) File.Delete(blacklistOld);
-
-        // File.Move(Path.Combine(settingsFolder, blacklistFileName), blacklistOld);
-        // File.Copy(
-        //   Path.Combine(ModDir, stuffFolder, blacklistFileName),
-        //   Path.Combine(settingsFolder, blacklistFileName)
-        // );
-
-
-
         saveSettings();
         saveBlacklist();
       }
@@ -189,7 +181,7 @@ namespace RemoveAll
       {
         try
         {
-          if (settings.customBlacklistPath != "" && File.Exists(settings.customBlacklistPath))
+          if (File.Exists(settings.realBlacklistPath))
           {
             blacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(
               File.ReadAllText(settings.customBlacklistPath)
@@ -213,7 +205,6 @@ namespace RemoveAll
       public static void load()
       {
         settings = new Settings();
-        settings.version = ModVersion;
 
         createStuffIfItDoesntExist();
 
@@ -255,22 +246,10 @@ namespace RemoveAll
 
       public static void saveBlacklist()
       {
-
-
-        if (settings.customBlacklistPath != "")
-        {
-          File.WriteAllText(
-            settings.customBlacklistPath,
-            JsonSerializer.Serialize(blacklist, new JsonSerializerOptions { WriteIndented = true })
-          );
-        }
-        else
-        {
-          File.WriteAllText(
-            Path.Combine(settingsFolder, blacklistFileName),
-            JsonSerializer.Serialize(blacklist, new JsonSerializerOptions { WriteIndented = true })
-          );
-        }
+        File.WriteAllText(
+          settings.realBlacklistPath,
+          JsonSerializer.Serialize(blacklist, new JsonSerializerOptions { WriteIndented = true })
+        );
       }
 
       public static void justLoad(string filePath)
