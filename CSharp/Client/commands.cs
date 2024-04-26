@@ -101,6 +101,19 @@ namespace RemoveAll
       {"vanilla",new ToggleableAction((state)=>{
         Settings.justLoad(Path.Combine(ModDir, stuffFolder,"Vanilla.json"));
         settings.version = ModVersion;
+
+        // hacky workaround 
+        settings.LevelRenderer.waterParticleLayers = new Dictionary<string, int>{
+          {"coldcaverns", 4},
+          {"europanridge", 4},
+          {"theaphoticplateau", 4},
+          {"thegreatsea", 4},
+          {"hydrothermalwastes", 4},
+          {"endzone", 4},
+          {"outpost", 4},
+        };
+
+
         Settings.saveSettings();
 
         Settings.justLoadBlacklist(Path.Combine(ModDir, stuffFolder, "Entity Blacklist Vanilla.json"));
