@@ -14,7 +14,7 @@ using Barotrauma.Extensions;
 using Barotrauma.Lights;
 using Barotrauma.Items.Components;
 
-// useless here, but required for dll version
+// useless in source code version, but required for dll version
 using System.Runtime.CompilerServices;
 [assembly: IgnoresAccessChecksTo("Barotrauma")]
 [assembly: IgnoresAccessChecksTo("DedicatedServer")]

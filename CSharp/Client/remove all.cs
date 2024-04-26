@@ -10,7 +10,7 @@ using System.Text.Json;
 using System.IO;
 using System.Runtime.CompilerServices;
 
-// useless here, but required for dll version
+// useless in source code version, but required for dll version
 [assembly: IgnoresAccessChecksTo("Barotrauma")]
 [assembly: IgnoresAccessChecksTo("DedicatedServer")]
 [assembly: IgnoresAccessChecksTo("BarotraumaCore")]
