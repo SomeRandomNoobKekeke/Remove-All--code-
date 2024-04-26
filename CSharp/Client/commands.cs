@@ -51,30 +51,41 @@ namespace RemoveAll
 
         Settings.saveSettings();
         Settings.justLoadBlacklist(settings.realBlacklistPath);
+
+        log($"hide.levelObjects = {settings.hide.levelObjects}");
+        log($"LevelObjectManager.cutOffdepth = {settings.LevelObjectManager.cutOffdepth}");
       })},
 
       {"hide_entities",new ToggleableAction((state)=>{
         settings.hide.entities = !settings.hide.entities;
         Settings.saveSettings();
         Settings.justLoadBlacklist(settings.realBlacklistPath);
+
+        log($"hide.entities = {settings.hide.entities}");
       })},
 
       {"hide_particles",new ToggleableAction((state)=>{
         settings.hide.particles = !settings.hide.particles;
         Settings.saveSettings();
         Settings.justLoadBlacklist(settings.realBlacklistPath);
+
+        log($"hide.particles = {settings.hide.particles}");
       })},
 
       {"hide_lights",new ToggleableAction((state)=>{
         settings.hide.itemLights = !settings.hide.itemLights;
         Settings.saveSettings();
         Settings.justLoadBlacklist(settings.realBlacklistPath);
+
+        log($"hide.itemLights = {settings.hide.itemLights}");
       })},
 
       {"hide_decals",new ToggleableAction((state)=>{
         settings.hide.decals = !settings.hide.decals;
         Settings.saveSettings();
         Settings.justLoadBlacklist(settings.realBlacklistPath);
+
+        log($"hide.decals = {settings.hide.decals}");
       })},
 
       {"reset",new ToggleableAction((state)=>{
@@ -83,6 +94,8 @@ namespace RemoveAll
 
         Settings.justLoadBlacklist(Path.Combine(ModDir, stuffFolder, blacklistFileName));
         Settings.saveBlacklist();
+
+        log($"everything is reset to default");
       })},
 
       {"vanilla",new ToggleableAction((state)=>{
@@ -92,6 +105,8 @@ namespace RemoveAll
 
         Settings.justLoadBlacklist(Path.Combine(ModDir, stuffFolder, "Entity Blacklist Vanilla.json"));
         Settings.saveBlacklist();
+
+        log($"everything is vanilla");
       })},
 
       {"all", new ToggleableAction((state)=>{
@@ -109,16 +124,22 @@ namespace RemoveAll
 
         Settings.justLoadBlacklist(Path.Combine(ModDir, stuffFolder, "All.json"));
         Settings.saveBlacklist();
+
+        log($"everything is hidden");
       })},
 
       {"water_particles",new ToggleableAction((state)=>{
         settings.LevelRenderer.drawWaterParticles = !settings.LevelRenderer.drawWaterParticles;
         Settings.saveSettings();
+
+        log($"LevelRenderer.drawWaterParticles = {settings.LevelRenderer.drawWaterParticles}");
       })},
 
       {"ghost_characters",new ToggleableAction((state)=>{
         settings.LightManager.ghostCharacters = !settings.LightManager.ghostCharacters;
         Settings.saveSettings();
+
+        log($"LightManager.ghostCharacters = {settings.LightManager.ghostCharacters}");
       })},
 
       {"background_fishes",new ToggleableAction((state)=>{
@@ -130,6 +151,8 @@ namespace RemoveAll
         Settings.saveSettings();
 
         reloadBackroundCreatures();
+
+        log($"maxBackgroundCreaturesCount = {settings.maxBackgroundCreaturesCount}");
       }, true)},
 
       {"darkmode",new ToggleableAction((state)=>{
@@ -156,6 +179,8 @@ namespace RemoveAll
         }
 
         Settings.saveSettings();
+
+        log($"darkmode {(state ? "On":"Off")}");
       })}
     };
 
@@ -228,6 +253,16 @@ namespace RemoveAll
 
       DebugConsole.Commands.Add(new DebugConsole.Command("ra_printblacklist", "for debugging | ra_printblacklist category id1 id2 id3...", (string[] args) =>
       {
+        if (args.Length > 1 && !blacklist.ContainsKey(args[0]))
+        {
+          log("no such category, try one of these:");
+          string cats = "";
+
+          foreach (var cat in blacklist.Keys) cats += cat + " ";
+          log(cats);
+          return;
+        }
+
         if (args.Length < 2)
         {
           log("ra_printblacklist category id1 id2 id3...");

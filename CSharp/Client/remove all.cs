@@ -17,7 +17,7 @@ namespace RemoveAll
     public static string ModVersion = "1.0.0";
     public static string ModDir = "";
 
-    public static bool testing = true;
+    public static bool testing = false;
     public Harmony harmony;
 
     public static Settings settings;
@@ -27,7 +27,7 @@ namespace RemoveAll
 
     public void Initialize()
     {
-      log("Compiled!");
+      if (testing) log("Compiled!");
 
       harmony = new Harmony("remove.all");
 
@@ -95,18 +95,13 @@ namespace RemoveAll
 
       settings = null;
 
-      lightSource_lightComponent.Clear();
-      lightSource_lightComponent = null;
-
-      blacklist.Clear();
-      blacklist = null;
-
-      mapEntityBlacklist.Clear();
-      mapEntityBlacklist = null;
+      lightSource_lightComponent.Clear(); lightSource_lightComponent = null;
+      blacklist.Clear(); blacklist = null;
+      mapEntityBlacklist.Clear(); mapEntityBlacklist = null;
+      presets.Clear(); presets = null;
 
 
       removeCommands();
-
     }
 
     public void OnLoadCompleted() { }
