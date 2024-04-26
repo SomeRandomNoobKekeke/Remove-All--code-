@@ -162,7 +162,6 @@ namespace RemoveAll
         {
           foreach (var rule in category.Value)
           {
-            log($"{category.Key}:{rule.Key}:{rule.Value}");
             blacklist[category.Key][rule.Key] = rule.Value;
           }
         }

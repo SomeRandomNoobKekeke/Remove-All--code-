@@ -10,11 +10,18 @@ using System.Text.Json;
 using System.IO;
 using System.Runtime.CompilerServices;
 
+// useless here, but required for dll version
+[assembly: IgnoresAccessChecksTo("Barotrauma")]
+[assembly: IgnoresAccessChecksTo("DedicatedServer")]
+[assembly: IgnoresAccessChecksTo("BarotraumaCore")]
+
 namespace RemoveAll
 {
   partial class RemoveAllMod : IAssemblyPlugin
   {
     public static string ModVersion = "1.0.0";
+    // must match name in filelist or we won't find mod folder
+    public static string modName = "Remove all (source code)";
     public static string ModDir = "";
 
     public static bool testing = false;
@@ -45,17 +52,11 @@ namespace RemoveAll
 
     }
 
-    public void loadSettings()
-    {
-
-    }
-
-
     public void figureOutModVersionAndDirPath()
     {
       foreach (ContentPackage p in ContentPackageManager.EnabledPackages.All)
       {
-        if (p.Name == "Remove all")
+        if (p.Name == modName)
         {
           ModVersion = p.ModVersion;
           ModDir = Path.GetFullPath(p.Dir);

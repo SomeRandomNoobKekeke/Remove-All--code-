@@ -266,7 +266,7 @@ namespace RemoveAll
               }
               else
               {
-                soundStr += Path.GetFileNameWithoutExtension(playingSoundChannel.Sound.Filename);
+                soundStr += System.IO.Path.GetFileNameWithoutExtension(playingSoundChannel.Sound.Filename);
 
 #if DEBUG
                                 if (PlayerInput.GetKeyboardState.IsKeyDown(Keys.G))
