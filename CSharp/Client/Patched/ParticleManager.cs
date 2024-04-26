@@ -12,6 +12,12 @@ using Microsoft.Xna.Framework.Graphics;
 
 using Barotrauma.Particles;
 
+// arghhhh
+using System.Runtime.CompilerServices;
+[assembly: IgnoresAccessChecksTo("Barotrauma")]
+[assembly: IgnoresAccessChecksTo("DedicatedServer")]
+[assembly: IgnoresAccessChecksTo("BarotraumaCore")]
+
 namespace RemoveAll
 {
   partial class RemoveAllMod

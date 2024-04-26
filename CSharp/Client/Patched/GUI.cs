@@ -24,6 +24,11 @@ using FarseerPhysics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Immutable;
 
+// arghhhh
+using System.Runtime.CompilerServices;
+[assembly: IgnoresAccessChecksTo("Barotrauma")]
+[assembly: IgnoresAccessChecksTo("DedicatedServer")]
+[assembly: IgnoresAccessChecksTo("BarotraumaCore")]
 
 namespace RemoveAll
 {

@@ -15,6 +15,11 @@ using System.Xml.Linq;
 
 using System.IO;
 
+// arghhhh
+using System.Runtime.CompilerServices;
+[assembly: IgnoresAccessChecksTo("Barotrauma")]
+[assembly: IgnoresAccessChecksTo("DedicatedServer")]
+[assembly: IgnoresAccessChecksTo("BarotraumaCore")]
 
 namespace RemoveAll
 {
@@ -166,7 +171,7 @@ namespace RemoveAll
         reloadBackroundCreatures();
 
         log($"maxBackgroundCreaturesCount = {settings.maxBackgroundCreaturesCount}");
-      }, true)},
+      }, false)},
 
       {"darkmode",new ToggleableAction((state)=>{
         if(state){

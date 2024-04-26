@@ -8,9 +8,9 @@ using Microsoft.Xna.Framework;
 
 using System.Text.Json;
 using System.IO;
-using System.Runtime.CompilerServices;
 
-// useless in source code version, but required for dll version
+// arghhhh
+using System.Runtime.CompilerServices;
 [assembly: IgnoresAccessChecksTo("Barotrauma")]
 [assembly: IgnoresAccessChecksTo("DedicatedServer")]
 [assembly: IgnoresAccessChecksTo("BarotraumaCore")]
