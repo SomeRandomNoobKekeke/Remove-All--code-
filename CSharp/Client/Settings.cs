@@ -30,15 +30,15 @@ namespace RemoveAll
     {
       public bool doPatching { get; set; } = true;
       public bool BackgroundCreatureManager { get; set; } = true;
-      public bool GameScreen { get; set; } = true;
-      public bool GUI { get; set; } = true;
+      public bool GameScreen { get; set; } = false;
+      public bool GUI { get; set; } = false;
       public bool Level { get; set; } = true;
       public bool LevelObjectManager { get; set; } = true;
       public bool LevelRenderer { get; set; } = true;
       public bool LightManager { get; set; } = true;
       public bool LightSource { get; set; } = true;
       public bool Submarine { get; set; } = true;
-      public bool WaterRenderer { get; set; } = true;
+      public bool WaterRenderer { get; set; } = false;
       public bool LightComponent { get; set; } = true;
       public bool ParticleManager { get; set; } = true;
       public bool Decal { get; set; } = true;
@@ -46,11 +46,11 @@ namespace RemoveAll
 
     public class HidingSettings
     {
-      public bool entities { get; set; } = true;
-      public bool itemLights { get; set; } = true;
+      public bool entities { get; set; } = false;
+      public bool itemLights { get; set; } = false;
       public bool levelObjects { get; set; } = true;
-      public bool particles { get; set; } = true;
-      public bool decals { get; set; } = true;
+      public bool particles { get; set; } = false;
+      public bool decals { get; set; } = false;
     }
 
 
@@ -63,20 +63,22 @@ namespace RemoveAll
       public LightManagerSettings LightManager { get; set; } = new LightManagerSettings();
 
       public SubmarineSettings Submarine { get; set; } = new SubmarineSettings();
-      public int maxBackgroundCreaturesCount { get; set; } = 0;
+
 
       [JsonIgnore]
       public patchingSettings patch { get; set; } = new patchingSettings();
 
       public HidingSettings hide { get; set; } = new HidingSettings();
 
-
+      public int maxBackgroundCreaturesCount { get; set; } = 0;
+      public int maxParticles { get; set; } = 100000;
 
       public string version { get; set; } = "undefined";
 
       // used instead of default path if != ""
       // could for example point to your download folder so you could update blacklist in one less step  
-      public string customBlacklistPath { get; set; } = "C:\\Users\\user\\Desktop\\Entity Blacklist.json";
+      [JsonIgnore]
+      public string customBlacklistPath { get; set; } = "";
 
       public string realBlacklistPath = "uhh";
 
@@ -132,18 +134,9 @@ namespace RemoveAll
         // merge old blacklist into new one
         try
         {
-          if (File.Exists(settings.realBlacklistPath))
-          {
-            blacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(
-              File.ReadAllText(settings.realBlacklistPath)
-            );
-          }
-          else
-          {
-            blacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(
-              File.ReadAllText(Path.Combine(settingsFolder, blacklistFileName))
-            );
-          }
+          blacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(
+            File.ReadAllText(Path.Combine(ModDir, stuffFolder, blacklistFileName))
+          );
         }
         catch (Exception e) { log(e.Message, Color.Orange); }
 
@@ -169,6 +162,7 @@ namespace RemoveAll
         {
           foreach (var rule in category.Value)
           {
+            log($"{category.Key}:{rule.Key}:{rule.Value}");
             blacklist[category.Key][rule.Key] = rule.Value;
           }
         }
@@ -184,7 +178,7 @@ namespace RemoveAll
           if (File.Exists(settings.realBlacklistPath))
           {
             blacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(
-              File.ReadAllText(settings.customBlacklistPath)
+              File.ReadAllText(settings.realBlacklistPath)
             );
           }
           else
@@ -264,6 +258,21 @@ namespace RemoveAll
         {
           log(e.Message, Color.Orange);
         }
+      }
+
+      public static void justLoadBlacklist(string filePath)
+      {
+        try
+        {
+          blacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(
+            File.ReadAllText(filePath)
+          );
+
+          mapEntityBlacklist = new Dictionary<string, bool>();
+          foreach (var id in blacklist["items"]) { mapEntityBlacklist.TryAdd(id.Key, id.Value); }
+          foreach (var id in blacklist["structures"]) { mapEntityBlacklist.TryAdd(id.Key, id.Value); }
+        }
+        catch (Exception e) { log(e.Message, Color.Orange); }
       }
     }
   }

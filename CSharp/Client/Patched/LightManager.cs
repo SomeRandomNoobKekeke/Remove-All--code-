@@ -23,15 +23,15 @@ namespace RemoveAll
   {
     public bool drawHalo { get; set; } = true;
     public bool ghostCharacters { get; set; } = false;
-    public bool highlightItems { get; set; } = false;
-    public bool drawGapGlow { get; set; } = false;
+    public bool highlightItems { get; set; } = true;
+    public bool drawGapGlow { get; set; } = true;
 
-    public float haloScale { get; set; } = 0.75f;
-    public float haloBrightness { get; set; } = 0.1f;
+    public float haloScale { get; set; } = 0.5f;
+    public float haloBrightness { get; set; } = 0.3f;
     public float hullAmbientBrightness { get; set; } = 1.0f;
-    public Color hullAmbientColor { get; set; } = new Color(4, 4, 4, 255);
-    public float globalLightBrightness { get; set; } = 0.7f;
-    public float levelAmbientBrightness { get; set; } = 0.0f;
+    public Color hullAmbientColor { get; set; } = new Color(0, 0, 0, 0);
+    public float globalLightBrightness { get; set; } = 1f;
+    public float levelAmbientBrightness { get; set; } = 1f;
   }
 
   partial class RemoveAllMod

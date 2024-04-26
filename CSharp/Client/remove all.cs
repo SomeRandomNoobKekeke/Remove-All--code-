@@ -80,6 +80,11 @@ namespace RemoveAll
       if (settings.patch.LightComponent) patchLightComponent();
       if (settings.patch.ParticleManager) patchParticleManager();
       if (settings.patch.Decal) patchDecal();
+
+      harmony.Patch(
+        original: typeof(LuaGame).GetMethod("IsCustomCommandPermitted"),
+        postfix: new HarmonyMethod(typeof(RemoveAllMod).GetMethod("permitCommands"))
+      );
     }
 
 

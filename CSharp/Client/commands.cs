@@ -41,60 +41,47 @@ namespace RemoveAll
 
 
     public static Dictionary<string, ToggleableAction> presets = new Dictionary<string, ToggleableAction>(){
-      {"water_particles",new ToggleableAction((state)=>{
-        settings.LevelRenderer.drawWaterParticles = !settings.LevelRenderer.drawWaterParticles;
-      })},
-
       {"hide_level_objects",new ToggleableAction((state)=>{
-        if(state) Settings.load();
-        else Settings.saveSettings();
-
         settings.hide.levelObjects = !settings.hide.levelObjects;
+        if(state ){
+          settings.LevelObjectManager.cutOffdepth = 0;
+        } else {
+          settings.LevelObjectManager.cutOffdepth = 10000;
+        }
+
+        Settings.saveSettings();
+        Settings.justLoadBlacklist(settings.realBlacklistPath);
       })},
 
       {"hide_entities",new ToggleableAction((state)=>{
-        if(state) Settings.load();
-        else Settings.saveSettings();
-
         settings.hide.entities = !settings.hide.entities;
+        Settings.saveSettings();
+        Settings.justLoadBlacklist(settings.realBlacklistPath);
       })},
 
       {"hide_particles",new ToggleableAction((state)=>{
-        if(state) Settings.load();
-        else Settings.saveSettings();
-
         settings.hide.particles = !settings.hide.particles;
+        Settings.saveSettings();
+        Settings.justLoadBlacklist(settings.realBlacklistPath);
       })},
 
       {"hide_lights",new ToggleableAction((state)=>{
-        if(state) Settings.load();
-        else Settings.saveSettings();
-
         settings.hide.itemLights = !settings.hide.itemLights;
+        Settings.saveSettings();
+        Settings.justLoadBlacklist(settings.realBlacklistPath);
       })},
 
       {"hide_decals",new ToggleableAction((state)=>{
-        if(state) Settings.load();
-        else Settings.saveSettings();
-
         settings.hide.decals = !settings.hide.decals;
+        Settings.saveSettings();
+        Settings.justLoadBlacklist(settings.realBlacklistPath);
       })},
 
       {"reset",new ToggleableAction((state)=>{
         settings = new Settings();
         Settings.saveSettings();
 
-        try
-        {
-          blacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(
-            File.ReadAllText(Path.Combine(ModDir, stuffFolder, blacklistFileName))
-          );
-
-          mapEntityBlacklist = new Dictionary<string, bool>();
-          foreach (var id in blacklist["items"]) { mapEntityBlacklist.TryAdd(id.Key, id.Value); }
-          foreach (var id in blacklist["structures"]) { mapEntityBlacklist.TryAdd(id.Key, id.Value); }
-        }
-        catch (Exception e) { log(e.Message, Color.Orange); }
+        Settings.justLoadBlacklist(Path.Combine(ModDir, stuffFolder, blacklistFileName));
         Settings.saveBlacklist();
       })},
 
@@ -103,38 +90,35 @@ namespace RemoveAll
         settings.version = ModVersion;
         Settings.saveSettings();
 
-
-        try
-        {
-          blacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(
-            File.ReadAllText(Path.Combine(ModDir, stuffFolder, "Entity Blacklist Vanilla.json"))
-          );
-
-          mapEntityBlacklist = new Dictionary<string, bool>();
-          foreach (var id in blacklist["items"]) { mapEntityBlacklist.TryAdd(id.Key, id.Value); }
-          foreach (var id in blacklist["structures"]) { mapEntityBlacklist.TryAdd(id.Key, id.Value); }
-        }
-        catch (Exception e) { log(e.Message, Color.Orange); }
+        Settings.justLoadBlacklist(Path.Combine(ModDir, stuffFolder, "Entity Blacklist Vanilla.json"));
         Settings.saveBlacklist();
       })},
 
       {"all", new ToggleableAction((state)=>{
-        try
-        {
-          blacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(
-            File.ReadAllText(Path.Combine(ModDir, stuffFolder, "All.json"))
-          );
+        settings.hide.decals = true;
+        settings.hide.entities = true;
+        settings.hide.itemLights = true;
+        settings.hide.levelObjects = true;
+        settings.hide.particles = true;
 
-          mapEntityBlacklist = new Dictionary<string, bool>();
-          foreach (var id in blacklist["items"]) { mapEntityBlacklist.TryAdd(id.Key, id.Value); }
-          foreach (var id in blacklist["structures"]) { mapEntityBlacklist.TryAdd(id.Key, id.Value); }
-        }
-        catch (Exception e) { log(e.Message, Color.Orange); }
+        settings.LevelRenderer.drawWaterParticles = false;
+        settings.maxBackgroundCreaturesCount = 0;
+        reloadBackroundCreatures();
+
+        Settings.saveSettings();
+
+        Settings.justLoadBlacklist(Path.Combine(ModDir, stuffFolder, "All.json"));
         Settings.saveBlacklist();
+      })},
+
+      {"water_particles",new ToggleableAction((state)=>{
+        settings.LevelRenderer.drawWaterParticles = !settings.LevelRenderer.drawWaterParticles;
+        Settings.saveSettings();
       })},
 
       {"ghost_characters",new ToggleableAction((state)=>{
         settings.LightManager.ghostCharacters = !settings.LightManager.ghostCharacters;
+        Settings.saveSettings();
       })},
 
       {"background_fishes",new ToggleableAction((state)=>{
@@ -143,6 +127,7 @@ namespace RemoveAll
         } else {
           settings.maxBackgroundCreaturesCount = 0;
         }
+        Settings.saveSettings();
 
         reloadBackroundCreatures();
       }, true)},
@@ -169,6 +154,8 @@ namespace RemoveAll
           settings.LightManager.globalLightBrightness = 1.0f;
           settings.LightManager.levelAmbientBrightness = 1.0f;
         }
+
+        Settings.saveSettings();
       })}
     };
 
@@ -269,6 +256,17 @@ namespace RemoveAll
       DebugConsole.Commands.RemoveAll(c => c.Names.Contains("ra_printsettings"));
       DebugConsole.Commands.RemoveAll(c => c.Names.Contains("ra_printblacklist"));
       DebugConsole.Commands.RemoveAll(c => c.Names.Contains("ra"));
+    }
+
+    public static void permitCommands(Identifier command, ref bool __result)
+    {
+      if (command.Value == "light") __result = true;
+      if (command.Value == "ra_exposure") __result = true;
+      if (command.Value == "ra_loadsettings") __result = true;
+      if (command.Value == "ra_savesettings") __result = true;
+      if (command.Value == "ra_printsettings") __result = true;
+      if (command.Value == "ra_printblacklist") __result = true;
+      if (command.Value == "ra") __result = true;
     }
   }
 }

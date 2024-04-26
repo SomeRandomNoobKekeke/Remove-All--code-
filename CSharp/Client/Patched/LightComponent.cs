@@ -43,7 +43,7 @@ namespace RemoveAll
     // i'm not sure if i need this
     public static void GameSession_StartRound_clearLightDict(LevelData? levelData, bool mirrorLevel, SubmarineInfo? startOutpost, SubmarineInfo? endOutpost)
     {
-      lightSource_lightComponent.Clear();
+      findLightSources();
     }
 
     public void patchLightComponent()

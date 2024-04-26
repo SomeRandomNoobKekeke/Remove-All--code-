@@ -27,14 +27,14 @@ namespace RemoveAll
       [JsonPropertyName("Draw water particles")]
       public bool drawWaterParticles { get; set; } = true;
 
-      public Dictionary<string, int> waterParticlelayers { get; set; } = new Dictionary<string, int>{
-        {"coldcaverns",2},
-        {"europanridge",1},
-        {"theaphoticplateau",1},
-        {"thegreatsea",2},
-        {"hydrothermalwastes",4},
+      public Dictionary<string, int> waterParticleLayers { get; set; } = new Dictionary<string, int>{
+        {"coldcaverns",1},
+        {"europanridge",0},
+        {"theaphoticplateau",0},
+        {"thegreatsea",0},
+        {"hydrothermalwastes",0},
         {"endzone",4},
-        {"outpost",1},
+        {"outpost",0},
       };
     }
 
@@ -198,7 +198,7 @@ namespace RemoveAll
         }
 
         int waterParticlelayerCount = 4;
-        settings.LevelRenderer.waterParticlelayers.TryGetValue(biome, out waterParticlelayerCount);
+        settings.LevelRenderer.waterParticleLayers.TryGetValue(biome, out waterParticlelayerCount);
         waterParticlelayerCount = Math.Clamp(waterParticlelayerCount, 0, 4);
 
         for (int i = 0; i < waterParticlelayerCount; i++)

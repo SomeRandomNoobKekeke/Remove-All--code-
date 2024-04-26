@@ -17,8 +17,9 @@ namespace RemoveAll
   {
     public class LevelObjectManagerSettings
     {
-      public int maxVisibleLevelObjects { get; set; } = 600;
-      public float cutOffdepth { get; set; } = 1000;
+      public int maxVisibleLevelObjects { get; set; } = 500;
+      public float cutOffdepth { get; set; } = 0;
+      public bool removeDepth { get; set; } = false;
     }
 
     public static bool LevelObjectManager_RefreshVisibleObjects_Prefix(Rectangle currentIndices, float zoom, LevelObjectManager __instance)
@@ -58,8 +59,7 @@ namespace RemoveAll
           {
             string id = obj.Prefab.Identifier.Value;
 
-            bool value;
-            if (blacklist["levelObjects"].TryGetValue(id, out value)) { if (!value) continue; }
+            if (blacklist["levelObjects"].TryGetValue(id, out bool value)) { if (!value) continue; }
           }
 
 
@@ -131,6 +131,8 @@ namespace RemoveAll
     {
       LevelObjectManager _ = __instance;
 
+      float objPositionZ;
+
       Rectangle indices = Rectangle.Empty;
       indices.X = (int)Math.Floor(cam.WorldView.X / (float)LevelObjectManager.GridSize);
       if (indices.X >= _.objectGrid.GetLength(0)) { return false; }
@@ -161,13 +163,16 @@ namespace RemoveAll
 
       foreach (LevelObject obj in objectList)
       {
+        objPositionZ = settings.LevelObjectManager.removeDepth ? 0 : obj.Position.Z;
+
+
         Vector2 camDiff = new Vector2(obj.Position.X, obj.Position.Y) - cam.WorldViewCenter;
         camDiff.Y = -camDiff.Y;
 
         Sprite activeSprite = obj.Sprite;
         activeSprite?.Draw(
             spriteBatch,
-            new Vector2(obj.Position.X, -obj.Position.Y) - camDiff * obj.Position.Z * LevelObjectManager.ParallaxStrength,
+            new Vector2(obj.Position.X, -obj.Position.Y) - camDiff * objPositionZ * LevelObjectManager.ParallaxStrength,
             Color.Lerp(obj.Prefab.SpriteColor, obj.Prefab.SpriteColor.Multiply(Level.Loaded.BackgroundTextureColor), obj.Position.Z / 3000.0f),
             activeSprite.Origin,
             obj.CurrentRotation,
@@ -186,7 +191,7 @@ namespace RemoveAll
             obj.ActivePrefab.DeformableSprite.Reset();
           }
           obj.ActivePrefab.DeformableSprite?.Draw(cam,
-              new Vector3(new Vector2(obj.Position.X, obj.Position.Y) - camDiff * obj.Position.Z * LevelObjectManager.ParallaxStrength, z * 10.0f),
+              new Vector3(new Vector2(obj.Position.X, obj.Position.Y) - camDiff * objPositionZ * LevelObjectManager.ParallaxStrength, z * 10.0f),
               obj.ActivePrefab.DeformableSprite.Origin,
               obj.CurrentRotation,
               obj.CurrentScale,
