@@ -56,13 +56,33 @@ namespace RemoveAll
       })},
 
       {"reset",new ToggleableAction((state)=>{
-        Settings.justLoad(Path.Combine(ModDir,"Settings.json"));
-        Settings.save();
+        settings = new Settings();
+        settings.version = ModVersion;
+        Settings.saveSettings();
+
+        try
+        {
+          blacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(
+            File.ReadAllText(Path.Combine(ModDir, stuffFolder, blacklistFileName))
+          );
+        }
+        catch (Exception e) { log(e.Message, Color.Orange); }
+        Settings.saveBlacklist();
       })},
 
       {"vanilla",new ToggleableAction((state)=>{
-        Settings.justLoad(Path.Combine(ModDir,"Settings presets/Vanilla.json"));
-        Settings.save();
+        Settings.justLoad(Path.Combine(ModDir, stuffFolder,"Vanilla.json"));
+        settings.version = ModVersion;
+        Settings.saveSettings();
+
+        try
+        {
+          blacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(
+            File.ReadAllText(Path.Combine(ModDir, stuffFolder, "Entity Blacklist Vanilla.json"))
+          );
+        }
+        catch (Exception e) { log(e.Message, Color.Orange); }
+        Settings.saveBlacklist();
       })},
 
       {"ghost_characters",new ToggleableAction((state)=>{
@@ -136,7 +156,30 @@ namespace RemoveAll
 
       DebugConsole.Commands.Add(new DebugConsole.Command("ra_savesettings", "save settings, settings are saved automatically, so, you don't need it", (string[] args) =>
       {
-        Settings.save();
+        Settings.saveSettings();
+      }));
+
+      DebugConsole.Commands.Add(new DebugConsole.Command("ra_printsettings", "for debugging", (string[] args) =>
+      {
+        log(JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true }));
+      }));
+
+      DebugConsole.Commands.Add(new DebugConsole.Command("ra_printblacklist", "for debugging | ra_printblacklist category id1 id2 id3...", (string[] args) =>
+      {
+        if (args.Length < 2)
+        {
+          log("ra_printblacklist category id1 id2 id3...");
+          return;
+        }
+
+        try
+        {
+          for (int i = 1; i < args.Length; i++)
+          {
+            log($"{args[i]}: {blacklist[args[0]][args[i]]}");
+          }
+        }
+        catch (Exception e) { log(e.Message, Color.Orange); }
       }));
 
       DebugConsole.Commands.Add(
@@ -157,9 +200,11 @@ namespace RemoveAll
     public static void removeCommands()
     {
       DebugConsole.Commands.RemoveAll(c => c.Names.Contains("light"));
-      DebugConsole.Commands.RemoveAll(c => c.Names.Contains("debugexposure"));
+      DebugConsole.Commands.RemoveAll(c => c.Names.Contains("ra_exposure"));
       DebugConsole.Commands.RemoveAll(c => c.Names.Contains("ra_loadsettings"));
       DebugConsole.Commands.RemoveAll(c => c.Names.Contains("ra_savesettings"));
+      DebugConsole.Commands.RemoveAll(c => c.Names.Contains("ra_printsettings"));
+      DebugConsole.Commands.RemoveAll(c => c.Names.Contains("ra_printblacklist"));
       DebugConsole.Commands.RemoveAll(c => c.Names.Contains("ra"));
     }
   }

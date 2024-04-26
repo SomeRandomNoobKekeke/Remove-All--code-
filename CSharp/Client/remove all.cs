@@ -33,9 +33,6 @@ namespace RemoveAll
 
       figureOutModVersionAndDirPath();
 
-      settings = new Settings();
-      settings.version = ModVersion;
-
       Settings.load();
 
       PatchAll();
@@ -95,6 +92,13 @@ namespace RemoveAll
 
       lightSource_lightComponent.Clear();
       lightSource_lightComponent = null;
+
+      blacklist.Clear();
+      blacklist = null;
+
+      mapEntityBlacklist.Clear();
+      mapEntityBlacklist = null;
+
 
       removeCommands();
 
