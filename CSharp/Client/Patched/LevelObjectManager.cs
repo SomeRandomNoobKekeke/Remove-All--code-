@@ -19,8 +19,6 @@ namespace RemoveAll
     {
       public int maxVisibleLevelObjects { get; set; } = 600;
       public float cutOffdepth { get; set; } = 1000;
-
-      public bool cullLevelObjects { get; set; } = true;
     }
 
     public static bool LevelObjectManager_RefreshVisibleObjects_Prefix(Rectangle currentIndices, float zoom, LevelObjectManager __instance)
@@ -56,7 +54,7 @@ namespace RemoveAll
           if (obj.Prefab.HideWhenBroken && obj.Health <= 0.0f) { continue; }
 
 
-          if (settings.LevelObjectManager.cullLevelObjects)
+          if (settings.hide.levelObjects)
           {
             string id = obj.Prefab.Identifier.Value;
 

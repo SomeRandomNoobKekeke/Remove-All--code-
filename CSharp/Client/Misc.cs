@@ -82,7 +82,7 @@ namespace RemoveAll
       // it just doesn't exist
       if (!justExists)
       {
-        File.Copy(source, target);
+        if (source != "") File.Copy(source, target);
         return;
       }
 
@@ -98,7 +98,9 @@ namespace RemoveAll
         if (File.Exists(backup)) File.Delete(backup);
 
         File.Move(target, backup);
-        File.Copy(source, target);
+
+        if (source != "") File.Copy(source, target);
+
         return;
       }
     }

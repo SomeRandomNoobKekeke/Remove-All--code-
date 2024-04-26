@@ -77,9 +77,8 @@ namespace RemoveAll
       if (settings.patch.Submarine) patchSubmarine();
       if (settings.patch.LightSource) patchLightSource();
       if (settings.patch.WaterRenderer) patchWaterRenderer();
-      patchLightComponent();
-
-
+      if (settings.patch.LightComponent) patchLightComponent();
+      if (settings.patch.ParticleManager) patchParticleManager();
     }
 
 

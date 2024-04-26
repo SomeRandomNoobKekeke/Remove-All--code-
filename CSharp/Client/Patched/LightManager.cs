@@ -211,7 +211,7 @@ namespace RemoveAll
         if (!light.Enabled) { continue; }
         if ((light.Color.A < 1 || light.Range < 1.0f) && !light.LightSourceParams.OverrideLightSpriteAlpha.HasValue) { continue; }
 
-        if (settings.Submarine.CullEntities)
+        if (settings.hide.itemLights)
         {
           string id = "";
           LightComponent lc;

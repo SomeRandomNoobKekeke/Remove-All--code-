@@ -46,13 +46,25 @@ namespace RemoveAll
       })},
 
       {"hide_level_objects",new ToggleableAction((state)=>{
-        settings.LevelObjectManager.cullLevelObjects = !settings.LevelObjectManager.cullLevelObjects;
+        settings.hide.levelObjects = !settings.hide.levelObjects;
       })},
 
       {"hide_entities",new ToggleableAction((state)=>{
         if(state) Settings.load();
 
-        settings.Submarine.CullEntities = !settings.Submarine.CullEntities;
+        settings.hide.entities = !settings.hide.entities;
+      })},
+
+      {"hide_particles",new ToggleableAction((state)=>{
+        if(state) Settings.load();
+
+        settings.hide.particles = !settings.hide.particles;
+      })},
+
+      {"hide_lights",new ToggleableAction((state)=>{
+        if(state) Settings.load();
+
+        settings.hide.itemLights = !settings.hide.itemLights;
       })},
 
       {"reset",new ToggleableAction((state)=>{

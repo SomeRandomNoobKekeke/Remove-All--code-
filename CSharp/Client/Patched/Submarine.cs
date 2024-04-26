@@ -31,8 +31,6 @@ namespace RemoveAll
     /// Update entity culling when any corner of the view has moved more than this
     /// </summary>
     public int CullMoveThreshold { get; set; } = 50;
-
-    public bool CullEntities { get; set; } = true;
   }
 
   partial class RemoveAllMod
@@ -99,12 +97,11 @@ namespace RemoveAll
 
 
         // note: linked subs are entities without prefab
-        if (settings.Submarine.CullEntities && entity.Prefab != null)
+        if (settings.hide.entities && entity.Prefab != null)
         {
           string id = entity.Prefab.Identifier.Value;
 
-          bool value;
-          if (mapEntityBlacklist.TryGetValue(id, out value)) { if (!value) continue; }
+          if (mapEntityBlacklist.TryGetValue(id, out bool value)) { if (!value) continue; }
         }
 
 

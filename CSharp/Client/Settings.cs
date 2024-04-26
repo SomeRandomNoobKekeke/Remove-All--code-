@@ -37,7 +37,19 @@ namespace RemoveAll
       public bool LightSource { get; set; } = true;
       public bool Submarine { get; set; } = true;
       public bool WaterRenderer { get; set; } = true;
+      public bool LightComponent { get; set; } = true;
+      public bool ParticleManager { get; set; } = true;
     }
+
+    public class HidingSettings
+    {
+      public bool entities { get; set; } = true;
+      public bool itemLights { get; set; } = true;
+      public bool levelObjects { get; set; } = true;
+      public bool particles { get; set; } = true;
+    }
+
+
 
     public class Settings
     {
@@ -48,7 +60,13 @@ namespace RemoveAll
 
       public SubmarineSettings Submarine { get; set; } = new SubmarineSettings();
       public int maxBackgroundCreaturesCount { get; set; } = 0;
+
+      [JsonIgnore]
       public patchingSettings patch { get; set; } = new patchingSettings();
+
+      public HidingSettings hide { get; set; } = new HidingSettings();
+
+
 
       public string version { get; set; } = "undefined";
 
@@ -77,10 +95,9 @@ namespace RemoveAll
           Path.Combine(settingsFolder, blacklistFileName)
         );
 
-        // copyIfNotExists(
-        //   Path.Combine(ModDir, stuffFolder, settingsFileName),
-        //   Path.Combine(settingsFolder, settingsFileName)
-        // );
+        // don't copy, just move it aside if it exists 
+        copyIfNotExists("", Path.Combine(settingsFolder, settingsFileName));
+        if (!File.Exists(Path.Combine(settingsFolder, settingsFileName))) saveSettings();
       }
 
 
@@ -236,6 +253,8 @@ namespace RemoveAll
 
       public static void saveBlacklist()
       {
+
+
         if (settings.customBlacklistPath != "")
         {
           File.WriteAllText(
