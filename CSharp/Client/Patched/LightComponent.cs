@@ -26,10 +26,20 @@ namespace RemoveAll
   {
     public static Dictionary<LightSource, LightComponent> lightSource_lightComponent = new Dictionary<LightSource, LightComponent>();
 
-    public static void LightComponent_Constructor_Postfix(LightComponent __instance)
-    {
-      lightSource_lightComponent[__instance.Light] = __instance;
-    }
+
+    // cursed, dont't touch
+    // public static void LightComponent_Constructor_Postfix(LightComponent __instance)
+    // {
+    //   try
+    //   {
+    //     lightSource_lightComponent[__instance.Light] = __instance;
+    //   }
+    //   catch (Exception e)
+    //   {
+    //     log($"Something terrible happened in LightComponent_Constructor_Postfix on line 37");
+    //     log($"tell me how you got to this point");
+    //   }
+    // }
 
     public static void findLightSources()
     {
@@ -44,7 +54,7 @@ namespace RemoveAll
       }
     }
 
-    // i'm not sure if i need this
+
     public static void GameSession_StartRound_clearLightDict(LevelData? levelData, bool mirrorLevel, SubmarineInfo? startOutpost, SubmarineInfo? endOutpost)
     {
       findLightSources();
@@ -52,10 +62,12 @@ namespace RemoveAll
 
     public void patchLightComponent()
     {
-      harmony.Patch(
-        original: typeof(LightComponent).GetConstructors()[0],
-        postfix: new HarmonyMethod(typeof(RemoveAllMod).GetMethod("LightComponent_Constructor_Postfix"))
-      );
+
+      // cursed, dont't touch
+      // harmony.Patch(
+      //   original: typeof(LightComponent).GetConstructors()[0],
+      //   postfix: new HarmonyMethod(typeof(RemoveAllMod).GetMethod("LightComponent_Constructor_Postfix"))
+      // );
 
       harmony.Patch(
         original: typeof(GameSession).GetMethod("StartRound", new Type[]{
