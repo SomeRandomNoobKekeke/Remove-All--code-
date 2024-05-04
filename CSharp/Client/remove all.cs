@@ -21,7 +21,7 @@ namespace RemoveAll
   {
     public static string ModVersion = "1.0.0";
     // must match name in filelist or we won't find mod folder
-    public static string modName = "Remove all (source code)";
+    public static string modName = "Remove All (source code)";
     public static string ModDir = "";
 
     public static bool testing = false;
@@ -47,9 +47,12 @@ namespace RemoveAll
       GameMain.GameScreen.Cam.MinZoom = 0.004f;
       GameMain.PerformanceCounter.DrawTimeGraph = new Graph(1000);
 
-      findLightSources();
       addCommands();
 
+      if (GameMain.GameSession.IsRunning)
+      {
+        findLightSources();
+      }
     }
 
     public void figureOutModVersionAndDirPath()

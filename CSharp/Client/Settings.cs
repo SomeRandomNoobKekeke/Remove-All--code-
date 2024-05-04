@@ -95,6 +95,12 @@ namespace RemoveAll
         else realBlacklistPath = Path.Combine(settingsFolder, blacklistFileName);
       }
 
+      public static void forceChangeSomething()
+      {
+        // turns out that ballast flora is level object with z slightly deeper than 0
+        // so this should keep it
+        if (settings.LevelObjectManager.cutOffdepth == 0) settings.LevelObjectManager.cutOffdepth = 10;
+      }
 
       public static void createStuffIfItDoesntExist()
       {
@@ -170,6 +176,8 @@ namespace RemoveAll
             blacklist[category.Key][rule.Key] = rule.Value;
           }
         }
+
+        forceChangeSomething();
 
         saveSettings();
         saveBlacklist();

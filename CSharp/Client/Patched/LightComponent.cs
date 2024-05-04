@@ -43,20 +43,44 @@ namespace RemoveAll
 
     public static void findLightSources()
     {
-      lightSource_lightComponent.Clear();
-
-      foreach (Item item in Item.ItemList)
+      try
       {
-        foreach (LightComponent lc in item.GetComponents<LightComponent>())
+        //throw new Exception("bruh");
+
+        lightSource_lightComponent.Clear();
+
+        foreach (Item item in Item.ItemList)
         {
-          lightSource_lightComponent[lc.Light] = lc;
+          foreach (LightComponent lc in item.GetComponents<LightComponent>())
+          {
+            lightSource_lightComponent[lc.Light] = lc;
+          }
+        }
+      }
+      catch (Exception e)
+      {
+        findLightSourcesRetries++;
+
+        log(e, Color.Orange);
+
+        if (Item.ItemList == null) log($"Item.ItemList was null in findLightSources");
+        if (lightSource_lightComponent == null) log($"lightSource_lightComponent was null in findLightSources");
+
+        if (findLightSourcesRetries < 2)
+        {
+          GameMain.LuaCs.Timer.Wait((object[] args) =>
+          {
+            findLightSources();
+          }, 500);
         }
       }
     }
 
+    public static int findLightSourcesRetries = 0;
 
     public static void GameSession_StartRound_clearLightDict(LevelData? levelData, bool mirrorLevel, SubmarineInfo? startOutpost, SubmarineInfo? endOutpost)
     {
+      findLightSourcesRetries = 0;
       findLightSources();
     }
 

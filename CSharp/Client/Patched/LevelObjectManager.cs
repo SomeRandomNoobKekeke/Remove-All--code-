@@ -24,7 +24,7 @@ namespace RemoveAll
     public class LevelObjectManagerSettings
     {
       public int maxVisibleLevelObjects { get; set; } = 500;
-      public float cutOffdepth { get; set; } = 0;
+      public float cutOffdepth { get; set; } = 10;
       public bool removeDepth { get; set; } = false;
     }
 
