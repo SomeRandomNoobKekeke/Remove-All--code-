@@ -49,7 +49,7 @@ namespace RemoveAll
 
       addCommands();
 
-      if (GameMain.GameSession.IsRunning)
+      if (GameMain.GameSession != null && GameMain.GameSession.IsRunning)
       {
         findLightSources();
       }
