@@ -40,6 +40,9 @@ namespace RemoveAll
 
       figureOutModVersionAndDirPath();
 
+
+      lightSource_lightComponent = new Dictionary<LightSource, LightComponent>(); // omfg
+
       Settings.load();
 
       PatchAll();
@@ -57,14 +60,18 @@ namespace RemoveAll
 
     public void figureOutModVersionAndDirPath()
     {
+      bool found = false;
       foreach (ContentPackage p in ContentPackageManager.EnabledPackages.All)
       {
         if (p.Name == modName)
         {
+          found = true;
           ModVersion = p.ModVersion;
           ModDir = Path.GetFullPath(p.Dir);
         }
       }
+
+      if (!found) log("Couldn't figure out mod folder", Color.Orange);
     }
 
     public void PatchAll()
@@ -94,7 +101,8 @@ namespace RemoveAll
 
     public void Dispose()
     {
-      harmony.UnpatchAll(harmony.Id);
+      //harmony.UnpatchAll(harmony.Id);
+      harmony.UnpatchAll();
       harmony = null;
 
       settings = null;

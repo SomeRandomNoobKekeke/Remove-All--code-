@@ -27,25 +27,36 @@ namespace RemoveAll
     public static Dictionary<LightSource, LightComponent> lightSource_lightComponent = new Dictionary<LightSource, LightComponent>();
 
 
-    // cursed, dont't touch
-    // public static void LightComponent_Constructor_Postfix(LightComponent __instance)
-    // {
-    //   try
-    //   {
-    //     lightSource_lightComponent[__instance.Light] = __instance;
-    //   }
-    //   catch (Exception e)
-    //   {
-    //     log($"Something terrible happened in LightComponent_Constructor_Postfix on line 37");
-    //     log($"tell me how you got to this point");
-    //   }
-    // }
+    //public static void LightComponent_Constructor_Postfix(LightComponent __instance)
+    //{
+    //  try
+    //  {
+    //    // how the fuck you're still not initialised?
+    //    if (lightSource_lightComponent == null)
+    //    {
+    //      lightSource_lightComponent = new Dictionary<LightSource, LightComponent>();
+    //    }
+
+    //    lightSource_lightComponent[__instance.Light] = __instance;
+    //  }
+    //  catch (Exception e)
+    //  {
+    //    log($"Something terrible happened in LightComponent_Constructor_Postfix on line 37");
+    //    log($"tell me how you got to this point");
+    //  }
+    //}
 
     public static void findLightSources()
     {
       try
       {
-        //throw new Exception("bruh");
+        // how the fuck you're still not initialised?
+        if (lightSource_lightComponent == null)
+        {
+          lightSource_lightComponent = new Dictionary<LightSource, LightComponent>();
+        }
+
+        if (lightSource_lightComponent == null) log($"bruh \n", Color.Yellow);
 
         lightSource_lightComponent.Clear();
 
@@ -63,15 +74,17 @@ namespace RemoveAll
 
         log(e, Color.Orange);
 
-        if (Item.ItemList == null) log($"Item.ItemList was null in findLightSources");
-        if (lightSource_lightComponent == null) log($"lightSource_lightComponent was null in findLightSources");
-
-        if (findLightSourcesRetries < 2)
+        if (findLightSourcesRetries < 3)
         {
           GameMain.LuaCs.Timer.Wait((object[] args) =>
           {
             findLightSources();
-          }, 500);
+          }, 1000);
+        }
+
+        if (findLightSourcesRetries >= 3)
+        {
+          log("I tried 3 times and something is still null, what do you want from me? bruh", Color.Orange);
         }
       }
     }
@@ -86,8 +99,6 @@ namespace RemoveAll
 
     public void patchLightComponent()
     {
-
-      // cursed, dont't touch
       // harmony.Patch(
       //   original: typeof(LightComponent).GetConstructors()[0],
       //   postfix: new HarmonyMethod(typeof(RemoveAllMod).GetMethod("LightComponent_Constructor_Postfix"))
