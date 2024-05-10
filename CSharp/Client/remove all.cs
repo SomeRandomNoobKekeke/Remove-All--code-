@@ -9,6 +9,9 @@ using Microsoft.Xna.Framework;
 using System.Text.Json;
 using System.IO;
 
+using Barotrauma.Items.Components;
+using Barotrauma.Lights;
+
 // arghhhh
 using System.Runtime.CompilerServices;
 [assembly: IgnoresAccessChecksTo("Barotrauma")]
