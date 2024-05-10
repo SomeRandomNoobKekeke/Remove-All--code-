@@ -48,8 +48,8 @@ namespace RemoveAll
     public static Dictionary<string, ToggleableAction> presets = new Dictionary<string, ToggleableAction>(){
       {"hide_level_objects",new ToggleableAction((state)=>{
         settings.hide.levelObjects = !settings.hide.levelObjects;
-        if(state ){
-          settings.LevelObjectManager.cutOffdepth = 0;
+        if(settings.hide.levelObjects){
+          settings.LevelObjectManager.cutOffdepth = 10;
         } else {
           settings.LevelObjectManager.cutOffdepth = 10000;
         }
