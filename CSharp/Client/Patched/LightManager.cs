@@ -46,12 +46,12 @@ namespace RemoveAll
     {
       LightManager _ = __instance;
 
-      if ((!_.LosEnabled || _.LosMode == LosMode.None) && !_.ObstructVision) { return false; }
+      if ((!_.LosEnabled || _.LosMode == LosMode.None) && _.ObstructVisionAmount <= 0.0f) { return false; }
       if (LightManager.ViewTarget == null) return false;
 
       graphics.SetRenderTarget(_.LosTexture);
 
-      if (_.ObstructVision)
+      if (_.ObstructVisionAmount > 0.0f)
       {
         graphics.Clear(Color.Black);
         Vector2 diff = lookAtPosition - LightManager.ViewTarget.WorldPosition;
@@ -61,13 +61,14 @@ namespace RemoveAll
 
         //the visible area stretches to the maximum when the cursor is this far from the character
         const float MaxOffset = 256.0f;
-        const float MinHorizontalScale = 2.2f;
-        const float MaxHorizontalScale = 2.8f;
-        const float VerticalScale = 2.5f;
+        //the magic numbers here are just based on experimentation
+        float MinHorizontalScale = MathHelper.Lerp(3.5f, 1.5f, _.ObstructVisionAmount);
+        float MaxHorizontalScale = MinHorizontalScale * 1.25f;
+        float VerticalScale = MathHelper.Lerp(4.0f, 1.25f, _.ObstructVisionAmount);
 
         //Starting point and scale-based modifier that moves the point of origin closer to the edge of the texture if the player moves their mouse further away, or vice versa.
-        float relativeOriginStartPosition = 0.22f; //Increasing this value moves the origin further behind the character
-        float originStartPosition = _.visionCircle.Width * relativeOriginStartPosition;
+        float relativeOriginStartPosition = 0.1f; //Increasing this value moves the origin further behind the character
+        float originStartPosition = _.visionCircle.Width * relativeOriginStartPosition * MinHorizontalScale;
         float relativeOriginLookAtPosModifier = -0.055f; //Increase this value increases how much the vision changes by moving the mouse
         float originLookAtPosModifier = _.visionCircle.Width * relativeOriginLookAtPosModifier;
 
@@ -488,7 +489,7 @@ namespace RemoveAll
       {
         foreach (MapEntity e in (Submarine.VisibleEntities ?? MapEntity.MapEntityList))
         {
-          if (e is Item item && !item.HiddenInGame && item.GetComponent<Wire>() is Wire wire)
+          if (e is Item item && !item.IsHidden && item.GetComponent<Wire>() is Wire wire)
           {
             wire.DebugDraw(spriteBatch, alpha: 0.4f);
           }
