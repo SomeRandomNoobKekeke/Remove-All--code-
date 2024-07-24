@@ -22,7 +22,7 @@ namespace RemoveAll
 {
   partial class RemoveAllMod
   {
-    public static bool ParticleManager_CreateParticle_Prefix(ParticlePrefab prefab, Vector2 position, Vector2 velocity, float rotation, Hull hullGuess, bool drawOnTop, float collisionIgnoreTimer, float lifeTimeMultiplier, Tuple<Vector2, Vector2> tracerPoints, ParticleManager __instance, Particle __result)
+    public static bool ParticleManager_CreateParticle_Prefix(ParticlePrefab prefab, Vector2 position, Vector2 velocity, float rotation, Hull hullGuess, bool drawOnTop, float collisionIgnoreTimer, float lifeTimeMultiplier, Tuple<Vector2, Vector2> tracerPoints, ParticleManager __instance, ref Particle __result)
     {
       ParticleManager _ = __instance;
 
