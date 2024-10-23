@@ -49,7 +49,7 @@ namespace RemoveAll
         if (_.ParentSub != null) { drawPos += _.ParentSub.DrawPosition; }
         drawPos.Y = -drawPos.Y;
 
-        spriteBatch.Draw(currentTexture, drawPos, null, _.Color.Multiply(_.CurrentBrightness * settings.LightManager.globalLightBrightness), -_.rotation + MathHelper.ToRadians(_.LightSourceParams.Rotation), center, scale, SpriteEffects.None, 1);
+        spriteBatch.Draw(currentTexture, drawPos, null, _.Color.Multiply(_.CurrentBrightness * Mod.settings.LightManager.globalLightBrightness), -_.rotation + MathHelper.ToRadians(_.LightSourceParams.Rotation), center, scale, SpriteEffects.None, 1);
         return false;
       }
 
@@ -102,7 +102,7 @@ namespace RemoveAll
           transform;
 
 
-      lightEffect.DiffuseColor = (new Vector3(_.Color.R, _.Color.G, _.Color.B) * (_.Color.A / 255.0f * _.CurrentBrightness * settings.LightManager.globalLightBrightness)) / 255.0f;
+      lightEffect.DiffuseColor = (new Vector3(_.Color.R, _.Color.G, _.Color.B) * (_.Color.A / 255.0f * _.CurrentBrightness * Mod.settings.LightManager.globalLightBrightness)) / 255.0f;
       if (_.OverrideLightTexture != null)
       {
         lightEffect.Texture = _.OverrideLightTexture.Texture;

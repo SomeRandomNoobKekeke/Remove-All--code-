@@ -45,10 +45,10 @@ namespace RemoveAll
       Rectangle camView = cam.WorldView;
 
       camView = new Rectangle(
-        camView.X - settings.Submarine.CullMarginX,
-        camView.Y + settings.Submarine.CullMarginY,
-        camView.Width + settings.Submarine.CullMarginX * 2,
-        camView.Height + settings.Submarine.CullMarginY * 2
+        camView.X - Mod.settings.Submarine.CullMarginX,
+        camView.Y + Mod.settings.Submarine.CullMarginY,
+        camView.Width + Mod.settings.Submarine.CullMarginX * 2,
+        camView.Height + Mod.settings.Submarine.CullMarginY * 2
       );
 
       if (Level.Loaded?.Renderer?.CollapseEffectStrength is > 0.0f)
@@ -58,11 +58,11 @@ namespace RemoveAll
         camView.Y += camView.Height;
       }
 
-      if (Math.Abs(camView.X - Submarine.prevCullArea.X) < settings.Submarine.CullMoveThreshold &&
-          Math.Abs(camView.Y - Submarine.prevCullArea.Y) < settings.Submarine.CullMoveThreshold &&
-          Math.Abs(camView.Right - Submarine.prevCullArea.Right) < settings.Submarine.CullMoveThreshold &&
-          Math.Abs(camView.Bottom - Submarine.prevCullArea.Bottom) < settings.Submarine.CullMoveThreshold &&
-          Submarine.prevCullTime > Timing.TotalTime - settings.Submarine.CullInterval)
+      if (Math.Abs(camView.X - Submarine.prevCullArea.X) < Mod.settings.Submarine.CullMoveThreshold &&
+          Math.Abs(camView.Y - Submarine.prevCullArea.Y) < Mod.settings.Submarine.CullMoveThreshold &&
+          Math.Abs(camView.Right - Submarine.prevCullArea.Right) < Mod.settings.Submarine.CullMoveThreshold &&
+          Math.Abs(camView.Bottom - Submarine.prevCullArea.Bottom) < Mod.settings.Submarine.CullMoveThreshold &&
+          Submarine.prevCullTime > Timing.TotalTime - Mod.settings.Submarine.CullInterval)
       {
         return false;
       }
@@ -99,11 +99,11 @@ namespace RemoveAll
 
 
         // note: linked subs are entities without prefab
-        if (settings.hide.entities && entity.Prefab != null)
+        if (Mod.settings.hide.entities && entity.Prefab != null)
         {
           string id = entity.Prefab.Identifier.Value;
 
-          if (mapEntityBlacklist.TryGetValue(id, out bool value)) { if (!value) continue; }
+          if (Mod.mapEntityBlacklist.TryGetValue(id, out bool value)) { if (!value) continue; }
         }
 
 

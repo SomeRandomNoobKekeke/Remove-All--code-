@@ -22,9 +22,9 @@ namespace RemoveAll
     {
       ParticleManager _ = __instance;
 
-      if (settings.hide.particles && prefab != null)
+      if (Mod.settings.hide.particles && prefab != null)
       {
-        if (blacklist["particles"].TryGetValue(prefab.Identifier.Value, out bool value))
+        if (Mod.blacklist["particles"].TryGetValue(prefab.Identifier.Value, out bool value))
         {
           if (!value)
           {
@@ -34,7 +34,7 @@ namespace RemoveAll
         }
       }
 
-      int MaxParticles = Math.Min(_.MaxParticles, settings.maxParticles);
+      int MaxParticles = Math.Min(_.MaxParticles, Mod.settings.maxParticles);
 
 
       if (prefab == null || prefab.Sprites.Count == 0) { __result = null; return false; }

@@ -18,10 +18,10 @@ namespace RemoveAll
   {
     public static bool Decal_Draw_Replace(SpriteBatch spriteBatch, Hull hull, float depth, Decal __instance)
     {
-      if (settings.hide.decals && __instance.Prefab != null)
+      if (Mod.settings.hide.decals && __instance.Prefab != null)
       {
         //log(__instance.Prefab.Identifier.Value);
-        if (blacklist["decals"].TryGetValue(__instance.Prefab.Identifier.Value, out bool value))
+        if (Mod.blacklist["decals"].TryGetValue(__instance.Prefab.Identifier.Value, out bool value))
         {
           if (!value)
           {

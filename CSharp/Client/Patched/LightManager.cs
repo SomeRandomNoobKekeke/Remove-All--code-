@@ -192,7 +192,7 @@ namespace RemoveAll
 
 
       bool highlightsVisible;
-      if (settings.LightManager.highlightItems)
+      if (Mod.settings.LightManager.highlightItems)
       {
         highlightsVisible = _.UpdateHighlights(graphics, spriteBatch, spriteBatchTransform, cam);
       }
@@ -213,7 +213,7 @@ namespace RemoveAll
         if (!light.Enabled) { continue; }
         if ((light.Color.A < 1 || light.Range < 1.0f) && !light.LightSourceParams.OverrideLightSpriteAlpha.HasValue) { continue; }
 
-        if (settings.hide.itemLights)
+        if (Mod.settings.hide.itemLights)
         {
           string id = "";
           LightComponent lc;
@@ -225,7 +225,7 @@ namespace RemoveAll
 
 
           bool value;
-          if (mapEntityBlacklist.TryGetValue(id, out value)) { if (!value) continue; }
+          if (Mod.mapEntityBlacklist.TryGetValue(id, out value)) { if (!value) continue; }
         }
 
         if (light.ParentBody != null)
@@ -312,7 +312,7 @@ namespace RemoveAll
       graphics.SetRenderTarget(_.LightMap);
 
 
-      graphics.Clear(_.AmbientLight.Multiply(settings.LightManager.levelAmbientBrightness));
+      graphics.Clear(_.AmbientLight.Multiply(Mod.settings.LightManager.levelAmbientBrightness));
 
 
       graphics.BlendState = BlendState.Additive;
@@ -335,13 +335,13 @@ namespace RemoveAll
       foreach (KeyValuePair<Hull, Rectangle> hull in visibleHulls)
       {
         Color ambientColor;
-        if (settings.LightManager.hullAmbientColor != Color.TransparentBlack)
+        if (Mod.settings.LightManager.hullAmbientColor != Color.TransparentBlack)
         {
-          ambientColor = settings.LightManager.hullAmbientColor.Multiply(settings.LightManager.hullAmbientColor.A / 255.0f * settings.LightManager.hullAmbientBrightness).Opaque();
+          ambientColor = Mod.settings.LightManager.hullAmbientColor.Multiply(Mod.settings.LightManager.hullAmbientColor.A / 255.0f * Mod.settings.LightManager.hullAmbientBrightness).Opaque();
         }
         else
         {
-          ambientColor = hull.Key.AmbientLight == Color.TransparentBlack ? Color.Black : hull.Key.AmbientLight.Multiply(hull.Key.AmbientLight.A / 255.0f * settings.LightManager.hullAmbientBrightness).Opaque();
+          ambientColor = hull.Key.AmbientLight == Color.TransparentBlack ? Color.Black : hull.Key.AmbientLight.Multiply(hull.Key.AmbientLight.A / 255.0f * Mod.settings.LightManager.hullAmbientBrightness).Opaque();
         }
 
         GUI.DrawRectangle(spriteBatch,
@@ -351,7 +351,7 @@ namespace RemoveAll
       }
       spriteBatch.End();
 
-      if (settings.LightManager.drawGapGlow)
+      if (Mod.settings.LightManager.drawGapGlow)
       {
         spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, transformMatrix: spriteBatchTransform);
         Vector3 glowColorHSV = ToolBox.RGBToHSV(_.AmbientLight);
@@ -416,7 +416,7 @@ namespace RemoveAll
       //draw characters to obstruct the highlighted items/characters and light sprites
       //---------------------------------------------------------------------------------------------------
 
-      if (!settings.LightManager.ghostCharacters && cam.Zoom > LightManager.ObstructLightsBehindCharactersZoomThreshold)
+      if (!Mod.settings.LightManager.ghostCharacters && cam.Zoom > LightManager.ObstructLightsBehindCharactersZoomThreshold)
       {
         _.SolidColorEffect.CurrentTechnique = _.SolidColorEffect.Techniques["SolidVertexColor"];
         spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, effect: _.SolidColorEffect, transformMatrix: spriteBatchTransform);
@@ -438,13 +438,13 @@ namespace RemoveAll
           if (Character.Controlled?.FocusedCharacter == character) { continue; }
 
           Color lightColor;
-          if (settings.LightManager.hullAmbientColor != Color.TransparentBlack)
+          if (Mod.settings.LightManager.hullAmbientColor != Color.TransparentBlack)
           {
-            lightColor = settings.LightManager.hullAmbientColor.Multiply(settings.LightManager.hullAmbientColor.A / 255.0f * settings.LightManager.hullAmbientBrightness).Opaque();
+            lightColor = Mod.settings.LightManager.hullAmbientColor.Multiply(Mod.settings.LightManager.hullAmbientColor.A / 255.0f * Mod.settings.LightManager.hullAmbientBrightness).Opaque();
           }
           else
           {
-            lightColor = character.CurrentHull.AmbientLight == Color.TransparentBlack ? Color.Black : character.CurrentHull.AmbientLight.Multiply(character.CurrentHull.AmbientLight.A / 255.0f * settings.LightManager.hullAmbientBrightness).Opaque();
+            lightColor = character.CurrentHull.AmbientLight == Color.TransparentBlack ? Color.Black : character.CurrentHull.AmbientLight.Multiply(character.CurrentHull.AmbientLight.A / 255.0f * Mod.settings.LightManager.hullAmbientBrightness).Opaque();
           }
 
 
@@ -496,7 +496,7 @@ namespace RemoveAll
 
       GameMain.ParticleManager.Draw(spriteBatch, false, null, Barotrauma.Particles.ParticleBlendState.Additive);
 
-      if (settings.LightManager.drawHalo)
+      if (Mod.settings.LightManager.drawHalo)
       {
         if (Character.Controlled != null)
         {
@@ -520,12 +520,12 @@ namespace RemoveAll
 
         //ambient light decreases the brightness of the halo (no need for a bright halo if the ambient light is bright enough)
 
-        float ambientBrightness = (_.AmbientLight.R + _.AmbientLight.B + _.AmbientLight.G) / 255.0f / 3.0f * settings.LightManager.levelAmbientBrightness;
-        Color haloColor = Color.White.Multiply(Math.Clamp(settings.LightManager.haloBrightness - ambientBrightness, 0, 1));
+        float ambientBrightness = (_.AmbientLight.R + _.AmbientLight.B + _.AmbientLight.G) / 255.0f / 3.0f * Mod.settings.LightManager.levelAmbientBrightness;
+        Color haloColor = Color.White.Multiply(Math.Clamp(Mod.settings.LightManager.haloBrightness - ambientBrightness, 0, 1));
         if (haloColor.A > 0)
         {
           //float scale = 512.0f / LightSource.LightTexture.Width;
-          float scale = settings.LightManager.haloScale;
+          float scale = Mod.settings.LightManager.haloScale;
           spriteBatch.Draw(
               LightSource.LightTexture, haloDrawPos, null, haloColor, 0.0f,
               new Vector2(LightSource.LightTexture.Width, LightSource.LightTexture.Height) / 2, scale, SpriteEffects.None, 0.0f);

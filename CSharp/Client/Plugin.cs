@@ -21,35 +21,31 @@ namespace RemoveAll
 {
   partial class Plugin : IAssemblyPlugin
   {
-    public static string ModVersion = "1.0.0";
-    // must match name in filelist or we won't find mod folder
-    public static string modName = "Remove All (source code)";
-    public static string ModDir = "";
 
-    public static bool testing = false;
-    public Harmony harmony;
-
-    public static Settings settings;
-
-    public static Dictionary<string, Dictionary<string, bool>> blacklist = new Dictionary<string, Dictionary<string, bool>>();
-    public static Dictionary<string, bool> mapEntityBlacklist = new Dictionary<string, bool>();
-
+    public static string ModName = "Remove All";
     public static Plugin Mod;
-
+    public Harmony harmony;
+    public string ModVersion = "1.0.0";
+    public string ModDir = "";
     public bool Debug;
+
+    public Settings settings;
+    public Dictionary<string, Dictionary<string, bool>> blacklist = new Dictionary<string, Dictionary<string, bool>>();
+    public Dictionary<string, bool> mapEntityBlacklist = new Dictionary<string, bool>();
+
 
     public void Initialize()
     {
       Mod = this;
 
-      if (testing) log("Compiled!");
-
       harmony = new Harmony("remove.all");
 
-      figureOutModVersionAndDirPath();
-
-
-      lightSource_lightComponent = new Dictionary<LightSource, LightComponent>(); // omfg
+      findModFolder();
+      if (ModDir.Contains("LocalMods"))
+      {
+        Debug = true;
+        info($"found {ModName} in LocalMods, debug: {Debug}");
+      }
 
       Settings.load();
 
@@ -58,7 +54,7 @@ namespace RemoveAll
       GameMain.GameScreen.Cam.MinZoom = 0.004f;
       GameMain.PerformanceCounter.DrawTimeGraph = new Graph(1000);
 
-      addCommands();
+      AddCommands();
 
       if (GameMain.GameSession != null && GameMain.GameSession.IsRunning)
       {
@@ -66,21 +62,7 @@ namespace RemoveAll
       }
     }
 
-    public void figureOutModVersionAndDirPath()
-    {
-      bool found = false;
-      foreach (ContentPackage p in ContentPackageManager.EnabledPackages.All)
-      {
-        if (p.Name == modName)
-        {
-          found = true;
-          ModVersion = p.ModVersion;
-          ModDir = Path.GetFullPath(p.Dir);
-        }
-      }
 
-      if (!found) log("Couldn't figure out mod folder", Color.Orange);
-    }
 
     public void PatchAll()
     {
@@ -109,15 +91,12 @@ namespace RemoveAll
 
     public void Dispose()
     {
-      settings = null;
+      lightSource_lightComponent.Clear();
+      blacklist.Clear();
+      mapEntityBlacklist.Clear();
+      presets.Clear();
 
-      lightSource_lightComponent.Clear(); lightSource_lightComponent = null;
-      blacklist.Clear(); blacklist = null;
-      mapEntityBlacklist.Clear(); mapEntityBlacklist = null;
-      presets.Clear(); presets = null;
-
-
-      removeCommands();
+      RemoveCommands();
     }
 
     public void OnLoadCompleted() { }

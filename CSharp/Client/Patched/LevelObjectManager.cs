@@ -57,15 +57,15 @@ namespace RemoveAll
           if (obj.Prefab.HideWhenBroken && obj.Health <= 0.0f) { continue; }
 
 
-          if (settings.hide.levelObjects)
+          if (Mod.settings.hide.levelObjects)
           {
             string id = obj.Prefab.Identifier.Value;
 
-            if (blacklist["levelObjects"].TryGetValue(id, out bool value)) { if (!value) continue; }
+            if (Mod.blacklist["levelObjects"].TryGetValue(id, out bool value)) { if (!value) continue; }
           }
 
 
-          if (obj.Position.Z >= settings.LevelObjectManager.cutOffdepth) continue;
+          if (obj.Position.Z >= Mod.settings.LevelObjectManager.cutOffdepth) continue;
 
           if (zoom < 0.05f)
           {
@@ -87,7 +87,7 @@ namespace RemoveAll
               obj.Position.Z >= 0 ?
                   _.visibleObjectsBack :
                   (obj.Position.Z < -1 ? _.visibleObjectsFront : _.visibleObjectsMid);
-          if (objectList.Count >= settings.LevelObjectManager.maxVisibleLevelObjects) { continue; }
+          if (objectList.Count >= Mod.settings.LevelObjectManager.maxVisibleLevelObjects) { continue; }
 
           int drawOrderIndex = 0;
           for (int i = 0; i < objectList.Count; i++)
@@ -105,11 +105,11 @@ namespace RemoveAll
             else
             {
               drawOrderIndex = i + 1;
-              if (drawOrderIndex >= settings.LevelObjectManager.maxVisibleLevelObjects) { break; }
+              if (drawOrderIndex >= Mod.settings.LevelObjectManager.maxVisibleLevelObjects) { break; }
             }
           }
 
-          if (drawOrderIndex >= 0 && drawOrderIndex < settings.LevelObjectManager.maxVisibleLevelObjects)
+          if (drawOrderIndex >= 0 && drawOrderIndex < Mod.settings.LevelObjectManager.maxVisibleLevelObjects)
           {
             objectList.Insert(drawOrderIndex, obj);
           }
@@ -165,7 +165,7 @@ namespace RemoveAll
 
       foreach (LevelObject obj in objectList)
       {
-        objPositionZ = settings.LevelObjectManager.removeDepth ? 0 : obj.Position.Z;
+        objPositionZ = Mod.settings.LevelObjectManager.removeDepth ? 0 : obj.Position.Z;
 
 
         Vector2 camDiff = new Vector2(obj.Position.X, obj.Position.Y) - cam.WorldViewCenter;

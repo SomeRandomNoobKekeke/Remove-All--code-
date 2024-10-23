@@ -56,6 +56,22 @@ namespace RemoveAll
       }
     }
 
+    public static void findModFolder()
+    {
+      bool found = false;
 
+      foreach (ContentPackage p in ContentPackageManager.EnabledPackages.All)
+      {
+        if (p.Name.Contains(ModName))
+        {
+          found = true;
+          Mod.ModDir = Path.GetFullPath(p.Dir);
+          Mod.ModVersion = p.ModVersion;
+          break;
+        }
+      }
+
+      if (!found) err($"Couldn't find {ModName} mod folder");
+    }
   }
 }

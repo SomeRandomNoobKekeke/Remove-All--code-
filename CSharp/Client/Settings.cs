@@ -86,16 +86,16 @@ namespace RemoveAll
 
       public Settings()
       {
-        version = ModVersion;
+        version = Mod.ModVersion;
         if (customBlacklistPath != "") realBlacklistPath = customBlacklistPath;
         else realBlacklistPath = Path.Combine(settingsFolder, blacklistFileName);
       }
 
-      public static void forceChangeSomething()
+      public void forceChangeSomething()
       {
         // turns out that ballast flora is level object with z slightly deeper than 0
         // so this should keep it
-        if (settings.LevelObjectManager.cutOffdepth == 0) settings.LevelObjectManager.cutOffdepth = 10;
+        if (LevelObjectManager.cutOffdepth == 0) LevelObjectManager.cutOffdepth = 10;
       }
 
       public static void createStuffIfItDoesntExist()
@@ -106,13 +106,13 @@ namespace RemoveAll
 
 
         copyIfNotExists(
-          Path.Combine(ModDir, stuffFolder, blacklistGenFileName),
+          Path.Combine(Mod.ModDir, stuffFolder, blacklistGenFileName),
           Path.Combine(settingsFolder, blacklistGenFileName)
         );
 
 
         copyIfNotExists(
-          Path.Combine(ModDir, stuffFolder, blacklistFileName),
+          Path.Combine(Mod.ModDir, stuffFolder, blacklistFileName),
           Path.Combine(settingsFolder, blacklistFileName)
         );
 
@@ -123,17 +123,17 @@ namespace RemoveAll
 
 
 
-      public static void ohNoItsOutdated()
+      public void ohNoItsOutdated()
       {
         // actually settings already merged by json.Deserialize
         // i just need to update version
-        settings.version = ModVersion;
+        version = Mod.ModVersion;
 
 
         // replace Entity Blacklist.html
         File.Delete(Path.Combine(settingsFolder, blacklistGenFileName));
         File.Copy(
-          Path.Combine(ModDir, stuffFolder, blacklistGenFileName),
+          Path.Combine(Mod.ModDir, stuffFolder, blacklistGenFileName),
           Path.Combine(settingsFolder, blacklistGenFileName)
         );
 
@@ -141,8 +141,8 @@ namespace RemoveAll
         // merge old blacklist into new one
         try
         {
-          blacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(
-            File.ReadAllText(Path.Combine(ModDir, stuffFolder, blacklistFileName))
+          Mod.blacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(
+            File.ReadAllText(Path.Combine(Mod.ModDir, stuffFolder, blacklistFileName))
           );
         }
         catch (Exception e) { log(e.Message, Color.Orange); }
@@ -150,10 +150,10 @@ namespace RemoveAll
         Dictionary<string, Dictionary<string, bool>> oldBlacklist = new Dictionary<string, Dictionary<string, bool>>();
         try
         {
-          if (File.Exists(settings.realBlacklistPath))
+          if (File.Exists(realBlacklistPath))
           {
             oldBlacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(
-              File.ReadAllText(settings.realBlacklistPath)
+              File.ReadAllText(realBlacklistPath)
             );
           }
           else
@@ -169,7 +169,7 @@ namespace RemoveAll
         {
           foreach (var rule in category.Value)
           {
-            blacklist[category.Key][rule.Key] = rule.Value;
+            Mod.blacklist[category.Key][rule.Key] = rule.Value;
           }
         }
 
@@ -179,19 +179,19 @@ namespace RemoveAll
         saveBlacklist();
       }
 
-      public static void itsOK()
+      public void itsOK()
       {
         try
         {
-          if (File.Exists(settings.realBlacklistPath))
+          if (File.Exists(realBlacklistPath))
           {
-            blacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(
-              File.ReadAllText(settings.realBlacklistPath)
+            Mod.blacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(
+              File.ReadAllText(realBlacklistPath)
             );
           }
           else
           {
-            blacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(
+            Mod.blacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(
               File.ReadAllText(Path.Combine(settingsFolder, blacklistFileName))
             );
           }
@@ -206,13 +206,13 @@ namespace RemoveAll
 
       public static void load()
       {
-        settings = new Settings();
+        Mod.settings = new Settings();
 
         createStuffIfItDoesntExist();
 
         try
         {
-          settings = JsonSerializer.Deserialize<Settings>(
+          Mod.settings = JsonSerializer.Deserialize<Settings>(
             File.ReadAllText(Path.Combine(settingsFolder, settingsFileName))
           );
         }
@@ -221,18 +221,18 @@ namespace RemoveAll
           log(e.Message, Color.Orange);
         }
 
-        if (String.Compare(settings.version, ModVersion) < 0)
+        if (String.Compare(Mod.settings.version, Mod.ModVersion) < 0)
         {
-          ohNoItsOutdated();
+          Mod.settings.ohNoItsOutdated();
         }
         else
         {
-          itsOK();
+          Mod.settings.itsOK();
         }
 
-        mapEntityBlacklist = new Dictionary<string, bool>();
-        foreach (var id in blacklist["items"]) { mapEntityBlacklist.TryAdd(id.Key, id.Value); }
-        foreach (var id in blacklist["structures"]) { mapEntityBlacklist.TryAdd(id.Key, id.Value); }
+        Mod.mapEntityBlacklist = new Dictionary<string, bool>();
+        foreach (var id in Mod.blacklist["items"]) { Mod.mapEntityBlacklist.TryAdd(id.Key, id.Value); }
+        foreach (var id in Mod.blacklist["structures"]) { Mod.mapEntityBlacklist.TryAdd(id.Key, id.Value); }
         //foreach (var id in blacklist["levelObjects"]) { mapEntityBlacklist.TryAdd(id.Key, id.Value); }
       }
 
@@ -242,15 +242,15 @@ namespace RemoveAll
 
         File.WriteAllText(
           path,
-          JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true })
+          JsonSerializer.Serialize(Mod.settings, new JsonSerializerOptions { WriteIndented = true })
         );
       }
 
       public static void saveBlacklist()
       {
         File.WriteAllText(
-          settings.realBlacklistPath,
-          JsonSerializer.Serialize(blacklist, new JsonSerializerOptions { WriteIndented = true })
+          Mod.settings.realBlacklistPath,
+          JsonSerializer.Serialize(Mod.blacklist, new JsonSerializerOptions { WriteIndented = true })
         );
       }
 
@@ -258,27 +258,24 @@ namespace RemoveAll
       {
         try
         {
-          settings = JsonSerializer.Deserialize<Settings>(
+          Mod.settings = JsonSerializer.Deserialize<Settings>(
             File.ReadAllText(filePath)
           );
         }
-        catch (Exception e)
-        {
-          log(e.Message, Color.Orange);
-        }
+        catch (Exception e) { log(e.Message, Color.Orange); }
       }
 
       public static void justLoadBlacklist(string filePath)
       {
         try
         {
-          blacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(
+          Mod.blacklist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, bool>>>(
             File.ReadAllText(filePath)
           );
 
-          mapEntityBlacklist = new Dictionary<string, bool>();
-          foreach (var id in blacklist["items"]) { mapEntityBlacklist.TryAdd(id.Key, id.Value); }
-          foreach (var id in blacklist["structures"]) { mapEntityBlacklist.TryAdd(id.Key, id.Value); }
+          Mod.mapEntityBlacklist = new Dictionary<string, bool>();
+          foreach (var id in Mod.blacklist["items"]) { Mod.mapEntityBlacklist.TryAdd(id.Key, id.Value); }
+          foreach (var id in Mod.blacklist["structures"]) { Mod.mapEntityBlacklist.TryAdd(id.Key, id.Value); }
         }
         catch (Exception e) { log(e.Message, Color.Orange); }
       }

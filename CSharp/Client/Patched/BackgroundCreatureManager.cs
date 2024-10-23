@@ -23,7 +23,7 @@ namespace RemoveAll
       {
         int count = Math.Max(0, Math.Min(
           Level.loaded.GenerationParams.BackgroundCreatureAmount,
-          settings.maxBackgroundCreaturesCount
+          Mod.settings.maxBackgroundCreaturesCount
         ));
 
         // Level.loaded.backgroundCreatureManager.Clear();
@@ -34,7 +34,7 @@ namespace RemoveAll
 
     public static bool BackgroundCreatureManager_SpawnCreatures_Prefix(Level level, ref int count, Vector2? position, BackgroundCreatureManager __instance)
     {
-      count = Math.Max(0, Math.Min(count, settings.maxBackgroundCreaturesCount));
+      count = Math.Max(0, Math.Min(count, Mod.settings.maxBackgroundCreaturesCount));
       return true;
     }
 
