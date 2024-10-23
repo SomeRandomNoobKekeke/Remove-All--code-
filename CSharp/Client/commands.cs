@@ -89,7 +89,7 @@ namespace RemoveAll
         log($"hide.decals = {Mod.settings.hide.decals}");
       })},
 
-      {"reset",new ToggleableAction((state)=>{
+      {"default",new ToggleableAction((state)=>{
         Mod.settings = new Settings();
         Settings.saveSettings();
 
@@ -207,7 +207,7 @@ namespace RemoveAll
         "darkmode  \n" +
         "background_fishes  \n" +
         "ghost_characters \n\n" +
-        "reset - resets all Mod.settings to default \n" +
+        "default - resets all Mod.settings to default \n" +
         "all - hides everything \n" +
         "vanilla - everything as in vanilla \n\n" +
         "hide_decals \n" +
