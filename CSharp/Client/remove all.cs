@@ -12,7 +12,6 @@ using System.IO;
 using Barotrauma.Items.Components;
 using Barotrauma.Lights;
 
-// arghhhh
 using System.Runtime.CompilerServices;
 [assembly: IgnoresAccessChecksTo("Barotrauma")]
 [assembly: IgnoresAccessChecksTo("DedicatedServer")]
@@ -104,10 +103,6 @@ namespace RemoveAll
 
     public void Dispose()
     {
-      //harmony.UnpatchAll(harmony.Id);
-      harmony.UnpatchAll();
-      harmony = null;
-
       settings = null;
 
       lightSource_lightComponent.Clear(); lightSource_lightComponent = null;

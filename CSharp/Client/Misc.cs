@@ -9,11 +9,7 @@ using Microsoft.Xna.Framework;
 using System.Text.Json;
 using System.IO;
 
-// arghhhh
-using System.Runtime.CompilerServices;
-[assembly: IgnoresAccessChecksTo("Barotrauma")]
-[assembly: IgnoresAccessChecksTo("DedicatedServer")]
-[assembly: IgnoresAccessChecksTo("BarotraumaCore")]
+
 
 namespace RemoveAll
 {

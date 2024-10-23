@@ -14,11 +14,7 @@ using Barotrauma.Extensions;
 using Barotrauma.Lights;
 using Barotrauma.Items.Components;
 
-// arghhhh
-using System.Runtime.CompilerServices;
-[assembly: IgnoresAccessChecksTo("Barotrauma")]
-[assembly: IgnoresAccessChecksTo("DedicatedServer")]
-[assembly: IgnoresAccessChecksTo("BarotraumaCore")]
+
 
 namespace RemoveAll
 {

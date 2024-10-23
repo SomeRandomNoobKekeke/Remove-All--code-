@@ -16,11 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Voronoi2;
 
-// arghhhh
-using System.Runtime.CompilerServices;
-[assembly: IgnoresAccessChecksTo("Barotrauma")]
-[assembly: IgnoresAccessChecksTo("DedicatedServer")]
-[assembly: IgnoresAccessChecksTo("BarotraumaCore")]
+
 
 namespace RemoveAll
 {
