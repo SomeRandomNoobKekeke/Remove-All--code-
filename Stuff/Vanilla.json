@@ -1,0 +1,52 @@
+{
+  "LevelRenderer": {
+    "Draw water particles": true,
+    "waterParticlelayers": {
+      "coldcaverns": 4,
+      "europanridge": 4,
+      "theaphoticplateau": 4,
+      "thegreatsea": 4,
+      "hydrothermalwastes": 4,
+      "endzone": 4,
+      "outpost": 4
+    }
+  },
+  "LevelObjectManager": {
+    "maxVisibleLevelObjects": 600,
+    "cutOffdepth": 1000000,
+	"removeDepth": false
+  },
+  "LightManager": {
+    "drawHalo": true,
+    "ghostCharacters": false,
+    "highlightItems": true,
+    "drawGapGlow": true,
+    "haloScale": 0.5,
+    "haloBrightness": 0.3,
+    "hullAmbientBrightness": 1,
+    "hullAmbientColor": {
+      "B": 0,
+      "G": 0,
+      "R": 0,
+      "A": 0,
+      "PackedValue": 0
+    },
+    "globalLightBrightness": 1,
+    "levelAmbientBrightness": 1
+  },
+  "Submarine": {
+    "CullInterval": 0.25,
+    "CullMarginX": 500,
+    "CullMarginY": 500,
+    "CullMoveThreshold": 50
+  },
+  "hide": {
+    "entities": false,
+    "itemLights": false,
+    "levelObjects": true,
+    "particles": false,
+    "decals": false
+  },
+  "maxBackgroundCreaturesCount": 0,
+  "maxParticles": 100000
+}

@@ -1,5 +1,2 @@
-*.*
-ContentParser
-!CSharp/**/*.cs
-!.gitignore
+node_modules
 

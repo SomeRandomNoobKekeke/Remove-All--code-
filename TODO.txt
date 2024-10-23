@@ -1,0 +1,2 @@
+draw backcharacterItems into buffer
+add ingame gui

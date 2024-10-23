@@ -1,0 +1,26 @@
+.entity {
+  position: relative;
+  border: 1px solid rgb(161, 0, 0);
+  background-color: rgb(66, 0, 0);
+  padding: 4px;
+  text-align: center;
+}
+
+.enabled {
+  border-color: rgb(0, 175, 0);
+  background-color: rgb(0, 82, 0);
+}
+
+.entity img {
+  object-fit: none;
+  user-select: none;
+  -webkit-user-drag: none;
+
+  padding-top: 4px;
+  max-width: 100%;
+}
+
+.bodyWarning {
+  background-color: orange;
+  color: black;
+}
