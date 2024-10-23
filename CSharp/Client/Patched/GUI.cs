@@ -255,7 +255,7 @@ namespace RemoveAll
                 "Loaded sounds: " + GameMain.SoundManager.LoadedSoundCount + " (" + GameMain.SoundManager.UniqueLoadedSoundCount + " unique)", Color.White, Color.Black * 0.5f, 0, GUIStyle.SmallFont);
             soundTextY += yStep;
 
-            for (int i = 0; i < SoundManager.SOURCE_COUNT; i++)
+            for (int i = 0; i < SoundManager.SourceCount; i++)
             {
               Color clr = Color.White;
               string soundStr = i + ": ";

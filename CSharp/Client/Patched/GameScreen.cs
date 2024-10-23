@@ -70,19 +70,7 @@ namespace RemoveAll
 
       if (Character.Controlled == null && !GUI.DisableHUD)
       {
-        for (int i = 0; i < Submarine.MainSubs.Length; i++)
-        {
-          if (Submarine.MainSubs[i] == null) continue;
-          if (Level.Loaded != null && Submarine.MainSubs[i].WorldPosition.Y < Level.MaxEntityDepth) { continue; }
-
-          Vector2 position = Submarine.MainSubs[i].SubBody != null ? Submarine.MainSubs[i].WorldPosition : Submarine.MainSubs[i].HiddenSubPosition;
-
-          Color indicatorColor = i == 0 ? Color.LightBlue * 0.5f : GUIStyle.Red * 0.5f;
-          GUI.DrawIndicator(
-              spriteBatch, position, _.cam,
-              Math.Max(Submarine.MainSub.Borders.Width, Submarine.MainSub.Borders.Height),
-              GUIStyle.SubmarineLocationIcon.Value.Sprite, indicatorColor);
-        }
+        _.DrawPositionIndicators(spriteBatch);
       }
 
       if (!GUI.DisableHUD)

@@ -34,8 +34,14 @@ namespace RemoveAll
     public static Dictionary<string, Dictionary<string, bool>> blacklist = new Dictionary<string, Dictionary<string, bool>>();
     public static Dictionary<string, bool> mapEntityBlacklist = new Dictionary<string, bool>();
 
+    public static Plugin Mod;
+
+    public bool Debug;
+
     public void Initialize()
     {
+      Mod = this;
+
       if (testing) log("Compiled!");
 
       harmony = new Harmony("remove.all");

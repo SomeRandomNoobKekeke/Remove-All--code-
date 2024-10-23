@@ -239,8 +239,6 @@ namespace RemoveAll
         original: typeof(LevelObjectManager).GetMethod("DrawObjects", AccessTools.all),
         prefix: new HarmonyMethod(typeof(Plugin).GetMethod("LevelObjectManager_DrawObjects_Replace"))
       );
-
-
     }
   }
 }

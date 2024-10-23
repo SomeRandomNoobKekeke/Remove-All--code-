@@ -1,14 +1,14 @@
 using System;
 using System.Reflection;
-
+using Barotrauma.Particles;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-
 
 using HarmonyLib;
 using Barotrauma;
 using Microsoft.Xna.Framework;
 
+using Barotrauma.Particles;
 using Barotrauma.Extensions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -119,7 +119,7 @@ namespace RemoveAll
       return false;
     }
 
-    public static bool LevelRenderer_DrawBackground_Replace(SpriteBatch spriteBatch, Camera cam, LevelObjectManager backgroundSpriteManager, BackgroundCreatureManager backgroundCreatureManager, LevelRenderer __instance)
+    public static bool LevelRenderer_DrawBackground_Replace(SpriteBatch spriteBatch, Camera cam, LevelObjectManager backgroundSpriteManager, BackgroundCreatureManager backgroundCreatureManager, ParticleManager particleManager, LevelRenderer __instance)
     {
       LevelRenderer _ = __instance;
 
@@ -226,6 +226,9 @@ namespace RemoveAll
               color: _.level.GenerationParams.WaterParticleColor * alpha, textureScale: new Vector2(texScale));
         }
       }
+
+      GameMain.ParticleManager?.Draw(spriteBatch, inWater: true, inSub: false, ParticleBlendState.AlphaBlend, background: true);
+
       spriteBatch.End();
 
       _.RenderWalls(GameMain.Instance.GraphicsDevice, cam);

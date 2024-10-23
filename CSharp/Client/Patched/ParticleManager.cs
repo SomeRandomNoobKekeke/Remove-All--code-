@@ -18,7 +18,7 @@ namespace RemoveAll
 {
   partial class Plugin
   {
-    public static bool ParticleManager_CreateParticle_Replace(ParticlePrefab prefab, Vector2 position, Vector2 velocity, float rotation, Hull hullGuess, bool drawOnTop, float collisionIgnoreTimer, float lifeTimeMultiplier, Tuple<Vector2, Vector2> tracerPoints, ParticleManager __instance, ref Particle __result)
+    public static bool ParticleManager_CreateParticle_Replace(ParticlePrefab prefab, Vector2 position, Vector2 velocity, float rotation, Hull hullGuess, ParticleDrawOrder drawOrder, float collisionIgnoreTimer, float lifeTimeMultiplier, Tuple<Vector2, Vector2> tracerPoints, ParticleManager __instance, ref Particle __result)
     {
       ParticleManager _ = __instance;
 
@@ -78,7 +78,7 @@ namespace RemoveAll
       if (_.particles[_.particleCount] == null) { _.particles[_.particleCount] = new Particle(); }
       Particle particle = _.particles[_.particleCount];
 
-      particle.Init(prefab, position, velocity, rotation, hullGuess, drawOnTop, collisionIgnoreTimer, lifeTimeMultiplier, tracerPoints: tracerPoints);
+      particle.Init(prefab, position, velocity, rotation, hullGuess, drawOrder, collisionIgnoreTimer, lifeTimeMultiplier, tracerPoints: tracerPoints);
       _.particleCount++;
       _.particlesInCreationOrder.AddFirst(particle);
 
@@ -94,7 +94,7 @@ namespace RemoveAll
           typeof(Vector2),
           typeof(float),
           typeof(Hull),
-          typeof(bool),
+          typeof(ParticleDrawOrder),
           typeof(float),
           typeof(float),
           typeof(Tuple<Vector2, Vector2> )

@@ -78,6 +78,7 @@ namespace RemoveAll
             foreach (var convexHullList in _.convexHullsInRange)
             {
               convexHullList.IsHidden.Remove(visibleConvexHull);
+              convexHullList.HasBeenVisible.Add(visibleConvexHull);
             }
           }
 

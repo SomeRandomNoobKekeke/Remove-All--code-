@@ -10,9 +10,9 @@ using HarmonyLib;
 using Microsoft.Xna.Framework;
 using System.IO;
 
-namespace TemplateNamespace
+namespace RemoveAll
 {
-  public partial class Mod : IAssemblyPlugin
+  public partial class Plugin
   {
     public static void log(object msg, Color? cl = null)
     {
@@ -22,7 +22,7 @@ namespace TemplateNamespace
 
     public static void info(object msg, [CallerFilePath] string source = "", [CallerLineNumber] int lineNumber = 0)
     {
-      if (debug)
+      if (Mod.Debug)
       {
         var fi = new FileInfo(source);
 
@@ -33,7 +33,7 @@ namespace TemplateNamespace
 
     public static void err(object msg, [CallerFilePath] string source = "", [CallerLineNumber] int lineNumber = 0)
     {
-      if (debug)
+      if (Mod.Debug)
       {
         var fi = new FileInfo(source);
 
