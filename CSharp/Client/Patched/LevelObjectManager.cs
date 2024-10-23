@@ -15,7 +15,7 @@ using System.Linq;
 
 namespace RemoveAll
 {
-  partial class RemoveAllMod
+  partial class Plugin
   {
     public class LevelObjectManagerSettings
     {
@@ -24,7 +24,7 @@ namespace RemoveAll
       public bool removeDepth { get; set; } = false;
     }
 
-    public static bool LevelObjectManager_RefreshVisibleObjects_Prefix(Rectangle currentIndices, float zoom, LevelObjectManager __instance)
+    public static bool LevelObjectManager_RefreshVisibleObjects_Replace(Rectangle currentIndices, float zoom, LevelObjectManager __instance)
     {
       LevelObjectManager _ = __instance;
 
@@ -129,7 +129,7 @@ namespace RemoveAll
     }
 
 
-    public static bool LevelObjectManager_DrawObjects_Prefix(SpriteBatch spriteBatch, Camera cam, List<LevelObject> objectList, LevelObjectManager __instance)
+    public static bool LevelObjectManager_DrawObjects_Replace(SpriteBatch spriteBatch, Camera cam, List<LevelObject> objectList, LevelObjectManager __instance)
     {
       LevelObjectManager _ = __instance;
 
@@ -232,12 +232,12 @@ namespace RemoveAll
     {
       harmony.Patch(
         original: typeof(LevelObjectManager).GetMethod("RefreshVisibleObjects", AccessTools.all),
-        prefix: new HarmonyMethod(typeof(RemoveAllMod).GetMethod("LevelObjectManager_RefreshVisibleObjects_Prefix"))
+        prefix: new HarmonyMethod(typeof(Plugin).GetMethod("LevelObjectManager_RefreshVisibleObjects_Replace"))
       );
 
       harmony.Patch(
         original: typeof(LevelObjectManager).GetMethod("DrawObjects", AccessTools.all),
-        prefix: new HarmonyMethod(typeof(RemoveAllMod).GetMethod("LevelObjectManager_DrawObjects_Prefix"))
+        prefix: new HarmonyMethod(typeof(Plugin).GetMethod("LevelObjectManager_DrawObjects_Replace"))
       );
 
 

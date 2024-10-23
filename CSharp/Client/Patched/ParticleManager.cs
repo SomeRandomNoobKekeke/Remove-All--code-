@@ -16,9 +16,9 @@ using Barotrauma.Particles;
 
 namespace RemoveAll
 {
-  partial class RemoveAllMod
+  partial class Plugin
   {
-    public static bool ParticleManager_CreateParticle_Prefix(ParticlePrefab prefab, Vector2 position, Vector2 velocity, float rotation, Hull hullGuess, bool drawOnTop, float collisionIgnoreTimer, float lifeTimeMultiplier, Tuple<Vector2, Vector2> tracerPoints, ParticleManager __instance, ref Particle __result)
+    public static bool ParticleManager_CreateParticle_Replace(ParticlePrefab prefab, Vector2 position, Vector2 velocity, float rotation, Hull hullGuess, bool drawOnTop, float collisionIgnoreTimer, float lifeTimeMultiplier, Tuple<Vector2, Vector2> tracerPoints, ParticleManager __instance, ref Particle __result)
     {
       ParticleManager _ = __instance;
 
@@ -99,7 +99,7 @@ namespace RemoveAll
           typeof(float),
           typeof(Tuple<Vector2, Vector2> )
         }),
-        prefix: new HarmonyMethod(typeof(RemoveAllMod).GetMethod("ParticleManager_CreateParticle_Prefix"))
+        prefix: new HarmonyMethod(typeof(Plugin).GetMethod("ParticleManager_CreateParticle_Replace"))
       );
     }
   }

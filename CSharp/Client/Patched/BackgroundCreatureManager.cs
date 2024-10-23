@@ -15,7 +15,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace RemoveAll
 {
 
-  partial class RemoveAllMod
+  partial class Plugin
   {
     public static void reloadBackroundCreatures()
     {
@@ -32,7 +32,7 @@ namespace RemoveAll
     }
 
 
-    public static bool BackgroundCreatureManager_SpawnCreatures_Prefix(Level level, ref int count, Vector2? position, BackgroundCreatureManager __instance)
+    public static bool BackgroundCreatureManager_SpawnCreatures_Replace(Level level, ref int count, Vector2? position, BackgroundCreatureManager __instance)
     {
       count = Math.Max(0, Math.Min(count, settings.maxBackgroundCreaturesCount));
       return true;
@@ -42,7 +42,7 @@ namespace RemoveAll
     {
       harmony.Patch(
         original: typeof(BackgroundCreatureManager).GetMethod("SpawnCreatures"),
-        prefix: new HarmonyMethod(typeof(RemoveAllMod).GetMethod("BackgroundCreatureManager_SpawnCreatures_Prefix"))
+        prefix: new HarmonyMethod(typeof(Plugin).GetMethod("BackgroundCreatureManager_SpawnCreatures_Replace"))
       );
     }
   }

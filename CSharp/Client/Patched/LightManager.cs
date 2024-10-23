@@ -35,10 +35,10 @@ namespace RemoveAll
     public float levelAmbientBrightness { get; set; } = 1f;
   }
 
-  partial class RemoveAllMod
+  partial class Plugin
   {
 
-    public static bool LightManager_UpdateObstructVision_Prefix(GraphicsDevice graphics, SpriteBatch spriteBatch, Camera cam, Vector2 lookAtPosition, LightManager __instance)
+    public static bool LightManager_UpdateObstructVision_Replace(GraphicsDevice graphics, SpriteBatch spriteBatch, Camera cam, Vector2 lookAtPosition, LightManager __instance)
     {
       LightManager _ = __instance;
 
@@ -172,7 +172,7 @@ namespace RemoveAll
     }
 
 
-    public static bool LightManager_RenderLightMap_Prefix(GraphicsDevice graphics, SpriteBatch spriteBatch, Camera cam, RenderTarget2D backgroundObstructor, LightManager __instance)
+    public static bool LightManager_RenderLightMap_Replace(GraphicsDevice graphics, SpriteBatch spriteBatch, Camera cam, RenderTarget2D backgroundObstructor, LightManager __instance)
     {
       LightManager _ = __instance;
 
@@ -547,12 +547,12 @@ namespace RemoveAll
     {
       harmony.Patch(
         original: typeof(LightManager).GetMethod("UpdateObstructVision"),
-        prefix: new HarmonyMethod(typeof(RemoveAllMod).GetMethod("LightManager_UpdateObstructVision_Prefix"))
+        prefix: new HarmonyMethod(typeof(Plugin).GetMethod("LightManager_UpdateObstructVision_Replace"))
       );
 
       harmony.Patch(
         original: typeof(LightManager).GetMethod("RenderLightMap"),
-        prefix: new HarmonyMethod(typeof(RemoveAllMod).GetMethod("LightManager_RenderLightMap_Prefix"))
+        prefix: new HarmonyMethod(typeof(Plugin).GetMethod("LightManager_RenderLightMap_Replace"))
       );
     }
   }

@@ -13,7 +13,7 @@ using System.Text.Json.Serialization;
 
 namespace RemoveAll
 {
-  partial class RemoveAllMod
+  partial class Plugin
   {
     public static string BarotraumaFolder = "";
     public static string modSettingsFolder = "ModSettings\\";

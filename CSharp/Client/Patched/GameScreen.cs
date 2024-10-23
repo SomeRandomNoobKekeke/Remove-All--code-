@@ -26,10 +26,10 @@ namespace RemoveAll
 
 
 
-  partial class RemoveAllMod
+  partial class Plugin
   {
 
-    public static bool GameScreen_Draw_Prefix(double deltaTime, GraphicsDevice graphics, SpriteBatch spriteBatch, GameScreen __instance)
+    public static bool GameScreen_Draw_Replace(double deltaTime, GraphicsDevice graphics, SpriteBatch spriteBatch, GameScreen __instance)
     {
       GameScreen _ = __instance;
 
@@ -107,7 +107,7 @@ namespace RemoveAll
 
 
 
-    public static bool GameScreen_DrawMap_Prefix(GraphicsDevice graphics, SpriteBatch spriteBatch, double deltaTime, GameScreen __instance)
+    public static bool GameScreen_DrawMap_Replace(GraphicsDevice graphics, SpriteBatch spriteBatch, double deltaTime, GameScreen __instance)
     {
       GameScreen _ = __instance;
 
@@ -492,11 +492,11 @@ namespace RemoveAll
     {
       harmony.Patch(
         original: typeof(GameScreen).GetMethod("Draw"),
-        prefix: new HarmonyMethod(typeof(RemoveAllMod).GetMethod("GameScreen_Draw_Prefix"))
+        prefix: new HarmonyMethod(typeof(Plugin).GetMethod("GameScreen_Draw_Replace"))
       );
       harmony.Patch(
         original: typeof(GameScreen).GetMethod("DrawMap"),
-        prefix: new HarmonyMethod(typeof(RemoveAllMod).GetMethod("GameScreen_DrawMap_Prefix"))
+        prefix: new HarmonyMethod(typeof(Plugin).GetMethod("GameScreen_DrawMap_Replace"))
       );
 
 

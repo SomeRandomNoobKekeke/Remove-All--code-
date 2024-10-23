@@ -18,7 +18,7 @@ using Barotrauma.Items.Components;
 
 namespace RemoveAll
 {
-  partial class RemoveAllMod
+  partial class Plugin
   {
     public static Dictionary<LightSource, LightComponent> lightSource_lightComponent = new Dictionary<LightSource, LightComponent>();
 
@@ -97,7 +97,7 @@ namespace RemoveAll
     {
       // harmony.Patch(
       //   original: typeof(LightComponent).GetConstructors()[0],
-      //   postfix: new HarmonyMethod(typeof(RemoveAllMod).GetMethod("LightComponent_Constructor_Postfix"))
+      //   postfix: new HarmonyMethod(typeof(Plugin).GetMethod("LightComponent_Constructor_Postfix"))
       // );
 
       harmony.Patch(
@@ -107,7 +107,7 @@ namespace RemoveAll
           typeof(SubmarineInfo),
           typeof(SubmarineInfo)
         }),
-        postfix: new HarmonyMethod(typeof(RemoveAllMod).GetMethod("GameSession_StartRound_clearLightDict"))
+        postfix: new HarmonyMethod(typeof(Plugin).GetMethod("GameSession_StartRound_clearLightDict"))
       );
     }
   }

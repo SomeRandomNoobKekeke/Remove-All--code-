@@ -19,7 +19,7 @@ using System.IO;
 
 namespace RemoveAll
 {
-  partial class RemoveAllMod
+  partial class Plugin
   {
 
     public class ToggleableAction

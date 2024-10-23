@@ -35,10 +35,10 @@ namespace RemoveAll
     public int CullMoveThreshold { get; set; } = 50;
   }
 
-  partial class RemoveAllMod
+  partial class Plugin
   {
 
-    public static bool Submarine_CullEntities_Prefix(Camera cam, Submarine __instance)
+    public static bool Submarine_CullEntities_Replace(Camera cam, Submarine __instance)
     {
       Submarine _ = __instance;
 
@@ -126,7 +126,7 @@ namespace RemoveAll
     {
       harmony.Patch(
         original: typeof(Submarine).GetMethod("CullEntities"),
-        prefix: new HarmonyMethod(typeof(RemoveAllMod).GetMethod("Submarine_CullEntities_Prefix"))
+        prefix: new HarmonyMethod(typeof(Plugin).GetMethod("Submarine_CullEntities_Replace"))
       );
     }
   }

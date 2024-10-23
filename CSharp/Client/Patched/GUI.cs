@@ -33,10 +33,10 @@ namespace RemoveAll
 
   }
 
-  partial class RemoveAllMod
+  partial class Plugin
   {
 
-    public static bool GUI_Draw_Prefix(Camera cam, SpriteBatch spriteBatch)
+    public static bool GUI_Draw_Replace(Camera cam, SpriteBatch spriteBatch)
     {
       lock (GUI.mutex)
       {
@@ -447,7 +447,7 @@ namespace RemoveAll
     {
       harmony.Patch(
         original: typeof(GUI).GetMethod("Draw", AccessTools.all),
-        prefix: new HarmonyMethod(typeof(RemoveAllMod).GetMethod("GUI_Draw_Prefix"))
+        prefix: new HarmonyMethod(typeof(Plugin).GetMethod("GUI_Draw_Replace"))
       );
     }
   }

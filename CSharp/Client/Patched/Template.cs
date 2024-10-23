@@ -19,14 +19,14 @@ namespace RemoveAll
 
   }
 
-  partial class RemoveAllMod
+  partial class Plugin
   {
 
     public void patchTemplate()
     {
       // harmony.Patch(
       //   original: typeof(LevelRenderer).GetMethod("Update"),
-      //   prefix: new HarmonyMethod(typeof(RemoveAllMod).GetMethod("LevelRenderer_Update_Prefix"))
+      //   prefix: new HarmonyMethod(typeof(Plugin).GetMethod("LevelRenderer_Update_Replace"))
       // );
     }
   }

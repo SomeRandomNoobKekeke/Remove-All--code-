@@ -20,7 +20,7 @@ using Voronoi2;
 
 namespace RemoveAll
 {
-  partial class RemoveAllMod
+  partial class Plugin
   {
     public class LevelRendererSettings
     {
@@ -39,7 +39,7 @@ namespace RemoveAll
     }
 
 
-    public static bool LevelRenderer_Update_Prefix(float deltaTime, Camera cam, LevelRenderer __instance)
+    public static bool LevelRenderer_Update_Replace(float deltaTime, Camera cam, LevelRenderer __instance)
     {
       LevelRenderer _ = __instance;
 
@@ -119,7 +119,7 @@ namespace RemoveAll
       return false;
     }
 
-    public static bool LevelRenderer_DrawBackground_Prefix(SpriteBatch spriteBatch, Camera cam, LevelObjectManager backgroundSpriteManager, BackgroundCreatureManager backgroundCreatureManager, LevelRenderer __instance)
+    public static bool LevelRenderer_DrawBackground_Replace(SpriteBatch spriteBatch, Camera cam, LevelObjectManager backgroundSpriteManager, BackgroundCreatureManager backgroundCreatureManager, LevelRenderer __instance)
     {
       LevelRenderer _ = __instance;
 
@@ -241,7 +241,7 @@ namespace RemoveAll
       return false;
     }
 
-    public static bool LevelRenderer_DrawForeground_Prefix(SpriteBatch spriteBatch, Camera cam, LevelObjectManager backgroundSpriteManager, LevelRenderer __instance)
+    public static bool LevelRenderer_DrawForeground_Replace(SpriteBatch spriteBatch, Camera cam, LevelObjectManager backgroundSpriteManager, LevelRenderer __instance)
     {
       spriteBatch.Begin(SpriteSortMode.Deferred,
           BlendState.NonPremultiplied,
@@ -258,17 +258,17 @@ namespace RemoveAll
     {
       harmony.Patch(
         original: typeof(LevelRenderer).GetMethod("Update"),
-        prefix: new HarmonyMethod(typeof(RemoveAllMod).GetMethod("LevelRenderer_Update_Prefix"))
+        prefix: new HarmonyMethod(typeof(Plugin).GetMethod("LevelRenderer_Update_Replace"))
       );
 
       harmony.Patch(
         original: typeof(LevelRenderer).GetMethod("DrawBackground"),
-        prefix: new HarmonyMethod(typeof(RemoveAllMod).GetMethod("LevelRenderer_DrawBackground_Prefix"))
+        prefix: new HarmonyMethod(typeof(Plugin).GetMethod("LevelRenderer_DrawBackground_Replace"))
       );
 
       harmony.Patch(
         original: typeof(LevelRenderer).GetMethod("DrawForeground"),
-        prefix: new HarmonyMethod(typeof(RemoveAllMod).GetMethod("LevelRenderer_DrawForeground_Prefix"))
+        prefix: new HarmonyMethod(typeof(Plugin).GetMethod("LevelRenderer_DrawForeground_Replace"))
       );
     }
   }

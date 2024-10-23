@@ -19,10 +19,10 @@ namespace RemoveAll
 
   }
 
-  partial class RemoveAllMod
+  partial class Plugin
   {
 
-    public static bool Level_DrawBack_Prefix(GraphicsDevice graphics, SpriteBatch spriteBatch, Camera cam, Level __instance)
+    public static bool Level_DrawBack_Replace(GraphicsDevice graphics, SpriteBatch spriteBatch, Camera cam, Level __instance)
     {
       Level _ = __instance;
 
@@ -47,7 +47,7 @@ namespace RemoveAll
     {
       harmony.Patch(
         original: typeof(Level).GetMethod("DrawBack"),
-        prefix: new HarmonyMethod(typeof(RemoveAllMod).GetMethod("Level_DrawBack_Prefix"))
+        prefix: new HarmonyMethod(typeof(Plugin).GetMethod("Level_DrawBack_Replace"))
       );
     }
   }

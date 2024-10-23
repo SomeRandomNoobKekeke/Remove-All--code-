@@ -19,7 +19,7 @@ using System.Runtime.CompilerServices;
 
 namespace RemoveAll
 {
-  partial class RemoveAllMod : IAssemblyPlugin
+  partial class Plugin : IAssemblyPlugin
   {
     public static string ModVersion = "1.0.0";
     // must match name in filelist or we won't find mod folder
@@ -96,7 +96,7 @@ namespace RemoveAll
 
       harmony.Patch(
         original: typeof(LuaGame).GetMethod("IsCustomCommandPermitted"),
-        postfix: new HarmonyMethod(typeof(RemoveAllMod).GetMethod("permitCommands"))
+        postfix: new HarmonyMethod(typeof(Plugin).GetMethod("permitCommands"))
       );
     }
 

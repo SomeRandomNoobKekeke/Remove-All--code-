@@ -25,10 +25,10 @@ namespace RemoveAll
 
   }
 
-  partial class RemoveAllMod
+  partial class Plugin
   {
 
-    public static bool LightSource_DrawLightVolume_Prefix(SpriteBatch spriteBatch, BasicEffect lightEffect, Matrix transform, bool allowRecalculation, ref int recalculationCount, LightSource __instance)
+    public static bool LightSource_DrawLightVolume_Replace(SpriteBatch spriteBatch, BasicEffect lightEffect, Matrix transform, bool allowRecalculation, ref int recalculationCount, LightSource __instance)
     {
       LightSource _ = __instance;
 
@@ -128,7 +128,7 @@ namespace RemoveAll
     {
       harmony.Patch(
         original: typeof(LightSource).GetMethod("DrawLightVolume"),
-        prefix: new HarmonyMethod(typeof(RemoveAllMod).GetMethod("LightSource_DrawLightVolume_Prefix"))
+        prefix: new HarmonyMethod(typeof(Plugin).GetMethod("LightSource_DrawLightVolume_Replace"))
       );
     }
   }

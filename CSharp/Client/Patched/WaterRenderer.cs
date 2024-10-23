@@ -20,9 +20,9 @@ namespace RemoveAll
 
   }
 
-  partial class RemoveAllMod
+  partial class Plugin
   {
-    public static bool WaterRenderer_RenderWater_Prefix(SpriteBatch spriteBatch, RenderTarget2D texture, Camera cam, WaterRenderer __instance)
+    public static bool WaterRenderer_RenderWater_Replace(SpriteBatch spriteBatch, RenderTarget2D texture, Camera cam, WaterRenderer __instance)
     {
       // return false;
 
@@ -127,7 +127,7 @@ namespace RemoveAll
 
       harmony.Patch(
         original: typeof(WaterRenderer).GetMethod("RenderWater"),
-        prefix: new HarmonyMethod(typeof(RemoveAllMod).GetMethod("WaterRenderer_RenderWater_Prefix"))
+        prefix: new HarmonyMethod(typeof(Plugin).GetMethod("WaterRenderer_RenderWater_Replace"))
       );
     }
   }

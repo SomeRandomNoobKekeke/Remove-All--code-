@@ -14,9 +14,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace RemoveAll
 {
-  partial class RemoveAllMod
+  partial class Plugin
   {
-    public static bool Decal_Draw_Prefix(SpriteBatch spriteBatch, Hull hull, float depth, Decal __instance)
+    public static bool Decal_Draw_Replace(SpriteBatch spriteBatch, Hull hull, float depth, Decal __instance)
     {
       if (settings.hide.decals && __instance.Prefab != null)
       {
@@ -37,7 +37,7 @@ namespace RemoveAll
     {
       harmony.Patch(
         original: typeof(Decal).GetMethod("Draw"),
-        prefix: new HarmonyMethod(typeof(RemoveAllMod).GetMethod("Decal_Draw_Prefix"))
+        prefix: new HarmonyMethod(typeof(Plugin).GetMethod("Decal_Draw_Replace"))
       );
     }
   }
