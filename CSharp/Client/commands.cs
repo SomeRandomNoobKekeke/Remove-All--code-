@@ -15,8 +15,6 @@ using System.Xml.Linq;
 
 using System.IO;
 
-
-
 namespace RemoveAll
 {
   partial class Plugin

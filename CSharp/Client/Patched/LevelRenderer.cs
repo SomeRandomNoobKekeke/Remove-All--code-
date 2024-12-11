@@ -82,7 +82,7 @@ namespace RemoveAll
       if (Mod.settings.LevelRenderer.drawWaterParticles)
       {
         Vector2 currentWaterParticleVel = _.level.GenerationParams.WaterParticleVelocity;
-        foreach (LevelObject levelObject in _.level.LevelObjectManager.GetVisibleObjects())
+        foreach (LevelObject levelObject in _.level.LevelObjectManager.GetAllVisibleObjects())
         {
           if (levelObject.Triggers == null) { continue; }
           //use the largest water flow velocity of all the triggers

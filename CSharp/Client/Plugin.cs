@@ -69,15 +69,12 @@ namespace RemoveAll
       if (!settings.patch.doPatching) return;
 
       if (settings.patch.BackgroundCreatureManager) patchBackgroundCreatureManager();
-      if (settings.patch.GameScreen) patchGameScreen();
-      if (settings.patch.GUI) patchGUI();
       if (settings.patch.Level) patchLevel();
       if (settings.patch.LevelObjectManager) patchLevelObjectManager();
       if (settings.patch.LevelRenderer) patchLevelRenderer();
       if (settings.patch.LightManager) patchLightManager();
       if (settings.patch.Submarine) patchSubmarine();
       if (settings.patch.LightSource) patchLightSource();
-      if (settings.patch.WaterRenderer) patchWaterRenderer();
       if (settings.patch.LightComponent) patchLightComponent();
       if (settings.patch.ParticleManager) patchParticleManager();
       if (settings.patch.Decal) patchDecal();

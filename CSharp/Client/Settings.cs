@@ -31,15 +31,12 @@ namespace RemoveAll
     {
       public bool doPatching { get; set; } = true;
       public bool BackgroundCreatureManager { get; set; } = true;
-      public bool GameScreen { get; set; } = false;
-      public bool GUI { get; set; } = false;
       public bool Level { get; set; } = true;
       public bool LevelObjectManager { get; set; } = true;
       public bool LevelRenderer { get; set; } = true;
       public bool LightManager { get; set; } = true;
       public bool LightSource { get; set; } = true;
       public bool Submarine { get; set; } = true;
-      public bool WaterRenderer { get; set; } = false;
       public bool LightComponent { get; set; } = true;
       public bool ParticleManager { get; set; } = true;
       public bool Decal { get; set; } = true;
