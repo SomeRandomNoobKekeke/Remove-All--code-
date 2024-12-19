@@ -51,9 +51,6 @@ namespace RemoveAll
 
       PatchAll();
 
-      GameMain.GameScreen.Cam.MinZoom = 0.004f;
-      GameMain.PerformanceCounter.DrawTimeGraph = new Graph(1000);
-
       AddCommands();
 
       if (GameMain.GameSession != null && GameMain.GameSession.IsRunning)
