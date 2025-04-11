@@ -21,7 +21,6 @@ namespace RemoveAll
 {
   partial class Plugin : IAssemblyPlugin
   {
-
     public static string ModName = "Remove All";
     public static Plugin Mod;
     public Harmony harmony;
@@ -91,6 +90,7 @@ namespace RemoveAll
       presets.Clear();
 
       RemoveCommands();
+      harmony.UnpatchSelf();
     }
 
     public void OnLoadCompleted() { }
