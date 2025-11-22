@@ -16,8 +16,8 @@ namespace RemoveAll
   partial class Plugin
   {
     public static string BarotraumaFolder = "";
-    public static string modSettingsFolder = "ModSettings\\";
-    public static string settingsFolder = "ModSettings\\RemoveAll\\";
+    public static string modSettingsFolder = "ModSettings";
+    public static string settingsFolder = Path.Combine(modSettingsFolder, "RemoveAll");
     public static string settingsFileName = "Settings.json";
     public static string blacklistFileName = "Entity Blacklist.json";
     public static string blacklistGenFileName = "Entity Blacklist.html";
