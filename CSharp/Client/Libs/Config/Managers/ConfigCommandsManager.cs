@@ -57,7 +57,7 @@ namespace BaroJunk
       Config.Facades.HooksFacade.Patch(
         Config.ID + ".PermitConfigCommand",
         typeof(DebugConsole).GetMethod("IsCommandPermitted", BindingFlags.NonPublic | BindingFlags.Static),
-        (object instance, LuaCsHook.ParameterTable ptable) =>
+        (object instance, LuaPatcherService.ParameterTable ptable) =>
         {
           if (Command is null) return null;
 
