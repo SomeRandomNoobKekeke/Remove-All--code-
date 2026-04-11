@@ -66,7 +66,7 @@ namespace RemoveAll
           if (_.verts == null)
           {
 #if DEBUG
-          DebugConsole.ThrowError($"Failed to generate vertices for a light source. Range: {_.Range}, color: {_.Color}, brightness: {_.CurrentBrightness}, parent: {ParentBody?.UserData ?? "Unknown"}");
+            DebugConsole.ThrowError($"Failed to generate vertices for a light source. Range: {_.Range}, color: {_.Color}, brightness: {_.CurrentBrightness}, parent: {ParentBody?.UserData ?? "Unknown"}");
 #endif
             _.Enabled = false;
             return false;
@@ -96,7 +96,6 @@ namespace RemoveAll
       Vector2 offset = _.ParentSub == null ? Vector2.Zero : _.ParentSub.DrawPosition;
       lightEffect.World =
           Matrix.CreateTranslation(-new Vector3(_.position, 0.0f)) *
-          Matrix.CreateRotationZ(MathHelper.ToRadians(_.LightSourceParams.Rotation)) *
           Matrix.CreateTranslation(new Vector3(_.position + offset + _.translateVertices, 0.0f)) *
           transform;
 

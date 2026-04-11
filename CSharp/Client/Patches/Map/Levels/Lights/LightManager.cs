@@ -33,7 +33,6 @@ namespace RemoveAll
     {
       LightManager _ = __instance;
 
-
       if (!_.LightingEnabled) { return false; }
 
       if (Math.Abs(_.currLightMapScale - GameSettings.CurrentConfig.Graphics.LightMapScale) > 0.01f)
@@ -63,7 +62,11 @@ namespace RemoveAll
       Rectangle viewRect = cam.WorldView;
       viewRect.Y -= cam.WorldView.Height;
       //check which lights need to be drawn
-      _.recalculationCount = 0;
+
+      // NOTE: in original it's a private LightManager field
+      // but i can't pass it by ref in light.DrawLightVolume
+      // it's used only here, so i think it's safe to just make it a local var
+      int recalculationCount = 0;
       _.activeLights.Clear();
       foreach (LightSource light in _.lights)
       {
@@ -112,13 +115,9 @@ namespace RemoveAll
 
         light.Priority = lightPriority(range, light);
 
-        int i = 0;
-        while (i < _.activeLights.Count && light.Priority < _.activeLights[i].Priority)
-        {
-          i++;
-        }
-        _.activeLights.Insert(i, light);
+        _.activeLights.Add(light);
       }
+      _.activeLights.Sort(static (a, b) => b.Priority.CompareTo(a.Priority));
       LightManager.ActiveLightCount = _.activeLights.Count;
 
       float lightPriority(float range, LightSource light)
@@ -135,6 +134,7 @@ namespace RemoveAll
       _.activeShadowCastingLights.Clear();
       foreach (var activeLight in _.activeLights)
       {
+        if (!activeLight.CastShadows) { continue; }
         if (activeLight.Range < 1.0f || activeLight.Color.A < 1 || activeLight.CurrentBrightness <= 0.0f) { continue; }
         _.activeShadowCastingLights.Add(activeLight);
       }
@@ -147,7 +147,7 @@ namespace RemoveAll
           _.activeLights.Remove(_.activeShadowCastingLights[i]);
         }
       }
-      _.activeLights.Sort((l1, l2) => l1.LastRecalculationTime.CompareTo(l2.LastRecalculationTime));
+      _.activeLights.Sort(static (l1, l2) => l1.LastRecalculationTime.CompareTo(l2.LastRecalculationTime));
 
       //draw light sprites attached to characters
       //render into a separate rendertarget using alpha blending (instead of on top of everything else with alpha blending)
@@ -169,9 +169,7 @@ namespace RemoveAll
       //---------------------------------------------------------------------------------------------------
       graphics.SetRenderTarget(_.LightMap);
 
-
       graphics.Clear(_.AmbientLight.Multiply(Mod.Settings.LightManager.LevelAmbientBrightness));
-
 
       graphics.BlendState = BlendState.Additive;
       spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, transformMatrix: spriteBatchTransform);
@@ -179,7 +177,7 @@ namespace RemoveAll
       foreach (LightSource light in _.activeLights)
       {
         if (!light.IsBackground || light.CurrentBrightness <= 0.0f) { continue; }
-        light.DrawLightVolume(spriteBatch, _.lightEffect, transform, _.recalculationCount < LightManager.MaxLightVolumeRecalculationsPerFrame, ref _.recalculationCount);
+        light.DrawLightVolume(spriteBatch, _.lightEffect, transform, recalculationCount < LightManager.MaxLightVolumeRecalculationsPerFrame, ref recalculationCount);
         light.DrawSprite(spriteBatch, cam);
       }
       GameMain.ParticleManager.Draw(spriteBatch, true, null, Barotrauma.Particles.ParticleBlendState.Additive);
@@ -192,6 +190,7 @@ namespace RemoveAll
       Dictionary<Hull, Rectangle> visibleHulls = _.GetVisibleHulls(cam);
       foreach (KeyValuePair<Hull, Rectangle> hull in visibleHulls)
       {
+        //BRUH wtf is this piece of shit? v
         Color ambientColor;
         if (Mod.Settings.LightManager.HullAmbientColor != Color.TransparentBlack)
         {
@@ -201,6 +200,7 @@ namespace RemoveAll
         {
           ambientColor = hull.Key.AmbientLight == Color.TransparentBlack ? Color.Black : hull.Key.AmbientLight.Multiply(hull.Key.AmbientLight.A / 255.0f * Mod.Settings.LightManager.HullAmbientBrightness).Opaque();
         }
+        //BRUH wtf is this piece of shit? ^
 
         GUI.DrawRectangle(spriteBatch,
             new Vector2(hull.Value.X, -hull.Value.Y),
@@ -305,6 +305,7 @@ namespace RemoveAll
           if (character.CurrentHull == null || !character.Enabled || !character.IsVisible || character.InvisibleTimer > 0.0f) { continue; }
           if (Character.Controlled?.FocusedCharacter == character) { continue; }
 
+          //BRUH wtf is this piece of shit? v
           Color lightColor;
           if (Mod.Settings.LightManager.HullAmbientColor != Color.TransparentBlack)
           {
@@ -314,7 +315,7 @@ namespace RemoveAll
           {
             lightColor = character.CurrentHull.AmbientLight == Color.TransparentBlack ? Color.Black : character.CurrentHull.AmbientLight.Multiply(character.CurrentHull.AmbientLight.A / 255.0f * Mod.Settings.LightManager.HullAmbientBrightness).Opaque();
           }
-
+          //BRUH wtf is this piece of shit? ^
 
 
           foreach (Limb limb in character.AnimController.Limbs)
@@ -346,7 +347,7 @@ namespace RemoveAll
       foreach (LightSource light in _.activeLights)
       {
         if (light.IsBackground || light.CurrentBrightness <= 0.0f) { continue; }
-        light.DrawLightVolume(spriteBatch, _.lightEffect, transform, _.recalculationCount < LightManager.MaxLightVolumeRecalculationsPerFrame, ref _.recalculationCount);
+        light.DrawLightVolume(spriteBatch, _.lightEffect, transform, recalculationCount < LightManager.MaxLightVolumeRecalculationsPerFrame, ref recalculationCount);
       }
 
       if (ConnectionPanel.ShouldDebugDrawWiring)
@@ -389,6 +390,7 @@ namespace RemoveAll
         //ambient light decreases the brightness of the halo (no need for a bright halo if the ambient light is bright enough)
 
         float ambientBrightness = (_.AmbientLight.R + _.AmbientLight.B + _.AmbientLight.G) / 255.0f / 3.0f * Mod.Settings.LightManager.LevelAmbientBrightness;
+        //TODO check, Math.Clamp probably excessive now, regalis said he fixed that
         Color haloColor = Color.White.Multiply(Math.Clamp(Mod.Settings.LightManager.HaloBrightness - ambientBrightness, 0, 1));
         if (haloColor.A > 0)
         {

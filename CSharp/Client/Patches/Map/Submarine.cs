@@ -24,10 +24,8 @@ namespace RemoveAll
       );
     }
 
-    public static bool Submarine_CullEntities_Replace(Camera cam, Submarine __instance)
+    public static bool Submarine_CullEntities_Replace(Camera cam)
     {
-      Submarine _ = __instance;
-
       Rectangle camView = cam.WorldView;
 
       camView = new Rectangle(
@@ -85,10 +83,10 @@ namespace RemoveAll
 
 
         // note: linked subs are entities without prefab
-        // if (Mod.Settings.Hide.Entities
-        //     && entity.Prefab != null
-        //     && Mod.BlackList.MapEntity.Has(entity.Prefab.Identifier.HashCode)
-        // ) continue;
+        if (Mod.Settings.Hide.Entities
+            && entity.Prefab != null
+            && Mod.BlackList.MapEntity.Has(entity.Prefab.Identifier.HashCode)
+        ) continue;
 
         if (entity.Submarine != null)
         {
