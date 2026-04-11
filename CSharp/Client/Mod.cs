@@ -17,15 +17,30 @@ namespace RemoveAll
     public IPluginManagementService PluginService { get; set; }
 
 
+    public static Settings Settings { get; } = new();
     public static Logger Logger = new Logger()
     {
-      PrintFilePath = true
+      PrintFilePath = false
     };
+
+
+
 
     public void Initialize()
     {
+      Logger.Log(Settings.LevelRenderer.WaterParticles.ColdCaverns);
 
+    }
 
+    public void DestroyStaticFields()
+    {
+      foreach (FieldInfo fi in typeof(Mod).GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static))
+      {
+        if (!fi.FieldType.IsPrimitive)
+        {
+          fi.SetValue(this, null);
+        }
+      }
     }
 
 
@@ -33,6 +48,7 @@ namespace RemoveAll
     public void PreInitPatching() { }
     public void Dispose()
     {
+      DestroyStaticFields();
 
     }
   }

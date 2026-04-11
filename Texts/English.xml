@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<infotexts language="English" nowhitespace="false" translatedname="English">
+    <!-- Sample Client Setting -->
+    <RemoveAll.MaxBackgroundCreaturesCount.DisplayName>MaxBackgroundCreaturesCount</RemoveAll.MaxBackgroundCreaturesCount.DisplayName>
+    <RemoveAll.MaxBackgroundCreaturesCount.DisplayCategory>Remove All</RemoveAll.MaxBackgroundCreaturesCount.DisplayCategory>
+    <RemoveAll.MaxBackgroundCreaturesCount.Tooltip>Bruh</RemoveAll.MaxBackgroundCreaturesCount.Tooltip>
+</infotexts>
