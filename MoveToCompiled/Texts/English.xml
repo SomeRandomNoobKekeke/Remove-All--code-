@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<infotexts language="English" nowhitespace="false" translatedname="English">
+    <!-- Sample Client Setting -->
+    <RemoveAll.SampleSettingClient.DisplayName>Sample Client Setting</RemoveAll.SampleSettingClient.DisplayName>
+    <RemoveAll.SampleSettingClient.DisplayCategory>Sample</RemoveAll.SampleSettingClient.DisplayCategory>
+    <RemoveAll.SampleSettingClient.Tooltip>Sample tooltip!</RemoveAll.SampleSettingClient.Tooltip>
+</infotexts>

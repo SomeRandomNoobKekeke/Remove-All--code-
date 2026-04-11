@@ -1,0 +1,8 @@
+<Project>
+    <Target Name="CopyFiles" AfterTargets="Build">
+        <ItemGroup>
+            <Content Include="$(SourceModDir)MoveToCompiled\**\*.*" />
+        </ItemGroup>
+        <Copy SourceFiles="@(Content)" DestinationFolder="$(ModDeployDir)%(RecursiveDir)" />
+    </Target>
+</Project>
