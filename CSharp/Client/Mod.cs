@@ -16,10 +16,10 @@ namespace RemoveAll
   {
     public IPluginManagementService PluginService { get; set; }
 
-    public static Harmony Harmony { get; set; } = new Harmony("Remove.All");
-    public static Settings Settings { get; } = new();
-    public static BlackList BlackList { get; } = new();
-    public static Logger Logger = new Logger()
+    public static Harmony Harmony { get; private set; } = new Harmony("Remove.All");
+    public static Settings Settings { get; private set; } = new();
+    public static BlackList BlackList { get; private set; } = new();
+    public static Logger Logger { get; private set; } = new()
     {
       PrintFilePath = false
     };

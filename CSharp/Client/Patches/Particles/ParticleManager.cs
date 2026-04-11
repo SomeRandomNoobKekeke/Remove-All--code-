@@ -38,19 +38,14 @@ namespace RemoveAll
     {
       ParticleManager _ = __instance;
 
-      //TODO
-      // if (Mod.Settings.Hide.Particles && prefab != null)
-      // {
-      //   if (Mod.blacklist["particles"].TryGetValue(prefab.Identifier.Value, out bool value))
-      //   {
-      //     if (!value)
-      //     {
-      //       __result = null;
-      //       return false;
-      //     }
-      //     ;
-      //   }
-      // }
+      if (Mod.Settings.Hide.Particles
+          && prefab != null
+          && Mod.BlackList.Particles.Has(prefab.Identifier.HashCode)
+      )
+      {
+        __result = null;
+        return false;
+      }
 
       int MaxParticles = Math.Min(_.MaxParticles, Mod.Settings.MaxParticles);
 

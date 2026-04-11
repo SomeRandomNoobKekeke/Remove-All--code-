@@ -84,16 +84,11 @@ namespace RemoveAll
         if (entity == null || entity.Removed) { continue; }
 
 
-        //TODO
         // note: linked subs are entities without prefab
-        // if (Mod.Settings.Hide.Entities && entity.Prefab != null)
-        // {
-        //   string id = entity.Prefab.Identifier.Value;
-
-        //   if (Mod.mapEntityBlacklist.TryGetValue(id, out bool value)) { if (!value) continue; }
-        // }
-
-
+        // if (Mod.Settings.Hide.Entities
+        //     && entity.Prefab != null
+        //     && Mod.BlackList.MapEntity.Has(entity.Prefab.Identifier.HashCode)
+        // ) continue;
 
         if (entity.Submarine != null)
         {
