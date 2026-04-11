@@ -24,10 +24,14 @@ namespace RemoveAll
       PrintFilePath = false
     };
 
+    public static LightSourceTracker LightSourceTracker { get; private set; } = new();
+
 
     public void Initialize()
     {
       PatchAll();
+
+      LightSourceTracker.FindLightSources();
 
       Settings.Settings().CommandName = "ra";
       Settings.UseStrategy(ConfigStrategy.MultiplayerClientside);
@@ -45,6 +49,8 @@ namespace RemoveAll
       ParticleManagerPatch.Patch(Harmony);
       SubmarinePatch.Patch(Harmony);
       LevelGenerationParamsPatch.Patch(Harmony);
+
+      LightSourceTracker.Patch(Harmony);
     }
 
     public void DestroyStaticFields()

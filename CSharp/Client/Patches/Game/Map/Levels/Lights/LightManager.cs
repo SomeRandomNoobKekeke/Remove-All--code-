@@ -73,21 +73,13 @@ namespace RemoveAll
         if (!light.Enabled) { continue; }
         if ((light.Color.A < 1 || light.Range < 1.0f) && !light.LightSourceParams.OverrideLightSpriteAlpha.HasValue) { continue; }
 
-        //TODO
-        // if (Mod.Settings.Hide.ItemLights)
-        // {
-        //   string id = "";
-        //   LightComponent lc;
-        //   if (lightSource_lightComponent.TryGetValue(light, out lc))
-        //   {
-        //     id = lc.Item.Prefab.Identifier.Value;
-        //   }
-
-
-
-        //   bool value;
-        //   if (Mod.mapEntityBlacklist.TryGetValue(id, out value)) { if (!value) continue; }
-        // }
+        if (Mod.Settings.Hide.ItemLights)
+        {
+          if (Mod.LightSourceTracker.ReverseLookup.TryGetValue(light, out LightComponent lc))
+          {
+            if (true) continue;
+          }
+        }
 
         if (light.ParentBody != null)
         {
