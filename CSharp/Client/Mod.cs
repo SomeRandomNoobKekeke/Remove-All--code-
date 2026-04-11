@@ -43,6 +43,7 @@ namespace RemoveAll
       LightSourcePatch.Patch(Harmony);
       ParticleManagerPatch.Patch(Harmony);
       SubmarinePatch.Patch(Harmony);
+      LevelGenerationParamsPatch.Patch(Harmony);
     }
 
     public void DestroyStaticFields()
