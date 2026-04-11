@@ -2,14 +2,11 @@ using System;
 using System.Reflection;
 using System.Collections.Generic;
 
-using System.Text.Json;
-using System.Text.Json.Serialization;
-
 using HarmonyLib;
 using Barotrauma;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
+using System.Linq;
 
 
 namespace RemoveAll
@@ -28,7 +25,10 @@ namespace RemoveAll
     {
       LevelGenerationParams _ = __instance;
 
-      if (_.WaterParticles == null || cam.Zoom <= 0.05f) { return false; }
+      if (!Mod.Settings.LevelRenderer.DrawWaterParticles || _.WaterParticles == null || cam.Zoom <= 0.05f) { return false; }
+
+      string biome = _.AnyBiomeAllowed ? "outpost" : _.AllowedBiomeIdentifiers.First().Value;
+      int waterParticlelayerCount = Mod.Settings.LevelRenderer.WaterParticles.Get(biome);
 
       float textureScale = _.WaterParticleScale;
       Vector2 textureSize = new Vector2(_.WaterParticles.Texture.Width, _.WaterParticles.Texture.Height);
@@ -36,7 +36,7 @@ namespace RemoveAll
       offset -= origin;
 
       // Draw 4 layers of particles.
-      for (int i = 0; i < 4; i++)
+      for (int i = 0; i < waterParticlelayerCount; i++)
       {
         float scale = 1f - i * 0.2f;
         float alpha = MathUtils.InverseLerp(0.05f, 0.1f, cam.Zoom * scale);

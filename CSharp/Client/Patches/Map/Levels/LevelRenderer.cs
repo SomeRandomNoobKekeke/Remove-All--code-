@@ -136,53 +136,6 @@ namespace RemoveAll
 
       _.level.GenerationParams.DrawWaterParticles(spriteBatch, cam, _.waterParticleOffset);
 
-
-      // if (Mod.Settings.LevelRenderer.DrawWaterParticles && _.level.GenerationParams.WaterParticles != null && cam.Zoom > 0.05f)
-      // {
-      //   float textureScale = _.level.GenerationParams.WaterParticleScale;
-
-      //   Rectangle srcRect = new Rectangle(0, 0, 2048, 2048);
-      //   Vector2 origin = new Vector2(cam.WorldView.X, -cam.WorldView.Y);
-      //   Vector2 offset = -origin + _.waterParticleOffset;
-      //   while (offset.X <= -srcRect.Width * textureScale) offset.X += srcRect.Width * textureScale;
-      //   while (offset.X > 0.0f) offset.X -= srcRect.Width * textureScale;
-      //   while (offset.Y <= -srcRect.Height * textureScale) offset.Y += srcRect.Height * textureScale;
-      //   while (offset.Y > 0.0f) offset.Y -= srcRect.Height * textureScale;
-
-
-
-      //   string biome = _.level.GenerationParams.AnyBiomeAllowed
-      //     ? "outpost"
-      //     : _.level.GenerationParams.AllowedBiomeIdentifiers.First().Value;
-
-      //   int waterParticlelayerCount = Mod.Settings.LevelRenderer.WaterParticles.Get(biome);
-
-      //   for (int i = 0; i < waterParticlelayerCount; i++)
-      //   {
-      //     float scale = (1.0f - i * 0.2f);
-
-      //     //alpha goes from 1.0 to 0.0 when scale is in the range of 0.1 - 0.05
-      //     float alpha = (cam.Zoom * scale) < 0.1f ? (cam.Zoom * scale - 0.05f) * 20.0f : 1.0f;
-      //     if (alpha <= 0.0f) continue;
-
-      //     Vector2 offsetS = offset * scale
-      //         + new Vector2(cam.WorldView.Width, cam.WorldView.Height) * (1.0f - scale) * 0.5f
-      //         - new Vector2(256.0f * i);
-
-      //     float texScale = scale * textureScale;
-
-      //     while (offsetS.X <= -srcRect.Width * texScale) offsetS.X += srcRect.Width * texScale;
-      //     while (offsetS.X > 0.0f) offsetS.X -= srcRect.Width * texScale;
-      //     while (offsetS.Y <= -srcRect.Height * texScale) offsetS.Y += srcRect.Height * texScale;
-      //     while (offsetS.Y > 0.0f) offsetS.Y -= srcRect.Height * texScale;
-
-      //     _.level.GenerationParams.WaterParticles.DrawTiled(
-      //         spriteBatch, origin + offsetS,
-      //         new Vector2(cam.WorldView.Width - offsetS.X, cam.WorldView.Height - offsetS.Y),
-      //         color: _.level.GenerationParams.WaterParticleColor * alpha, textureScale: new Vector2(texScale));
-      //   }
-      // }
-
       GameMain.ParticleManager?.Draw(spriteBatch, inWater: true, inSub: false, ParticleBlendState.AlphaBlend, background: true);
 
       spriteBatch.End();

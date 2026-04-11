@@ -25,11 +25,12 @@ namespace RemoveAll
     };
 
 
-
-
     public void Initialize()
     {
-      Logger.Log(Settings.LevelRenderer.WaterParticles.ColdCaverns);
+      PatchAll();
+
+      Settings.Settings().CommandName = "ra";
+      Settings.UseStrategy(ConfigStrategy.MultiplayerClientside);
     }
 
     public void PatchAll()
