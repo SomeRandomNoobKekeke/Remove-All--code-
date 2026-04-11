@@ -77,7 +77,7 @@ namespace RemoveAll
         {
           if (Mod.LightSourceTracker.ReverseLookup.TryGetValue(light, out LightComponent lc))
           {
-            if (true) continue;
+            if (Mod.BlackList.MapEntity.Has(lc.Item.Prefab.Identifier.HashCode)) continue;
           }
         }
 
