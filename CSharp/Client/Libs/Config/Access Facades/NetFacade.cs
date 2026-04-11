@@ -46,20 +46,20 @@ namespace BaroJunk
 
     public void ClientSend(string header)
     {
-      GameMain.LuaCs.Networking.Send(GameMain.LuaCs.Networking.Start(header));
+      LuaCsSetup.Instance.Networking.Send(LuaCsSetup.Instance.Networking.Start(header));
     }
 
     public void ClientEncondeAndSend(string header, ConfigCore config)
     {
-      IWriteMessage outMsg = GameMain.LuaCs.Networking.Start(header);
+      IWriteMessage outMsg = LuaCsSetup.Instance.Networking.Start(header);
       config.NetEncode(outMsg);
-      GameMain.LuaCs.Networking.Send(outMsg);
+      LuaCsSetup.Instance.Networking.Send(outMsg);
     }
 
     public void ListenForServer(string header, Action<IReadMessage> callback)
     {
       AlreadyListeningFor.Add(header);
-      GameMain.LuaCs.Networking.Receive(header, (object[] args) =>
+      LuaCsSetup.Instance.Networking.Receive(header, (object[] args) =>
       {
         callback?.Invoke(args[0] as IReadMessage);
       });
@@ -80,28 +80,28 @@ namespace BaroJunk
 
     public void ServerSend(string header, Client client)
     {
-      GameMain.LuaCs.Networking.Send(
-        GameMain.LuaCs.Networking.Start(header),
+      LuaCsSetup.Instance.Networking.Send(
+        LuaCsSetup.Instance.Networking.Start(header),
         client.Connection
       );
     }
     public void ServerEncondeAndSend(string header, ConfigCore config, Client client)
     {
-      IWriteMessage outMsg = GameMain.LuaCs.Networking.Start(header);
+      IWriteMessage outMsg = LuaCsSetup.Instance.Networking.Start(header);
       config.NetEncode(outMsg);
-      GameMain.LuaCs.Networking.Send(outMsg, client.Connection);
+      LuaCsSetup.Instance.Networking.Send(outMsg, client.Connection);
     }
     public void ServerEncondeAndBroadcast(string header, ConfigCore config)
     {
-      IWriteMessage outMsg = GameMain.LuaCs.Networking.Start(header);
+      IWriteMessage outMsg = LuaCsSetup.Instance.Networking.Start(header);
       config.NetEncode(outMsg);
-      GameMain.LuaCs.Networking.Send(outMsg);
+      LuaCsSetup.Instance.Networking.Send(outMsg);
     }
 
     public void ListenForClients(string header, Action<IReadMessage, Client> callback)
     {
       AlreadyListeningFor.Add(header);
-      GameMain.LuaCs.Networking.Receive(header, (object[] args) =>
+      LuaCsSetup.Instance.Networking.Receive(header, (object[] args) =>
       {
         callback?.Invoke(args[0] as IReadMessage, args[1] as Client);
       });
