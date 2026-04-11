@@ -12,6 +12,7 @@ namespace RemoveAll
     public Dictionary<int, bool> LevelObjects { get; set; } = new();
     public Dictionary<int, bool> MapEntity { get; set; } = new();
     public Dictionary<int, bool> Particles { get; set; } = new();
+    public Dictionary<int, bool> Decals { get; set; } = new();
   }
 
 }

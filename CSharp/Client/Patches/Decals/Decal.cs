@@ -27,20 +27,14 @@ namespace RemoveAll
 
     public static bool Decal_Draw_Prefix(SpriteBatch spriteBatch, Hull hull, float depth, Decal __instance)
     {
-      // if (Mod.settings.hide.decals && __instance.Prefab != null)
-      // {
-      //   //log(__instance.Prefab.Identifier.Value);
-      //   if (Mod.blacklist["decals"].TryGetValue(__instance.Prefab.Identifier.Value, out bool value))
-      //   {
-      //     if (!value)
-      //     {
-      //       return false; // don't
-      //     }
-      //     ;
-      //   }
-      // }
+      if (Mod.Settings.Hide.Decals && __instance.Prefab != null &&
+          Mod.BlackList.Decals.Has(__instance.Prefab.Identifier.HashCode)
+      )
+      {
+        return false;
+      }
 
-      return !Mod.Settings.Hide.Decals;
+      return true;
     }
   }
 }
