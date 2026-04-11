@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
 
+using Microsoft.Xna.Framework;
 using BaroJunk;
 
 namespace RemoveAll
@@ -17,8 +18,8 @@ namespace RemoveAll
     public float HaloBrightness { get; set; } = 0.3f;
     public float HullAmbientBrightness { get; set; } = 1.0f;
     public Color HullAmbientColor { get; set; } = Color.Transparent;
-    public bool GlobalLightBrightness { get; set; } = 1.0f;
-    public bool LevelAmbientBrightness { get; set; } = 1.0f;
+    public float GlobalLightBrightness { get; set; } = 1.0f;
+    public float LevelAmbientBrightness { get; set; } = 1.0f;
   }
 
 }

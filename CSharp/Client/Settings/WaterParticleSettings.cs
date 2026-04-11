@@ -16,6 +16,18 @@ namespace RemoveAll
     public int Hydrothermalwastes { get; set; } = 4;
     public int Endzone { get; set; } = 4;
     public int Outpost { get; set; } = 4;
+
+    public int Get(string key) => Map[key].Invoke(this);
+    private Dictionary<string, Func<WaterParticleSettings, int>> Map = new()
+    {
+      ["coldcaverns"] = (self) => self.ColdCaverns,
+      ["europanridge"] = (self) => self.Europanridge,
+      ["theaphoticplateau"] = (self) => self.Theaphoticplateau,
+      ["thegreatsea"] = (self) => self.Thegreatsea,
+      ["hydrothermalwastes"] = (self) => self.Hydrothermalwastes,
+      ["endzone"] = (self) => self.Endzone,
+      ["outpost"] = (self) => self.Outpost,
+    };
   }
 
 }

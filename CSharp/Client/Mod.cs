@@ -16,8 +16,9 @@ namespace RemoveAll
   {
     public IPluginManagementService PluginService { get; set; }
 
-
+    public static Harmony Harmony { get; set; } = new Harmony("Remove.All");
     public static Settings Settings { get; } = new();
+    public static BlackList BlackList { get; } = new();
     public static Logger Logger = new Logger()
     {
       PrintFilePath = false
@@ -29,7 +30,19 @@ namespace RemoveAll
     public void Initialize()
     {
       Logger.Log(Settings.LevelRenderer.WaterParticles.ColdCaverns);
+    }
 
+    public void PatchAll()
+    {
+      DecalPatch.Patch(Harmony);
+      BackgroundCreatureManagerPatch.Patch(Harmony);
+      LevelPatch.Patch(Harmony);
+      LevelObjectManagerPatch.Patch(Harmony);
+      LevelRendererPatch.Patch(Harmony);
+      LightManagerPatch.Patch(Harmony);
+      LightSourcePatch.Patch(Harmony);
+      ParticleManagerPatch.Patch(Harmony);
+      SubmarinePatch.Patch(Harmony);
     }
 
     public void DestroyStaticFields()
@@ -48,8 +61,8 @@ namespace RemoveAll
     public void PreInitPatching() { }
     public void Dispose()
     {
+      Harmony.UnpatchSelf();
       DestroyStaticFields();
-
     }
   }
 }

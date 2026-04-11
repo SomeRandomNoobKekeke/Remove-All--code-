@@ -10,8 +10,8 @@ namespace RemoveAll
   public class SubmarineSettings : IConfig
   {
     public float CullInterval { get; set; } = 0.25f;
-    public float CullMarginX { get; set; } = 500f;
-    public float CullMarginY { get; set; } = 500f;
+    public int CullMarginX { get; set; } = 500;
+    public int CullMarginY { get; set; } = 500;
     public float CullMoveThreshold { get; set; } = 50f;
   }
 

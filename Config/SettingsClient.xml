@@ -1,8 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!-- Client-only settings -->
-<Configuration>
-    <Settings>
-        <Setting Name="MaxBackgroundCreaturesCount" Type="int" Value="0" />
-        <Setting Name="MaxParticles" Type="int" Value="100000" />
-    </Settings>
-</Configuration>
