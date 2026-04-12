@@ -45,6 +45,8 @@ namespace RemoveAll
           GameMain.PerformanceCounter.DrawTimeGraph = new Graph(ticks);
           GameMain.PerformanceCounter.UpdateTimeGraph = new Graph(ticks);
         }
+
+        Logger.Log($"Showperf Graph frame size is: [{GameMain.PerformanceCounter.DrawTimeGraph.values.Length}]");
       });
     }
 
