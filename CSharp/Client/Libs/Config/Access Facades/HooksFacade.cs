@@ -21,7 +21,7 @@ namespace BaroJunk
       string identifier,
       MethodBase method,
       LuaCsPatchFunc patch,
-      LuaCsHook.HookMethodType hookType = LuaCsHook.HookMethodType.Before
+      Barotrauma.LuaCs.Compatibility.ILuaCsHook.HookMethodType hookType = Barotrauma.LuaCs.Compatibility.ILuaCsHook.HookMethodType.Before
     );
   }
 
@@ -39,7 +39,7 @@ namespace BaroJunk
       string identifier,
       MethodBase method,
       LuaCsPatchFunc patch,
-      LuaCsHook.HookMethodType hookType = LuaCsHook.HookMethodType.Before
+      Barotrauma.LuaCs.Compatibility.ILuaCsHook.HookMethodType hookType = Barotrauma.LuaCs.Compatibility.ILuaCsHook.HookMethodType.Before
     ) => ((LuaCsSetup.Instance.EventService as EventService)
            ._luaPatcher as LuaPatcherService)
            .Patch(identifier, method, patch, hookType);
