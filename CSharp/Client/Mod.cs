@@ -9,6 +9,7 @@ using HarmonyLib;
 using BaroJunk;
 using System.Text.Json;
 using System.IO;
+using Barotrauma.LuaCs.Data;
 
 namespace RemoveAll
 {
@@ -16,9 +17,12 @@ namespace RemoveAll
   public partial class Mod : IAssemblyPlugin
   {
     public IPluginManagementService PluginService { get; set; }
+    public IConfigService ConfigService { get; set; }
+    public ILoggerService LoggerService { get; set; }
 
     public static Harmony Harmony { get; private set; } = new Harmony("Remove.All");
     public static Settings Settings { get; private set; } = new();
+    public static LuaSettings LuaSettings { get; private set; } = new();
     public static BlackList BlackList { get; private set; } = new();
     public static Logger Logger { get; private set; } = new()
     {
@@ -27,7 +31,6 @@ namespace RemoveAll
 
     public static LightSourceTracker LightSourceTracker { get; private set; } = new();
     public static ContentPackage Package { get; private set; }
-
 
     public void Initialize()
     {

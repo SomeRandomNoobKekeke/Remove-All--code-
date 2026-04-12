@@ -7,5 +7,5 @@
     <Assembly File="%ModDir%/bin/Server/OSX/RemoveAll.dll" Target="Server" Platform="OSX" />
     <Assembly File="%ModDir%/bin/Server/Windows/RemoveAll.dll" Target="Server" Platform="Windows" />
 
-    <Config File="%ModDir%/Config/SettingsClient.xml" Target="Client" />
+    <!-- <Config File="%ModDir%/Config/SettingsClient.xml" Target="Client" /> -->
 </ModConfig>

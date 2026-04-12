@@ -1,4 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<contentpackage name="RemoveAll" modversion="4.0.0" corepackage="False">
-  <Text file="%ModDir%/Texts/English.xml" />
+<contentpackage name="Remove All" modversion="4.0.0" corepackage="False">
+  <!-- <Text file="%ModDir%/Texts/English.xml" /> -->
 </contentpackage>
