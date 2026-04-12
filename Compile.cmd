@@ -1,3 +1,4 @@
+@REM this is https://github.com/SomeRandomNoobKekeke/Barotrauma-CS-hybrid-compiler script
 @REM Put this in your "in memory" mod folder
 echo off 
 
