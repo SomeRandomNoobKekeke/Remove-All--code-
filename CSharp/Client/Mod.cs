@@ -8,6 +8,7 @@ using Barotrauma;
 using HarmonyLib;
 using BaroJunk;
 using System.Text.Json;
+using System.IO;
 
 namespace RemoveAll
 {
@@ -40,6 +41,17 @@ namespace RemoveAll
 
       Settings.Settings().CommandName = "ra_config";
       Settings.UseStrategy(ConfigStrategy.MultiplayerClientside);
+
+      Settings.OnPropChanged((key, value) =>
+      {
+        if (key == "Blacklist") BlackList.Load((string)value);
+      });
+
+      Settings.OnUpdated(() =>
+      {
+        BlackList.Load(Settings.Blacklist);
+      });
+      BlackList.Load(Settings.Blacklist);
     }
 
     public void PatchAll()

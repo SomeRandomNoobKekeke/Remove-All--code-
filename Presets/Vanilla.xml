@@ -44,4 +44,5 @@
   </Hide>
   <MaxBackgroundCreaturesCount>10000</MaxBackgroundCreaturesCount>
   <MaxParticles>100000</MaxParticles>
+  <Blacklist>HideNotImportantStuff</Blacklist>
 </Settings>

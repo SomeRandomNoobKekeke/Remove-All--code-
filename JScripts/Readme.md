@@ -1,0 +1,1 @@
+These scripts are prehistoric, i have no idea how they work, don't ask me

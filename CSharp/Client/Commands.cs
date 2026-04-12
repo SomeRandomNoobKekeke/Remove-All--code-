@@ -20,6 +20,17 @@ namespace RemoveAll
     {
       PluginCommands.Add("ra", RA_Command, () => new string[][] { RAActions.Keys.ToArray() });
 
+      PluginCommands.Add("ra_blacklist", (args) =>
+        {
+          if (args.Length == 0) return;
+          Mod.Settings.ReactiveSetValue("Blacklist", args[0]);
+        },
+        () => new string[][] {
+          Directory.GetFiles(Path.Combine(Mod.Package.Dir, BlackList.BlacklistsDir),"*.json")
+          .Select(path=>Path.GetFileNameWithoutExtension(path)).ToArray()
+        }
+      );
+
       PluginCommands.Add("light", (args) =>
       {
         GameMain.LightManager.LightingEnabled = !GameMain.LightManager.LightingEnabled;
@@ -137,6 +148,7 @@ namespace RemoveAll
         Mod.Settings.MaxBackgroundCreaturesCount = 0;
 
         BackgroundCreatureManagerPatch.ReloadBackroundCreatures();
+        Mod.Settings.ReactiveSetValue("Blacklist", "HideAll");
         Logger.Log("Removed All");
       },
       ["darkmode"] = () =>

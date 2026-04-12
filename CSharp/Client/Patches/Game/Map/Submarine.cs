@@ -85,7 +85,7 @@ namespace RemoveAll
         // note: linked subs are entities without prefab
         if (Mod.Settings.Hide.Entities
             && entity.Prefab != null
-            && true
+            && Mod.BlackList.MapEntity.Has(entity.Prefab.Identifier.HashCode)
         ) continue;
 
         if (entity.Submarine != null)

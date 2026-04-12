@@ -18,6 +18,7 @@ namespace RemoveAll
 
     public int MaxBackgroundCreaturesCount { get; set; } = 0;
     public int MaxParticles { get; set; } = 100000;
+    public string Blacklist { get; set; } = "HideNotImportantStuff";
 
     public Settings()
     {

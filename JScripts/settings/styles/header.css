@@ -1,0 +1,53 @@
+#header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 4px ridge rgb(133, 133, 133);
+  scrollbar-gutter: stable;
+  font-size: 10vw;
+}
+
+#header button {
+  flex: 1;
+  color: rgb(221, 221, 221);
+  display: block;
+  border: none;
+  padding: 4px;
+  outline: none;
+  font-size: 1.2vw;
+}
+
+#header nav {
+  display: flex;
+  border-right: 4px solid rgb(199, 199, 199);
+}
+
+#header nav button {
+  border-right: 1px solid rgb(143, 143, 143);
+  background-color: rgb(0, 81, 83);
+}
+
+#header nav button:hover {
+  background-color: rgb(0, 107, 110);
+}
+
+#header nav button:active {
+  background-color: rgb(0, 136, 141);
+}
+
+#header .menu {
+  flex: 1;
+  display: flex;
+}
+
+#header .menu button {
+  border-left: 1px solid rgb(143, 143, 143);
+  background-color: rgb(49, 0, 64);
+}
+
+#header .menu button:hover {
+  background-color: rgb(80, 0, 104);
+}
+
+#header .menu button:active {
+  background-color: rgb(129, 0, 168);
+}

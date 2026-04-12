@@ -2,7 +2,13 @@
     <Target Name="CopyFiles" AfterTargets="Build">
         <ItemGroup>
             <Content Include="$(SourceModDir)MoveToCompiled\**\*.*" />
+            <Blacklists Include="$(SourceModDir)Blacklists\**\*.*" />
+            <Presets Include="$(SourceModDir)Presets\**\*.*" />
+            <JScripts Include="$(SourceModDir)Presets\**\*.*" />
         </ItemGroup>
         <Copy SourceFiles="@(Content)" DestinationFolder="$(ModDeployDir)%(RecursiveDir)" />
+        <Copy SourceFiles="@(Blacklists)" DestinationFolder="$(ModDeployDir)Blacklists\%(RecursiveDir)" />
+        <Copy SourceFiles="@(Presets)" DestinationFolder="$(ModDeployDir)Presets\%(RecursiveDir)" />
+        <Copy SourceFiles="@(JScripts)" DestinationFolder="$(ModDeployDir)JScripts\%(RecursiveDir)" />
     </Target>
 </Project>
