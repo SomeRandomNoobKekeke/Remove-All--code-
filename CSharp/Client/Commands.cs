@@ -118,7 +118,7 @@ namespace RemoveAll
       {
         if (Mod.Settings.MaxBackgroundCreaturesCount == 0)
         {
-          Mod.Settings.MaxBackgroundCreaturesCount = 100;
+          Mod.Settings.MaxBackgroundCreaturesCount = 1000;
         }
         else
         {

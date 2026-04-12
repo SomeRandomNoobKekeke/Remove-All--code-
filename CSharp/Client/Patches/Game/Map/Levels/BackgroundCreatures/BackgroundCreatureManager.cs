@@ -43,8 +43,8 @@ namespace RemoveAll
           Mod.Settings.MaxBackgroundCreaturesCount
         ));
 
-        // Level.loaded.backgroundCreatureManager.Clear();
         Level.loaded.backgroundCreatureManager.SpawnCreatures(Level.loaded, count);
+        Mod.Logger.Log($"Spawning {count} background fishes");
       }
     }
   }
