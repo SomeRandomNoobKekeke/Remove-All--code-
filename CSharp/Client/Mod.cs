@@ -25,15 +25,20 @@ namespace RemoveAll
     };
 
     public static LightSourceTracker LightSourceTracker { get; private set; } = new();
+    public static ContentPackage Package { get; private set; }
 
 
     public void Initialize()
     {
+      PluginService.TryGetPackageForPlugin<Mod>(out ContentPackage package);
+      Package = package;
+
       PatchAll();
+      AddCommands();
 
       LightSourceTracker.FindLightSources();
 
-      Settings.Settings().CommandName = "ra";
+      Settings.Settings().CommandName = "ra_config";
       Settings.UseStrategy(ConfigStrategy.MultiplayerClientside);
     }
 

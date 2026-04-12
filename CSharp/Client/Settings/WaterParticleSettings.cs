@@ -9,13 +9,13 @@ namespace RemoveAll
 {
   public class WaterParticleSettings : IConfig
   {
-    public int ColdCaverns { get; set; } = 4;
-    public int Europanridge { get; set; } = 4;
-    public int Theaphoticplateau { get; set; } = 4;
-    public int Thegreatsea { get; set; } = 4;
-    public int Hydrothermalwastes { get; set; } = 4;
+    public int ColdCaverns { get; set; } = 1;
+    public int Europanridge { get; set; } = 0;
+    public int Theaphoticplateau { get; set; } = 0;
+    public int Thegreatsea { get; set; } = 0;
+    public int Hydrothermalwastes { get; set; } = 0;
     public int Endzone { get; set; } = 4;
-    public int Outpost { get; set; } = 4;
+    public int Outpost { get; set; } = 0;
 
     public int Get(string key) => Map[key].Invoke(this);
     private Dictionary<string, Func<WaterParticleSettings, int>> Map = new()

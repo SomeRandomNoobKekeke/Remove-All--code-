@@ -9,8 +9,8 @@ namespace RemoveAll
 {
   public class LevelObjectManagerSettings : IConfig
   {
-    public int MaxVisibleLevelObjects { get; set; } = 600;
-    public float CutOffdepth { get; set; } = 1000000;
+    public int MaxVisibleLevelObjects { get; set; } = 500;
+    public float CutOffdepth { get; set; } = 10;
     public bool RemoveDepth { get; set; } = false;
   }
 
