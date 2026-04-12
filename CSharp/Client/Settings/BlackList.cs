@@ -18,14 +18,14 @@ namespace RemoveAll
     public Dictionary<int, bool> Particles { get; set; } = new();
     public Dictionary<int, bool> Decals { get; set; } = new();
 
-    public void Load(string path)
+    public bool Load(string path)
     {
       //BRUH probably should return result and handle logging somewhere else
       string fullPath = Path.Combine(Mod.Package.Dir, BlacklistsDir, $"{path}.json");
       if (!File.Exists(fullPath))
       {
         Mod.Logger.Log($"Can't find [{path}.json] in Blacklists folder");
-        return;
+        return false;
       }
 
       Dictionary<string, Dictionary<string, bool>> all =
@@ -57,7 +57,7 @@ namespace RemoveAll
       MergeDict(all["levelObjects"], LevelObjects);
       MergeDict(all["particles"], Particles);
 
-      Mod.Logger.Log($"Loaded {path}.json");
+      return true;
     }
 
     public void Clear()

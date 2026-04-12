@@ -47,12 +47,15 @@ namespace RemoveAll
 
       Settings.OnPropChanged((key, value) =>
       {
-        if (key == "Blacklist") BlackList.Load((string)value);
+        if (key == "Blacklist")
+        {
+          if (BlackList.Load((string)value)) Logger.Log($"Loaded {value}.json");
+        }
       });
 
       Settings.OnUpdated(() =>
       {
-        BlackList.Load(Settings.Blacklist);
+        if (BlackList.Load(Settings.Blacklist)) Logger.Log($"Loaded {Settings.Blacklist}.json");
       });
       BlackList.Load(Settings.Blacklist);
     }
