@@ -30,7 +30,7 @@ namespace RemoveAll
       );
     }
 
-    public static bool LevelObjectManager_RefreshVisibleObjects_Replace(Rectangle currentIndices, float zoom, LevelObjectManager __instance)
+    public static bool LevelObjectManager_RefreshVisibleObjects_Replace(LevelObjectManager __instance, Rectangle currentIndices, BackgroundCreatureManager backgroundCreatureManager, float zoom)
     {
       LevelObjectManager _ = __instance;
 
@@ -120,6 +120,27 @@ namespace RemoveAll
         }
       }
 
+      foreach (var backgroundCreature in backgroundCreatureManager.VisibleCreatures)
+      {
+        int drawOrderIndex = 0;
+        for (int i = 0; i < _.visibleObjectsBack.Count; i++)
+        {
+          if (_.visibleObjectsBack[i].Position.Z > backgroundCreature.Position.Z)
+          {
+            break;
+          }
+          else
+          {
+            drawOrderIndex = i + 1;
+            if (drawOrderIndex >= LevelObjectManager.MaxVisibleObjects) { break; }
+          }
+        }
+        if (drawOrderIndex >= 0 && drawOrderIndex < LevelObjectManager.MaxVisibleObjects)
+        {
+          _.visibleObjectsBack.Insert(drawOrderIndex, backgroundCreature);
+        }
+      }
+
       //object grid is sorted in an ascending order
       //(so we prefer the objects in the foreground instead of ones in the background if some need to be culled)
       //rendering needs to be done in a descending order though to get the background objects to be drawn first -> reverse the lists
@@ -133,11 +154,9 @@ namespace RemoveAll
     }
 
 
-    public static bool LevelObjectManager_DrawObjects_Replace(SpriteBatch spriteBatch, Camera cam, List<LevelObject> objectList, LevelObjectManager __instance)
+    public static bool LevelObjectManager_DrawObjects_Replace(LevelObjectManager __instance, SpriteBatch spriteBatch, Camera cam, BackgroundCreatureManager backgroundCreatureManager, List<ILevelRenderableObject> objectList)
     {
       LevelObjectManager _ = __instance;
-
-      float objPositionZ;
 
       Rectangle indices = Rectangle.Empty;
       indices.X = (int)Math.Floor(cam.WorldView.X / (float)LevelObjectManager.GridSize);
@@ -158,7 +177,7 @@ namespace RemoveAll
       float z = 0.0f;
       if (_.ForceRefreshVisibleObjects || (_.currentGridIndices != indices && Timing.TotalTime > _.NextRefreshTime))
       {
-        _.RefreshVisibleObjects(indices, cam.Zoom);
+        _.RefreshVisibleObjects(indices, backgroundCreatureManager, cam.Zoom);
         _.ForceRefreshVisibleObjects = false;
         if (cam.Zoom < 0.1f)
         {
@@ -167,64 +186,95 @@ namespace RemoveAll
         }
       }
 
-      foreach (LevelObject obj in objectList)
+      bool prevObjectHasDeformableSprite = false;
+      foreach (ILevelRenderableObject obj2 in objectList)
       {
-        objPositionZ = Mod.Settings.LevelObjectManager.RemoveDepth ? 0 : obj.Position.Z;
-
-
-        Vector2 camDiff = new Vector2(obj.Position.X, obj.Position.Y) - cam.WorldViewCenter;
+        Vector2 camDiff = new Vector2(obj2.Position.X, obj2.Position.Y) - cam.WorldViewCenter;
         camDiff.Y = -camDiff.Y;
 
-        Sprite activeSprite = obj.Sprite;
-        activeSprite?.Draw(
-            spriteBatch,
-            new Vector2(obj.Position.X, -obj.Position.Y) - camDiff * objPositionZ * LevelObjectManager.ParallaxStrength,
-            Color.Lerp(obj.Prefab.SpriteColor, obj.Prefab.SpriteColor.Multiply(Level.Loaded.BackgroundTextureColor), obj.Position.Z / obj.Prefab.FadeOutDepth),
-            activeSprite.Origin,
-            obj.CurrentRotation,
-            obj.CurrentScale,
-            SpriteEffects.None,
-            z);
-
-        if (obj.ActivePrefab.DeformableSprite != null)
+        bool hasDeformableSprite = false;
+        if (obj2 is LevelObject levelObject)
         {
-          if (obj.CurrentSpriteDeformation != null)
+          hasDeformableSprite = levelObject.ActivePrefab.DeformableSprite != null;
+          if (hasDeformableSprite != prevObjectHasDeformableSprite)
           {
-            obj.ActivePrefab.DeformableSprite.Deform(obj.CurrentSpriteDeformation);
+            spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.Deferred,
+                BlendState.NonPremultiplied,
+                SamplerState.LinearWrap, DepthStencilState.DepthRead,
+                transformMatrix: cam.Transform);
           }
-          else
+
+          float objPositionZ = Mod.Settings.LevelObjectManager.RemoveDepth ? 0 : levelObject.Position.Z;
+
+          Sprite activeSprite = levelObject.Sprite;
+          activeSprite?.Draw(
+              spriteBatch,
+              new Vector2(levelObject.Position.X, -levelObject.Position.Y) - camDiff * objPositionZ * LevelObjectManager.ParallaxStrength,
+              Color.Lerp(levelObject.Prefab.SpriteColor, levelObject.Prefab.SpriteColor.Multiply(Level.Loaded.BackgroundTextureColor), levelObject.Position.Z / levelObject.Prefab.FadeOutDepth),
+              activeSprite.Origin,
+              levelObject.CurrentRotation,
+              levelObject.CurrentScale,
+              SpriteEffects.None,
+              z);
+
+          if (hasDeformableSprite)
           {
-            obj.ActivePrefab.DeformableSprite.Reset();
-          }
-          obj.ActivePrefab.DeformableSprite?.Draw(cam,
-              new Vector3(new Vector2(obj.Position.X, obj.Position.Y) - camDiff * objPositionZ * LevelObjectManager.ParallaxStrength, z * 10.0f),
-              obj.ActivePrefab.DeformableSprite.Origin,
-              obj.CurrentRotation,
-              obj.CurrentScale,
-              Color.Lerp(obj.Prefab.SpriteColor, obj.Prefab.SpriteColor.Multiply(Level.Loaded.BackgroundTextureColor), obj.Position.Z / 5000.0f));
-        }
-
-
-        if (GameMain.DebugDraw)
-        {
-          GUI.DrawRectangle(spriteBatch, new Vector2(obj.Position.X, -obj.Position.Y), new Vector2(10.0f, 10.0f), GUIStyle.Red, true);
-
-          if (obj.Triggers == null) { continue; }
-          foreach (LevelTrigger trigger in obj.Triggers)
-          {
-            if (trigger.PhysicsBody == null) continue;
-            GUI.DrawLine(spriteBatch, new Vector2(obj.Position.X, -obj.Position.Y), new Vector2(trigger.WorldPosition.X, -trigger.WorldPosition.Y), Color.Cyan, 0, 3);
-
-            Vector2 flowForce = trigger.GetWaterFlowVelocity();
-            if (flowForce.LengthSquared() > 1)
+            if (levelObject.CurrentSpriteDeformation != null)
             {
-              flowForce.Y = -flowForce.Y;
-              GUI.DrawLine(spriteBatch, new Vector2(trigger.WorldPosition.X, -trigger.WorldPosition.Y), new Vector2(trigger.WorldPosition.X, -trigger.WorldPosition.Y) + flowForce * 10, GUIStyle.Orange, 0, 5);
+              levelObject.ActivePrefab.DeformableSprite.Deform(levelObject.CurrentSpriteDeformation);
             }
-            trigger.PhysicsBody.UpdateDrawPosition();
-            trigger.PhysicsBody.DebugDraw(spriteBatch, trigger.IsTriggered ? Color.Cyan : Color.DarkCyan);
+            else
+            {
+              levelObject.ActivePrefab.DeformableSprite.Reset();
+            }
+            levelObject.ActivePrefab.DeformableSprite?.Draw(cam,
+                new Vector3(new Vector2(levelObject.Position.X, levelObject.Position.Y) - camDiff * objPositionZ * LevelObjectManager.ParallaxStrength, z * 10.0f),
+                levelObject.ActivePrefab.DeformableSprite.Origin,
+                levelObject.CurrentRotation,
+                levelObject.CurrentScale,
+                Color.Lerp(levelObject.Prefab.SpriteColor, levelObject.Prefab.SpriteColor.Multiply(Level.Loaded.BackgroundTextureColor), levelObject.Position.Z / 5000.0f));
           }
+          prevObjectHasDeformableSprite = hasDeformableSprite;
+
+          if (GameMain.DebugDraw)
+          {
+            GUI.DrawRectangle(spriteBatch, new Vector2(levelObject.Position.X, -levelObject.Position.Y), new Vector2(10.0f, 10.0f), GUIStyle.Red, true);
+
+            if (levelObject.Triggers == null) { continue; }
+            foreach (LevelTrigger trigger in levelObject.Triggers)
+            {
+              if (trigger.PhysicsBody == null) continue;
+              GUI.DrawLine(spriteBatch, new Vector2(levelObject.Position.X, -levelObject.Position.Y), new Vector2(trigger.WorldPosition.X, -trigger.WorldPosition.Y), Color.Cyan, 0, 3);
+
+              Vector2 flowForce = trigger.GetWaterFlowVelocity();
+              if (flowForce.LengthSquared() > 1)
+              {
+                flowForce.Y = -flowForce.Y;
+                GUI.DrawLine(spriteBatch, new Vector2(trigger.WorldPosition.X, -trigger.WorldPosition.Y), new Vector2(trigger.WorldPosition.X, -trigger.WorldPosition.Y) + flowForce * 10, GUIStyle.Orange, 0, 5);
+              }
+              trigger.PhysicsBody.UpdateDrawPosition();
+              trigger.PhysicsBody.DebugDraw(spriteBatch, trigger.IsTriggered ? Color.Cyan : Color.DarkCyan);
+            }
+          }
+
         }
+        else if (obj2 is BackgroundCreature backgroundCreature && cam.Zoom > 0.05f)
+        {
+          hasDeformableSprite = backgroundCreature.Prefab.DeformableSprite != null;
+          if (hasDeformableSprite != prevObjectHasDeformableSprite)
+          {
+            spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.Deferred,
+                BlendState.NonPremultiplied,
+                SamplerState.LinearWrap, DepthStencilState.DepthRead,
+                transformMatrix: cam.Transform);
+          }
+
+          backgroundCreature.Draw(spriteBatch, cam);
+        }
+        prevObjectHasDeformableSprite = hasDeformableSprite;
+
 
         z += 0.0001f;
       }

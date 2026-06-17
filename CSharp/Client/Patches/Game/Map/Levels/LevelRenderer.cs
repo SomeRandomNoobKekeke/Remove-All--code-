@@ -77,8 +77,9 @@ namespace RemoveAll
       if (Mod.Settings.LevelRenderer.DrawWaterParticles)
       {
         Vector2 currentWaterParticleVel = _.level.GenerationParams.WaterParticleVelocity;
-        foreach (LevelObject levelObject in _.level.LevelObjectManager.GetAllVisibleObjects())
+        foreach (ILevelRenderableObject obj in _.level.LevelObjectManager.GetAllVisibleObjects())
         {
+          if (obj is not LevelObject levelObject) { continue; }
           if (levelObject.Triggers == null) { continue; }
           //use the largest water flow velocity of all the triggers
           Vector2 objectMaxFlow = Vector2.Zero;
@@ -128,11 +129,7 @@ namespace RemoveAll
           SamplerState.LinearWrap, DepthStencilState.DepthRead, null, null,
           cam.Transform);
 
-      backgroundSpriteManager?.DrawObjectsBack(spriteBatch, cam);
-      if (cam.Zoom > 0.05f)
-      {
-        backgroundCreatureManager?.Draw(spriteBatch, cam);
-      }
+      backgroundSpriteManager?.DrawObjectsBack(spriteBatch, backgroundCreatureManager, cam);
 
       _.level.GenerationParams.DrawWaterParticles(spriteBatch, cam, _.waterParticleOffset);
 
@@ -146,19 +143,19 @@ namespace RemoveAll
           BlendState.NonPremultiplied,
           SamplerState.LinearClamp, DepthStencilState.DepthRead, null, null,
           cam.Transform);
-      backgroundSpriteManager?.DrawObjectsMid(spriteBatch, cam);
+      backgroundSpriteManager?.DrawObjectsMid(spriteBatch, backgroundCreatureManager, cam);
       spriteBatch.End();
 
       return false;
     }
 
-    public static bool LevelRenderer_DrawForeground_Replace(LevelRenderer __instance, SpriteBatch spriteBatch, Camera cam, LevelObjectManager backgroundSpriteManager = null)
+    public static bool LevelRenderer_DrawForeground_Replace(LevelRenderer __instance, SpriteBatch spriteBatch, Camera cam, BackgroundCreatureManager backgroundCreatureManager, LevelObjectManager backgroundSpriteManager = null)
     {
       spriteBatch.Begin(SpriteSortMode.Deferred,
           BlendState.NonPremultiplied,
           SamplerState.LinearClamp, DepthStencilState.DepthRead, null, null,
           cam.Transform);
-      backgroundSpriteManager?.DrawObjectsFront(spriteBatch, cam);
+      backgroundSpriteManager?.DrawObjectsFront(spriteBatch, backgroundCreatureManager, cam);
       spriteBatch.End();
 
       return false;

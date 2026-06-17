@@ -48,6 +48,16 @@ namespace RemoveAll
 
         Logger.Log($"Showperf Graph frame size is: [{GameMain.PerformanceCounter.DrawTimeGraph.values.Length}]");
       });
+
+      PluginCommands.Add("spawnbackgroundfishes", SpawnBackgroundFished_Command);
+    }
+
+    public void SpawnBackgroundFished_Command(string[] args)
+    {
+      int count = 100;
+      if (args.Length > 0 && int.TryParse(args[0], out int i)) count = i;
+
+      Level.Loaded.BackgroundCreatureManager.SpawnCreatures(Level.Loaded, count, GameMain.GameScreen.Cam.ScreenToWorld(PlayerInput.MousePosition));
     }
 
     public void RA_Command(string[] args)
